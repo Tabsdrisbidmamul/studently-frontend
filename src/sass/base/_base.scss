@@ -30,3 +30,27 @@ html {
   //   font-size: 25%;
   // }
 }
+
+body {
+  background-image: linear-gradient(
+    to right bottom,
+    $color-secondary-light,
+    $color-secondary-dark
+  );
+  background-size: cover;
+  background-repeat: no-repeat;
+
+  min-height: 100vh; // FIXME: REMOVE AT FINAL BUILD
+  color: $color-grey-dark-2;
+}
+
+.container {
+  max-width: 120rem;
+  margin: 8rem auto;
+  background-color: $color-grey-light-2;
+  box-shadow: $shadow-dark;
+
+  min-height: 50rem;
+  border-radius: 3px;
+  overflow: hidden;
+}

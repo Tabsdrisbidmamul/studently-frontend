@@ -8,10 +8,169 @@
       rel="stylesheet"
     />
     <!-- change href to style.css at the end -->
-    <link href="css/style.comp.css" type="text/css" rel="stylesheet" />
+    <link href="css/main.css" type="text/css" rel="stylesheet" />
     <title>Document</title>
   </head>
   <body>
-    <header class="header"></header>
+    <div class="container">
+      <header class="header">
+        <img src="img/logo.png" alt="Studently logo" class="logo" />
+
+        <div class="login">
+          <a href="#" class="btn">Login</a>
+          <a href="#" class="btn btn--ghost">Sign up</a>
+        </div>
+
+        <!-- <nav class="user-nav">
+          <div class="user-nav__user">
+            <img
+              src="img/default.png"
+              alt="User Photo"
+              class="user-nav__user-photo"
+            />
+            <span class="user-nav__user-name">Idris</span>
+          </div> -->
+
+          <!-- <div class="user-nav__dropdown">
+            <a href="#" class="user-nav__link">Settings</a>
+            <a href="#" class="user-nav__link">Statistics</a>
+            <a href="#" class="user-nav__link">Settings</a>
+          </div> -->
+        </nav>
+      </header>
+
+      <div class="content">
+        <nav class="sidebar">
+          <ul class="side-nav">
+            <li class="side-nav__item side-nav__item side-nav__item--active">
+              <a href="#" class="side-nav__link">
+                <svg class="side-nav__icon">
+                  <use href="img/sprite.svg#icon-documents"></use>
+                </svg>
+                <span>My Cards</span>
+              </a>
+            </li>
+
+            <li class="side-nav__item side-nav__item">
+              <a href="#" class="side-nav__link">
+                <svg class="side-nav__icon">
+                  <use href="img/sprite.svg#icon-drive"></use>
+                </svg>
+                <span>My Decks</span>
+              </a>
+            </li>
+
+            <li class="side-nav__item side-nav__item">
+              <a href="#" class="side-nav__link">
+                <svg class="side-nav__icon">
+                  <use href="img/sprite.svg#icon-graduation-cap"></use>
+                </svg>
+                <span>My Classrooms</span>
+              </a>
+            </li>
+
+            <li class="side-nav__item side-nav__item">
+              <a href="#" class="side-nav__link">
+                <svg class="side-nav__icon">
+                  <use href="img/sprite.svg#icon-line-graph"></use>
+                </svg>
+                <span>My Statistics</span>
+              </a>
+            </li>
+
+            <li class="side-nav__item side-nav__item">
+              <a href="#" class="side-nav__link">
+                <svg class="side-nav__icon">
+                  <use href="img/sprite.svg#icon-cog"></use>
+                </svg>
+                <span>My Settings</span>
+              </a>
+            </li>
+          </ul>
+
+          <div class="legal">
+            &copy; 2020 by Studently. All rights reserved.
+          </div>
+        </nav>
+
+        <div class="overview">
+          <div class="make-card">
+            <a href="#" class="btn btn--ghost">Make A New Card</a>
+          </div>
+
+          <div class="card-grid">
+            <div class="card">
+              <div class="card__details">
+                <span class="name">This is what a Question should look like</span>
+              </div>
+            </div>
+  
+            <div class="card">
+              <div class="card__details">
+                <span class="name">Is light a particle or a wave? (Hint: think of light reflecting and diffracting</span>
+              </div>
+            </div>
+  
+            <div class="card">
+              <div class="card__details">
+                <span class="name">This is what an Answer should look like</span>
+              </div>
+
+              <div class="answer-form">
+                <a href="#" class="answer-form_link">
+                  <svg class="answer-form__icon answer-form__icon--right">
+                    <use href="img/sprite.svg#icon-check"></use>
+                  </svg>
+                </a>
+
+                <a href="#" class="answer-form_link">
+                  <svg class="answer-form__icon answer-form__icon--wrong">
+                    <use href="img/sprite.svg#icon-circle-with-cross"></use>
+                  </svg>
+                </a>
+              </div>
+            </div>
+  
+            <div class="card">
+              <div class="card__details">
+                <span class="name">What is a Question?</span>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card__details">
+                <span class="name">This is what an Answer should look like</span>
+              </div>
+
+              <div class="answer-form">
+                <a href="#" class="answer-form_link">
+                  <svg class="answer-form__icon answer-form__icon--right">
+                    <use href="img/sprite.svg#icon-check"></use>
+                  </svg>
+                </a>
+
+                <a href="#" class="answer-form_link">
+                  <svg class="answer-form__icon answer-form__icon--wrong">
+                    <use href="img/sprite.svg#icon-circle-with-cross"></use>
+                  </svg>
+                </a>
+              </div>
+            </div>
+
+            
+          </div>
+
+          <!-- <div class="paginate">
+            <a href="#" class="paginate__next">
+              <svg class="paginate__icon">
+                <use href="img/sprite.svg#icon-chevron-thin-left"></use>
+              </svg>
+              <span>Next</span>
+            </a>
+          </div> -->
+
+        </div>
+      </div>
+    </div>
   </body>
 </html>

@@ -1,0 +1,26 @@
+.answer-form {
+  display: flex;
+
+  &__icon {
+    width: 3.75rem;
+    height: 1.75rem;
+    transition: all 250ms;
+
+    &--right {
+      fill: $color-green-right;
+      transform: scale(1);
+
+      &:hover {
+        transform: scale(1.2);
+      }
+    }
+
+    &--wrong {
+      fill: $color-red-wrong;
+
+      &:hover {
+        transform: scale(1.2);
+      }
+    }
+  }
+}
