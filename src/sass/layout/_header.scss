@@ -8,4 +8,10 @@
   font-size: 1.4rem;
   border-bottom: $line;
   // background-color: $color-grey-light-1;
+
+  &__login {
+    & > * {
+      margin-right: 2rem;
+    }
+  }
 }

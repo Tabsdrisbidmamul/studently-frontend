@@ -5,11 +5,11 @@
 
 @import './components/side-nav';
 @import './components/user-nav';
-@import './components/login';
 @import './components/card';
 @import './components/logo';
 @import './components/button';
 @import './components/answer-form';
+@import './components/form';
 
 @import './base/base';
 @import './base/typography';
@@ -19,5 +19,6 @@
 @import './layout/sidebar';
 @import './layout/header';
 @import './layout/card-grid';
+@import './layout/login';
 
 @import './pages/home';
