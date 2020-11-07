@@ -34,14 +34,16 @@ html {
 body {
   background-image: linear-gradient(
     to right bottom,
-    $color-secondary-light,
-    $color-secondary-dark
+    $color-tertiary-1,
+    $color-tertiary-2,
+    $color-tertiary-3
   );
   background-size: cover;
   background-repeat: no-repeat;
 
   min-height: 100vh; // FIXME: REMOVE AT FINAL BUILD
   color: $color-grey-dark-2;
+  // position: relative;
 }
 
 .container {

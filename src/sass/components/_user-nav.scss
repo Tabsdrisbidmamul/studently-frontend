@@ -6,6 +6,7 @@
   align-items: center;
   justify-content: flex-end;
   backface-visibility: hidden;
+  color: $color-grey-dark-1;
 
   & > * {
     padding: 0 2rem;
@@ -29,7 +30,11 @@
   &__user-photo {
     border-radius: 50%;
     height: 3.75rem;
-    margin-right: 1rem;
+    margin-right: 2rem;
+  }
+
+  &__user-name {
+    margin-right: 1.5rem;
   }
 
   // &__dropdown {
