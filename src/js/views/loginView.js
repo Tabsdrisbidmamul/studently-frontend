@@ -1,7 +1,5 @@
 import { elements } from './base';
 
-const classes = {};
-
 export const renderLoginForm = (parent) => {
   const loginForm = `          
   <div class="login">

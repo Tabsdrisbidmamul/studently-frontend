@@ -9,8 +9,9 @@
 @import './components/logo';
 @import './components/button';
 @import './components/answer-form';
-@import './components/form';
+@import './components/login-form';
 @import './components/alert';
+@import './components/make-card';
 
 @import './base/base';
 @import './base/typography';
@@ -21,5 +22,6 @@
 @import './layout/header';
 @import './layout/card-grid';
 @import './layout/login';
+@import './layout/make-card-grid';
 
 @import './pages/home';

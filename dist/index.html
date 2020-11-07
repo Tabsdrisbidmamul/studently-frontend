@@ -17,11 +17,15 @@
         &nbsp;
 
         <div class="header__login">
-          <a href="#" class="btn">Login</a>
+          <a href="#" class="btn btn--login">Login</a>
           <a href="#" type="submit" class="btn btn--ghost">Sign up</a>
         </div>
 
         <!-- <nav class="user-nav">
+          <div class="header__login">
+            <a href="#" class="btn btn--logout">Logout</a>
+          </div>
+
           <div class="user-nav__user">
             <img
               src="img/default.png"
@@ -183,10 +187,47 @@
               </div>
             </div> -->
 
-            
+            <div class="make-card-grid">
+              <div class="card">
+                <div class="card__details">
+                  <span class="name">What is a Question?</span>
+                </div>
+              </div>
 
+              <form action="#" class="make-card__form">
+                <!-- <div class="make-card-group"> -->
+                  <label for="question" class="make-card__label">Enter Your Question</label>
+                  <textarea id="question" class="make-card__textarea make-card__textarea" wrap="off" minlength="5" maxlength="250" placeholder="Enter your question" required="true" spellcheck="true"></textarea>
+                <!-- </div> -->
+                
+                <!-- <div class="make-card__group"> -->
+                  <label for="answer" class="make-card__label">Enter Your Answer</label>
+                  <textarea id="answer" class="make-card__textarea" wrap="off" minlength="5" maxlength="250" placeholder="Enter your answer" required="true" spellcheck="true"></textarea>
+                <!-- </div> -->                
+              </form>
 
-            
+              <div class="make-card__group make-card--switch">
+                <a href="#" class="make-card__switch btn btn--switch">Turn Over</a>
+              </div>
+
+              <div class="make-card__group make-card--right">
+                <a href="#" class="make-card__link">
+                  <svg class="make-card__icon make-card__icon--right">
+                    <use xlink:href="#030794220a577069b4c9e37f7881512d"></use>
+                  </svg>
+                </a>
+                <span class="make-card__span">Create The Card</span>
+              </div>
+
+              <div class="make-card__group make-card--wrong">
+                <a href="#" class="make-card__link">
+                  <svg class="make-card__icon make-card__icon--wrong">
+                    <use xlink:href="#fcba2f951158d7741a6b4f3c6594ec67"></use>
+                  </svg>
+                </a>
+                <span class="make-card__span">Let's Stop!</span>
+              </div>
+            </div>
           </div>
 
           <!-- <div class="paginate">

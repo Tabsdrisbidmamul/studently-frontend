@@ -5,3 +5,7 @@ export const storeObj = (key, value) => {
 export const getObj = (key) => {
   return JSON.parse(window.localStorage.getItem(`${key}`));
 };
+
+export const removeObj = (key) => {
+  window.localStorage.removeItem(`${key}`);
+};

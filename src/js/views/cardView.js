@@ -4,7 +4,6 @@ import cross from '../../img/SVG/circle-with-cross.svg';
 export const renderCardGrid = (parent, cardArray) => {
   let cards = '';
   cardArray.forEach((card) => {
-    console.log(card);
     const cardMarkup = `
     <div class="card card-${card.id}" data-card=${card.id}>
       <div class="card__details">

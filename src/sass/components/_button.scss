@@ -25,6 +25,36 @@
     background-color: $color-secondary;
     color: $color-grey-light-1;
   }
+
+  &--logout:link,
+  &--logout:visited {
+    padding: 1rem 3rem;
+  }
+
+  &--switch:link,
+  &--switch:visited {
+    // background-color: $color-tertiary-2;
+    background-image: linear-gradient(
+      45deg,
+      $color-tertiary-1,
+      $color-tertiary-2,
+      $color-tertiary-3
+    );
+    color: $color-grey-light-3;
+    width: 90%;
+    transition: all 200ms;
+  }
+
+  &--switch:hover,
+  &--switch:active {
+    // background-color: $color-tertiary-1;
+    background-image: linear-gradient(
+      315deg,
+      $color-tertiary-1,
+      $color-tertiary-2,
+      $color-tertiary-3
+    );
+  }
 }
 
 .btn--btn-login {
