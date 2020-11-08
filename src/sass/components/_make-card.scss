@@ -89,24 +89,6 @@
     text-decoration: none;
   }
 
-  &__icon {
-    width: 5rem;
-    transform: scale(1);
-    transition: all 200ms;
-
-    &--right {
-      fill: $color-green-right;
-    }
-
-    &--wrong {
-      fill: $color-secondary-dark;
-    }
-
-    &:hover {
-      transform: scale(1.3);
-    }
-  }
-
   &__span {
     text-transform: uppercase;
     font-size: 1.6rem;

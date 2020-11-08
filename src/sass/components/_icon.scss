@@ -1,0 +1,42 @@
+.icon {
+  transition: all 250ms;
+
+  &--right {
+    fill: $color-green-right;
+    transform: scale(1);
+  }
+
+  &--wrong {
+    fill: $color-red-wrong;
+    transform: scale(1);
+  }
+
+  &--card {
+    width: 3.75rem;
+    height: 1.75rem;
+
+    &:hover {
+      transform: scale(1.2);
+    }
+
+    &-right {
+      margin-right: 2rem;
+    }
+  }
+
+  &--make-card {
+    width: 5rem;
+
+    // drop-shadow on svg (not working supposedly)
+    filter: drop-shadow(0 0.8rme 1rem rgba(#000, 0.2));
+    -webkit-filter: drop-shadow(0 0.8rme 1rem rgba(#000, 0.2));
+
+    &-left {
+      fill: $color-secondary-dark;
+    }
+
+    &:hover {
+      transform: scale(1.3);
+    }
+  }
+}

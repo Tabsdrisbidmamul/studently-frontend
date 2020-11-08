@@ -33,14 +33,14 @@ export const renderCardAnswer = (HTMLCard, cardData) => {
   </div>
 
   <div class="answer-form">
-    <a href="#" class="answer-form__link answer-form__icon answer-form__icon--right">
-      <svg class="answer-form__icon answer-form__icon--right">
+    <a href="#" class="answer-form__link">
+      <svg class="icon icon--card icon--card-right icon--right">
         <use xlink:href="${tick}"></use>
       </svg>
     </a>
 
-    <a href="#" class="answer-form__link answer-form__icon answer-form__icon--wrong"">
-      <svg class="answer-form__icon answer-form__icon--wrong">
+    <a href="#" class="answer-form__link">
+      <svg class="icon icon--card icon--card-left icon--wrong">
         <use xlink:href="${cross}"></use>
       </svg>
     </a>

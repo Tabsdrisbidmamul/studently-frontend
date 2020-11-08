@@ -3,7 +3,7 @@ import '../sass/main.scss';
 import * as overview from './controllers/overviewController';
 import * as alert from './controllers/alertController';
 import * as headerController from './controllers/headerController';
-import * as cardController from './controllers/cardController';
+import * as sidebarController from './controllers/sidebarController';
 /***
  * N.B
  * COOKIE WERE NOT WORKING IN DEV SERVER, SO INSTEAD USED TOKEN BASED APPROACH BY PUTTING THEM IN THE HEADERS

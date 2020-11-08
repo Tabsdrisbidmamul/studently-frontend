@@ -135,7 +135,8 @@
     background-image: linear-gradient(45deg, #ff99ac, #ff6a88, #ff9a8b);
     color: #f0eeee;
     width: 90%;
-    transition: all 200ms; }
+    transition: all 200ms;
+    box-shadow: 0 0.8rem 1rem rgba(0, 0, 0, 0.2); }
   .btn--switch:hover, .btn--switch:active {
     background-image: linear-gradient(315deg, #ff99ac, #ff6a88, #ff9a8b); }
 
@@ -156,22 +157,32 @@
     background-color: #e94560;
     color: #faf9f9; }
 
+.icon {
+  transition: all 250ms; }
+  .icon--right {
+    fill: #24a19c;
+    transform: scale(1); }
+  .icon--wrong {
+    fill: #e84a5f;
+    transform: scale(1); }
+  .icon--card {
+    width: 3.75rem;
+    height: 1.75rem; }
+    .icon--card:hover {
+      transform: scale(1.2); }
+    .icon--card-right {
+      margin-right: 2rem; }
+  .icon--make-card {
+    width: 5rem;
+    filter: drop-shadow(0 0.8rme 1rem rgba(0, 0, 0, 0.2));
+    -webkit-filter: drop-shadow(0 0.8rme 1rem rgba(0, 0, 0, 0.2)); }
+    .icon--make-card-left {
+      fill: #d11937; }
+    .icon--make-card:hover {
+      transform: scale(1.3); }
+
 .answer-form {
   display: flex; }
-  .answer-form__icon {
-    width: 3.75rem;
-    height: 1.75rem;
-    transition: all 250ms; }
-    .answer-form__icon--right {
-      margin-right: 2rem;
-      fill: #24a19c;
-      transform: scale(1); }
-      .answer-form__icon--right:hover {
-        transform: scale(1.2); }
-    .answer-form__icon--wrong {
-      fill: #e84a5f; }
-      .answer-form__icon--wrong:hover {
-        transform: scale(1.2); }
 
 .form {
   display: flex;
@@ -329,17 +340,6 @@
 
 .make-card__link:link, .make-card__link:visited {
   text-decoration: none; }
-
-.make-card__icon {
-  width: 5rem;
-  transform: scale(1);
-  transition: all 200ms; }
-  .make-card__icon--right {
-    fill: #24a19c; }
-  .make-card__icon--wrong {
-    fill: #d11937; }
-  .make-card__icon:hover {
-    transform: scale(1.3); }
 
 .make-card__span {
   text-transform: uppercase;

@@ -1,8 +1,14 @@
 import { elements } from './base';
 import image from '../../img/default.png';
+import * as storage from '../utils/localStorage';
 
 // TODO: Add user data as args into this func
-export const renderHeaderLogin = () => {
+export const renderHeaderLogin = (user) => {
+  // FIXME: User value comes up undefined when they login due to promise
+  if (!user) {
+    user = storage.getObj('user');
+  }
+
   const markup = `
   &nbsp;
   <nav class="user-nav">
@@ -12,11 +18,11 @@ export const renderHeaderLogin = () => {
 
     <div class="user-nav__user">
       <img
-        src="${image}"
-        alt="User Photo"
+        src="https://polar-savannah-53668.herokuapp.com/img/users/${user.photo}"
+        alt="${user.name} Photo"
         class="user-nav__user-photo"
       />
-      <span class="user-nav__user-name">Jo Mama</span>
+      <span class="user-nav__user-name">${user.name}</span>
     </div>
 </nav>`;
 

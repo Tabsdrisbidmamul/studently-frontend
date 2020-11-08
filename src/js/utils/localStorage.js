@@ -1,5 +1,5 @@
 export const storeObj = (key, value) => {
-  return window.localStorage.setItem(`${key}`, JSON.stringify(value));
+  window.localStorage.setItem(`${key}`, JSON.stringify(value));
 };
 
 export const getObj = (key) => {
@@ -7,5 +7,5 @@ export const getObj = (key) => {
 };
 
 export const removeObj = (key) => {
-  window.localStorage.removeItem(`${key}`);
+  return window.localStorage.removeItem(`${key}`);
 };
