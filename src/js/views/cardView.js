@@ -7,7 +7,7 @@ export const renderCardGrid = (parent, cardArray) => {
     const cardMarkup = `
     <div class="card card-${card.id}" data-card=${card.id}>
       <div class="card__details">
-        <span class="name">${card.question}</span>
+        <div class="name">${card.question}</div>
       </div>
     </div>
     `;
@@ -26,10 +26,10 @@ export const renderCardGrid = (parent, cardArray) => {
   parent.insertAdjacentHTML('afterbegin', markup);
 };
 
-export const renderCardAnswer = (HTMLCard, cardData) => {
+export const renderCardAnswer = (HTMLCard, answer) => {
   const markup = `
   <div class="card__details">
-    <span class="name">${cardData.answer}</span>
+    <div class="card__name">${answer}</div>
   </div>
 
   <div class="answer-form">
@@ -49,12 +49,55 @@ export const renderCardAnswer = (HTMLCard, cardData) => {
   HTMLCard.innerHTML = markup;
 };
 
-export const renderCardQuestion = (HTMLCard, cardData) => {
+export const renderCardQuestion = (HTMLCard, question) => {
   const markup = `
   <div class="card__details">
-    <span class="name">${cardData.question}</span>
+    <div class="card__name">${question}</div>
   </div>
   `;
 
   HTMLCard.innerHTML = markup;
+};
+
+export const renderMakeCardGrid = (parent) => {
+  const markup = `<div class="make-card-grid">
+  <div class="card card--make">
+    <div class="card__details">
+      <span class="name">What is a Question?</span>
+    </div>
+  </div>
+
+  <form action="#" class="make-card__form">
+      <label for="question" class="make-card__label">Enter Your Question</label>
+      <textarea id="question" class="make-card__textarea textarea-q" wrap="on" minlength="5" maxlength="150" placeholder="Enter your question" required="true" spellcheck="true"></textarea>
+    
+      <label for="answer" class="make-card__label">Enter Your Answer</label>
+      <textarea id="answer" class="make-card__textarea textarea-a" wrap="on" minlength="5" maxlength="150" placeholder="Enter your answer" required="true" spellcheck="true"></textarea>
+  </form>
+
+  <div class="make-card__group make-card--switch">
+    <a href="#" class="make-card__switch btn btn--switch">Turn Over</a>
+  </div>
+
+  <div class="make-card__group make-card--right">
+    <a href="#" class="make-card__link">
+      <svg class="icon icon--make-card icon--make-card-right icon--right">
+        <use href="${tick}"></use>
+      </svg>
+    </a>
+    <span class="make-card__span">Create The Card</span>
+  </div>
+
+  <div class="make-card__group make-card--wrong">
+    <a href="#" class="make-card__link">
+      <svg class="icon icon--make-card icon--make-card-left icon-left icon--wrong">
+        <use href="${cross}"></use>
+      </svg>
+    </a>
+    <span class="make-card__span">Let's Stop!</span>
+  </div>
+</div>
+`;
+
+  parent.insertAdjacentHTML('afterbegin', markup);
 };

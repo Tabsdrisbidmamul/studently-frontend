@@ -94,6 +94,10 @@
     text-transform: uppercase;
     padding: 0 2rem;
     color: #999; }
+  .card__name {
+    display: inline-block;
+    width: 100%;
+    word-break: break-word; }
   .card:hover {
     transform: scale(1.03); }
 
@@ -173,9 +177,7 @@
     .icon--card-right {
       margin-right: 2rem; }
   .icon--make-card {
-    width: 5rem;
-    filter: drop-shadow(0 0.8rme 1rem rgba(0, 0, 0, 0.2));
-    -webkit-filter: drop-shadow(0 0.8rme 1rem rgba(0, 0, 0, 0.2)); }
+    width: 5rem; }
     .icon--make-card-left {
       fill: #d11937; }
     .icon--make-card:hover {
@@ -271,7 +273,8 @@
   color: #faf9f9;
   font-size: 2rem;
   font-weight: 300;
-  width: 30vw;
+  max-width: 50vw;
+  word-break: break-word;
   text-align: center; }
   .alert-type--success {
     background-color: #24a19c; }
@@ -389,6 +392,7 @@ body {
   height: 70rem;
   background-color: #e94560;
   overflow-y: scroll;
+  overflow-x: hidden;
   flex-grow: 1;
   position: relative; }
 

@@ -28,8 +28,8 @@
     width: 5rem;
 
     // drop-shadow on svg (not working supposedly)
-    filter: drop-shadow(0 0.8rme 1rem rgba(#000, 0.2));
-    -webkit-filter: drop-shadow(0 0.8rme 1rem rgba(#000, 0.2));
+    // filter: drop-shadow(0 0.8rme 1rem rgba(#000, 0.2));
+    // -webkit-filter: drop-shadow(0 0.8rme 1rem rgba(#000, 0.2));
 
     &-left {
       fill: $color-secondary-dark;

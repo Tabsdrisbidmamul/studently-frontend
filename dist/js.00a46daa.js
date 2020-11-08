@@ -6721,7 +6721,7 @@ module.exports = '#fcba2f951158d7741a6b4f3c6594ec67';
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.renderCardQuestion = exports.renderCardAnswer = exports.renderCardGrid = void 0;
+exports.renderMakeCardGrid = exports.renderCardQuestion = exports.renderCardAnswer = exports.renderCardGrid = void 0;
 
 var _check = _interopRequireDefault(require("../../img/SVG/check.svg"));
 
@@ -6732,7 +6732,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var renderCardGrid = function renderCardGrid(parent, cardArray) {
   var cards = '';
   cardArray.forEach(function (card) {
-    var cardMarkup = "\n    <div class=\"card card-".concat(card.id, "\" data-card=").concat(card.id, ">\n      <div class=\"card__details\">\n        <span class=\"name\">").concat(card.question, "</span>\n      </div>\n    </div>\n    ");
+    var cardMarkup = "\n    <div class=\"card card-".concat(card.id, "\" data-card=").concat(card.id, ">\n      <div class=\"card__details\">\n        <div class=\"name\">").concat(card.question, "</div>\n      </div>\n    </div>\n    ");
     cards += cardMarkup;
   });
   var markup = "\n  <div class=\"make-card\">\n    <a href=\"#\" class=\"btn btn--ghost\">Make A New Card</a>\n  </div>\n\n  <div class=\"card-grid\">\n      ".concat(cards, "\n  </div>");
@@ -6741,19 +6741,26 @@ var renderCardGrid = function renderCardGrid(parent, cardArray) {
 
 exports.renderCardGrid = renderCardGrid;
 
-var renderCardAnswer = function renderCardAnswer(HTMLCard, cardData) {
-  var markup = "\n  <div class=\"card__details\">\n    <span class=\"name\">".concat(cardData.answer, "</span>\n  </div>\n\n  <div class=\"answer-form\">\n    <a href=\"#\" class=\"answer-form__link\">\n      <svg class=\"icon icon--card icon--card-right icon--right\">\n        <use xlink:href=\"").concat(_check.default, "\"></use>\n      </svg>\n    </a>\n\n    <a href=\"#\" class=\"answer-form__link\">\n      <svg class=\"icon icon--card icon--card-left icon--wrong\">\n        <use xlink:href=\"").concat(_circleWithCross.default, "\"></use>\n      </svg>\n    </a>\n  ");
+var renderCardAnswer = function renderCardAnswer(HTMLCard, answer) {
+  var markup = "\n  <div class=\"card__details\">\n    <div class=\"card__name\">".concat(answer, "</div>\n  </div>\n\n  <div class=\"answer-form\">\n    <a href=\"#\" class=\"answer-form__link\">\n      <svg class=\"icon icon--card icon--card-right icon--right\">\n        <use xlink:href=\"").concat(_check.default, "\"></use>\n      </svg>\n    </a>\n\n    <a href=\"#\" class=\"answer-form__link\">\n      <svg class=\"icon icon--card icon--card-left icon--wrong\">\n        <use xlink:href=\"").concat(_circleWithCross.default, "\"></use>\n      </svg>\n    </a>\n  ");
   HTMLCard.innerHTML = markup;
 };
 
 exports.renderCardAnswer = renderCardAnswer;
 
-var renderCardQuestion = function renderCardQuestion(HTMLCard, cardData) {
-  var markup = "\n  <div class=\"card__details\">\n    <span class=\"name\">".concat(cardData.question, "</span>\n  </div>\n  ");
+var renderCardQuestion = function renderCardQuestion(HTMLCard, question) {
+  var markup = "\n  <div class=\"card__details\">\n    <div class=\"card__name\">".concat(question, "</div>\n  </div>\n  ");
   HTMLCard.innerHTML = markup;
 };
 
 exports.renderCardQuestion = renderCardQuestion;
+
+var renderMakeCardGrid = function renderMakeCardGrid(parent) {
+  var markup = "<div class=\"make-card-grid\">\n  <div class=\"card card--make\">\n    <div class=\"card__details\">\n      <span class=\"name\">What is a Question?</span>\n    </div>\n  </div>\n\n  <form action=\"#\" class=\"make-card__form\">\n      <label for=\"question\" class=\"make-card__label\">Enter Your Question</label>\n      <textarea id=\"question\" class=\"make-card__textarea textarea-q\" wrap=\"on\" minlength=\"5\" maxlength=\"150\" placeholder=\"Enter your question\" required=\"true\" spellcheck=\"true\"></textarea>\n    \n      <label for=\"answer\" class=\"make-card__label\">Enter Your Answer</label>\n      <textarea id=\"answer\" class=\"make-card__textarea textarea-a\" wrap=\"on\" minlength=\"5\" maxlength=\"150\" placeholder=\"Enter your answer\" required=\"true\" spellcheck=\"true\"></textarea>\n  </form>\n\n  <div class=\"make-card__group make-card--switch\">\n    <a href=\"#\" class=\"make-card__switch btn btn--switch\">Turn Over</a>\n  </div>\n\n  <div class=\"make-card__group make-card--right\">\n    <a href=\"#\" class=\"make-card__link\">\n      <svg class=\"icon icon--make-card icon--make-card-right icon--right\">\n        <use href=\"".concat(_check.default, "\"></use>\n      </svg>\n    </a>\n    <span class=\"make-card__span\">Create The Card</span>\n  </div>\n\n  <div class=\"make-card__group make-card--wrong\">\n    <a href=\"#\" class=\"make-card__link\">\n      <svg class=\"icon icon--make-card icon--make-card-left icon-left icon--wrong\">\n        <use href=\"").concat(_circleWithCross.default, "\"></use>\n      </svg>\n    </a>\n    <span class=\"make-card__span\">Let's Stop!</span>\n  </div>\n</div>\n");
+  parent.insertAdjacentHTML('afterbegin', markup);
+};
+
+exports.renderMakeCardGrid = renderMakeCardGrid;
 },{"../../img/SVG/check.svg":"img/SVG/check.svg","../../img/SVG/circle-with-cross.svg":"img/SVG/circle-with-cross.svg"}],"js/utils/localStorage.js":[function(require,module,exports) {
 "use strict";
 
@@ -6779,7 +6786,34 @@ var removeObj = function removeObj(key) {
 };
 
 exports.removeObj = removeObj;
-},{}],"../node_modules/axios/lib/helpers/bind.js":[function(require,module,exports) {
+},{}],"js/utils/alert.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.hideAlert = exports.showAlert = void 0;
+
+var _base = require("../views/base");
+
+var showAlert = function showAlert(type, msg) {
+  hideAlert();
+  var alertMarkup = "<div class=\"alert alert-type--".concat(type, "\">").concat(msg, "<a href=\"#\" class=\"cross\">&Cross;</a></div> ");
+  document.querySelector('body').insertAdjacentHTML('afterbegin', alertMarkup);
+  window.setTimeout(function () {
+    return hideAlert;
+  }, 1000);
+};
+
+exports.showAlert = showAlert;
+
+var hideAlert = function hideAlert() {
+  var alert = document.querySelector('.alert');
+  if (alert) alert.remove();
+};
+
+exports.hideAlert = hideAlert;
+},{"../views/base":"js/views/base.js"}],"../node_modules/axios/lib/helpers/bind.js":[function(require,module,exports) {
 'use strict';
 
 module.exports = function bind(fn, thisArg) {
@@ -8563,34 +8597,7 @@ module.exports.default = axios;
 
 },{"./utils":"../node_modules/axios/lib/utils.js","./helpers/bind":"../node_modules/axios/lib/helpers/bind.js","./core/Axios":"../node_modules/axios/lib/core/Axios.js","./core/mergeConfig":"../node_modules/axios/lib/core/mergeConfig.js","./defaults":"../node_modules/axios/lib/defaults.js","./cancel/Cancel":"../node_modules/axios/lib/cancel/Cancel.js","./cancel/CancelToken":"../node_modules/axios/lib/cancel/CancelToken.js","./cancel/isCancel":"../node_modules/axios/lib/cancel/isCancel.js","./helpers/spread":"../node_modules/axios/lib/helpers/spread.js"}],"../node_modules/axios/index.js":[function(require,module,exports) {
 module.exports = require('./lib/axios');
-},{"./lib/axios":"../node_modules/axios/lib/axios.js"}],"js/utils/alert.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.hideAlert = exports.showAlert = void 0;
-
-var _base = require("../views/base");
-
-var showAlert = function showAlert(type, msg) {
-  hideAlert();
-  var alertMarkup = "<div class=\"alert alert-type--".concat(type, "\">").concat(msg, "<a href=\"#\" class=\"cross\">&Cross;</a></div> ");
-  document.querySelector('body').insertAdjacentHTML('afterbegin', alertMarkup);
-  window.setTimeout(function () {
-    return hideAlert;
-  }, 1000);
-};
-
-exports.showAlert = showAlert;
-
-var hideAlert = function hideAlert() {
-  var alert = document.querySelector('.alert');
-  if (alert) alert.remove();
-};
-
-exports.hideAlert = hideAlert;
-},{"../views/base":"js/views/base.js"}],"js/models/cardModel.js":[function(require,module,exports) {
+},{"./lib/axios":"../node_modules/axios/lib/axios.js"}],"js/models/cardModel.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -8623,7 +8630,7 @@ var Card = /*#__PURE__*/function () {
     key: "getCards",
     value: function () {
       var _getCards = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(token) {
-        var res;
+        var res, message;
         return regeneratorRuntime.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
@@ -8643,8 +8650,8 @@ var Card = /*#__PURE__*/function () {
               case 7:
                 _context.prev = 7;
                 _context.t0 = _context["catch"](0);
-                console.log(_context.t0);
-                (0, _alert.showAlert)('error', _context.t0.message);
+                message = _context.t0.response.data.message;
+                (0, _alert.showAlert)('error', message);
 
               case 11:
               case "end":
@@ -8660,6 +8667,57 @@ var Card = /*#__PURE__*/function () {
 
       return getCards;
     }()
+  }, {
+    key: "createCard",
+    value: function () {
+      var _createCard = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(question, answer, user, token) {
+        var res, message;
+        return regeneratorRuntime.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                _context2.prev = 0;
+                _context2.next = 3;
+                return _axios.default.post('https://polar-savannah-53668.herokuapp.com/api/v0/cards', {
+                  question: question,
+                  answer: answer,
+                  user: user
+                }, {
+                  headers: {
+                    Authorization: "Bearer ".concat(token)
+                  }
+                });
+
+              case 3:
+                res = _context2.sent;
+
+                if (res.data.status === 'success') {
+                  (0, _alert.showAlert)('success', 'Card was created');
+                }
+
+                _context2.next = 11;
+                break;
+
+              case 7:
+                _context2.prev = 7;
+                _context2.t0 = _context2["catch"](0);
+                message = _context2.t0.response.data.message;
+                (0, _alert.showAlert)('error', message);
+
+              case 11:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2, null, [[0, 7]]);
+      }));
+
+      function createCard(_x2, _x3, _x4, _x5) {
+        return _createCard.apply(this, arguments);
+      }
+
+      return createCard;
+    }()
   }]);
 
   return Card;
@@ -8672,13 +8730,15 @@ exports.default = Card;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.cardLoader = exports.cardRender = exports.getCardsFromAPI = exports.cardLoaderAndRender = void 0;
+exports.cardMakerLoader = exports.cardLoader = exports.cardRender = exports.getCardsFromAPI = exports.cardLoaderAndRender = void 0;
 
 var _base = require("../views/base");
 
 var cardView = _interopRequireWildcard(require("../views/cardView"));
 
 var storage = _interopRequireWildcard(require("../utils/localStorage"));
+
+var _alert = require("../utils/alert");
 
 var _cardModel = _interopRequireDefault(require("../models/cardModel"));
 
@@ -8787,16 +8847,82 @@ var cardLoader = function cardLoader(e) {
       }); // 4. check if the card is a question card or an answer card
 
       if (click.children.length > 1) {
-        cardView.renderCardQuestion(document.querySelector(".card-".concat(cardId)), cardData[0]);
+        cardView.renderCardQuestion(document.querySelector(".card-".concat(cardId)), cardData[0].question);
       } else {
-        cardView.renderCardAnswer(document.querySelector(".card-".concat(cardId)), cardData[0]);
+        cardView.renderCardAnswer(document.querySelector(".card-".concat(cardId)), cardData[0].answer);
       }
     } catch (err) {}
   }
-};
+}; //
+
 
 exports.cardLoader = cardLoader;
-},{"../views/base":"js/views/base.js","../views/cardView":"js/views/cardView.js","../utils/localStorage":"js/utils/localStorage.js","../models/cardModel":"js/models/cardModel.js","./overviewController":"js/controllers/overviewController.js"}],"img/default.png":[function(require,module,exports) {
+
+var QAndAValueChanger = function QAndAValueChanger(e) {
+  // 1. question box update the value in real time to the card
+  document.querySelector('.textarea-q').addEventListener('input', function (e) {
+    cardView.renderCardQuestion(document.querySelector('.card--make'), document.querySelector('.textarea-q').value);
+  }); // 2. answer box update the value in real time to the card
+
+  document.querySelector('.textarea-a').addEventListener('input', function (e) {
+    cardView.renderCardQuestion(document.querySelector('.card--make'), document.querySelector('.textarea-a').value);
+  });
+};
+
+var swapCardFacing = function swapCardFacing(e) {
+  // 1. set the boolean for card facing
+  var cardFacing = 'question'; // 2. swap card facing side
+
+  document.querySelector('.btn--switch').addEventListener('click', function (e) {
+    var textareaBox = '.textarea-q';
+
+    if (cardFacing === 'question') {
+      textareaBox = '.textarea-q';
+      cardFacing = 'answer';
+    } else {
+      textareaBox = '.textarea-a';
+      cardFacing = 'question';
+    }
+
+    cardView.renderCardQuestion(document.querySelector('.card--make'), document.querySelector(textareaBox).value);
+  });
+};
+
+var createCard = function createCard(e) {
+  // User clicks to create the card
+  document.querySelector('.icon--make-card-right').addEventListener('click', function (e) {
+    var question = document.querySelector('.textarea-q').value;
+    var answer = document.querySelector('.textarea-a').value;
+
+    var user = storage.getObj('user') || _overviewController.state.user.userData.id;
+
+    if (question && answer && user) {
+      _overviewController.state.card.createCard(question, answer, user, storage.getObj('token'));
+    } else {
+      (0, _alert.showAlert)('error', 'Please enter a question and an answer');
+    }
+  });
+};
+
+var cancelCardMaker = function cancelCardMaker(e) {
+  // User clicks to cancel the card creation
+  document.querySelector('.icon--make-card-left').addEventListener('click', function (e) {
+    (0, _base.clearOverview)();
+    cardRender(_base.elements.overview, _overviewController.state.card.cards);
+  });
+};
+
+var cardMakerLoader = function cardMakerLoader(e) {
+  (0, _base.clearOverview)();
+  cardView.renderMakeCardGrid(_base.elements.overview);
+  QAndAValueChanger(e);
+  swapCardFacing(e);
+  createCard(e);
+  cancelCardMaker(e);
+};
+
+exports.cardMakerLoader = cardMakerLoader;
+},{"../views/base":"js/views/base.js","../views/cardView":"js/views/cardView.js","../utils/localStorage":"js/utils/localStorage.js","../utils/alert":"js/utils/alert.js","../models/cardModel":"js/models/cardModel.js","./overviewController":"js/controllers/overviewController.js"}],"img/default.png":[function(require,module,exports) {
 module.exports = "/default.6c87049f.png";
 },{}],"js/views/headerView.js":[function(require,module,exports) {
 "use strict";
@@ -8933,10 +9059,7 @@ var User = /*#__PURE__*/function () {
       }
 
       return login;
-    }() // getToken() {
-    //   return this.token;
-    // }
-
+    }()
   }, {
     key: "getMe",
     value: function () {
@@ -9095,6 +9218,14 @@ var _userModel = _interopRequireDefault(require("../models/userModel"));
 
 var _cardModel = _interopRequireDefault(require("../models/cardModel"));
 
+var storage = _interopRequireWildcard(require("../utils/localStorage"));
+
+var cardView = _interopRequireWildcard(require("../views/cardView"));
+
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -9120,7 +9251,54 @@ _base.elements.overview.addEventListener('click', /*#__PURE__*/function () {
             } else if (e.target.closest('.card')) {
               (0, _cardController.cardLoader)(e); // User click 'make a new card' button in card homepage
             } else if (e.target.closest('.make-card')) {
-              console.log("we're in");
+              (0, _cardController.cardMakerLoader)(e); // // set the boolean for card facing
+              // let cardFacing = 'question';
+              // // question box update the value in real time to the card
+              // document.querySelector('.textarea-q').addEventListener('input', (e) => {
+              //   cardView.renderCardQuestion(
+              //     document.querySelector('.card--make'),
+              //     document.querySelector('.textarea-q').value
+              //   );
+              // });
+              // // answer box update the value in real time to the card
+              // document.querySelector('.textarea-a').addEventListener('input', (e) => {
+              //   cardView.renderCardQuestion(
+              //     document.querySelector('.card--make'),
+              //     document.querySelector('.textarea-a').value
+              //   );
+              // });
+              // // swap card facing side
+              // document.querySelector('.btn--switch').addEventListener('click', (e) => {
+              //   let textareaBox = '.textarea-q';
+              //   if (cardFacing === 'question') {
+              //     textareaBox = '.textarea-q';
+              //     cardFacing = 'answer';
+              //   } else {
+              //     textareaBox = '.textarea-a';
+              //     cardFacing = 'question';
+              //   }
+              //   cardView.renderCardQuestion(
+              //     document.querySelector('.card--make'),
+              //     document.querySelector(textareaBox).value
+              //   );
+              // });
+              // // User clicks to create the card
+              // document
+              //   .querySelector('.icon--make-card-right')
+              //   .addEventListener('click', (e) => {
+              //     console.log("we're in");
+              //     const question = document.querySelector('.textarea-q').value;
+              //     const answer = document.querySelector('.textarea-a').value;
+              //     const user = storage.getObj('user') || state.user.userData.id;
+              //     state.card.createCard(question, answer, user, storage.getObj('token'));
+              //   });
+              // // User clicks to cancel the card creation
+              // document
+              //   .querySelector('.icon--make-card-left')
+              //   .addEventListener('click', (e) => {
+              //     clearOverview();
+              //     cardRender(elements.overview, state.card.cards);
+              //   });
             }
 
           case 1:
@@ -9135,7 +9313,7 @@ _base.elements.overview.addEventListener('click', /*#__PURE__*/function () {
     return _ref.apply(this, arguments);
   };
 }());
-},{"../views/base":"js/views/base.js","./cardController":"js/controllers/cardController.js","./loginHandler":"js/controllers/loginHandler.js","../models/userModel":"js/models/userModel.js","../models/cardModel":"js/models/cardModel.js"}],"js/controllers/alertController.js":[function(require,module,exports) {
+},{"../views/base":"js/views/base.js","./cardController":"js/controllers/cardController.js","./loginHandler":"js/controllers/loginHandler.js","../models/userModel":"js/models/userModel.js","../models/cardModel":"js/models/cardModel.js","../utils/localStorage":"js/utils/localStorage.js","../views/cardView":"js/views/cardView.js"}],"js/controllers/alertController.js":[function(require,module,exports) {
 "use strict";
 
 var _alert = require("../utils/alert");
@@ -9569,7 +9747,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "53823" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61177" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

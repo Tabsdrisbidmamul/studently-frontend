@@ -28,10 +28,6 @@ export default class User {
     }
   }
 
-  // getToken() {
-  //   return this.token;
-  // }
-
   async getMe() {
     if (this.token || storage.getObj('token')) {
       try {

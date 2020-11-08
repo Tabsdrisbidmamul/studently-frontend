@@ -21,6 +21,12 @@
     color: $color-grey-dark-3;
   }
 
+  &__name {
+    display: inline-block;
+    width: 100%;
+    word-break: break-word;
+  }
+
   &:hover {
     transform: scale(1.03);
   }
