@@ -29,6 +29,7 @@ const loginHandler = (e) => {
 };
 
 // When the user interacts with cards in the overview
+//TODO: ADD CATCHING FOR THE ERROR ON CARD_DATA
 const cardLoader = (e) => {
   const click = e.target.closest('.card');
   if (e.target.matches('.card, .card *')) {
