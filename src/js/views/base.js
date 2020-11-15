@@ -3,6 +3,7 @@ export const elements = {
   header: document.querySelector('header'),
   overview: document.querySelector('.overview'),
   card: document.querySelector('.side-nav-card'),
+  deck: document.querySelector('.side-nav-deck'),
 };
 
 export const clearOverview = () => {

@@ -11,6 +11,7 @@ export const state = {};
 // Create all instance of the model when the application starts
 state.user = new User();
 state.card = new Card();
+state.deck = new Deck();
 
 // FIXME: REFACTOR THIS PIECE OF SHIT
 // Overview Handler

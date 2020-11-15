@@ -6698,7 +6698,8 @@ var elements = {
   headerLoginBtn: document.querySelector('.header__login'),
   header: document.querySelector('header'),
   overview: document.querySelector('.overview'),
-  card: document.querySelector('.side-nav-card')
+  card: document.querySelector('.side-nav-card'),
+  deck: document.querySelector('.side-nav-deck')
 };
 exports.elements = elements;
 
@@ -9236,7 +9237,8 @@ var state = {}; // Create all instance of the model when the application starts
 
 exports.state = state;
 state.user = new _userModel.default();
-state.card = new _cardModel.default(); // FIXME: REFACTOR THIS PIECE OF SHIT
+state.card = new _cardModel.default();
+state.deck = new Deck(); // FIXME: REFACTOR THIS PIECE OF SHIT
 // Overview Handler
 
 _base.elements.overview.addEventListener('click', /*#__PURE__*/function () {
@@ -9396,6 +9398,56 @@ _base.elements.card.addEventListener('click', /*#__PURE__*/function () {
 
   return function (_x) {
     return _ref.apply(this, arguments);
+  };
+}()); // User clicks 'MY DECKS' in the sidebar nav
+
+
+_base.elements.deck.addEventListener('click', /*#__PURE__*/function () {
+  var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(e) {
+    return regeneratorRuntime.wrap(function _callee2$(_context2) {
+      while (1) {
+        switch (_context2.prev = _context2.next) {
+          case 0:
+            _context2.prev = 0;
+            // 1. Clear the overview page
+            (0, _base.clearOverview)(); // 2. Check if the user is authenticated
+
+            if (!(storage.getObj('token') || _overviewController.state.user)) {
+              _context2.next = 8;
+              break;
+            }
+
+            _context2.next = 5;
+            return getDecksFromAPI();
+
+          case 5:
+            deckRender(); // 2.1 Tell them to login
+
+            _context2.next = 9;
+            break;
+
+          case 8:
+            throw new Error('You are not logged in');
+
+          case 9:
+            _context2.next = 14;
+            break;
+
+          case 11:
+            _context2.prev = 11;
+            _context2.t0 = _context2["catch"](0);
+            (0, _alert.showAlert)('error', _context2.t0.message);
+
+          case 14:
+          case "end":
+            return _context2.stop();
+        }
+      }
+    }, _callee2, null, [[0, 11]]);
+  }));
+
+  return function (_x2) {
+    return _ref2.apply(this, arguments);
   };
 }());
 },{"../views/base":"js/views/base.js","./cardController":"js/controllers/cardController.js","./overviewController":"js/controllers/overviewController.js","../utils/alert":"js/utils/alert.js","../utils/localStorage":"js/utils/localStorage.js"}],"js/index.js":[function(require,module,exports) {
@@ -9700,7 +9752,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "63767" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "59979" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
