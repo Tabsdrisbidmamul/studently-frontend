@@ -4,6 +4,7 @@ export const elements = {
   overview: document.querySelector('.overview'),
   card: document.querySelector('.side-nav-card'),
   deck: document.querySelector('.side-nav-deck'),
+  classroom: document.querySelector('.side-nav-classroom'),
 };
 
 export const clearOverview = () => {

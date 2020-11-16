@@ -13,6 +13,10 @@
 @import './components/login-form';
 @import './components/alert';
 @import './components/make-card';
+@import './components/deck';
+@import './components/make-deck';
+@import './components/classroom';
+@import './components/make-classroom';
 
 @import './base/base';
 @import './base/typography';
@@ -24,5 +28,9 @@
 @import './layout/card-grid';
 @import './layout/login';
 @import './layout/make-card-grid';
+@import './layout/deck-grid';
+@import './layout/make-deck-grid';
+@import './layout/classroom-grid';
+@import './layout/make-classroom-grid';
 
 @import './pages/home';

@@ -3,8 +3,10 @@ import { cardLoader, cardRender, cardMakerLoader } from './cardController';
 import { loginHandler } from './loginHandler';
 import User from '../models/userModel';
 import Card from '../models/cardModel';
+import Deck from '../models/deckModel';
 import * as storage from '../utils/localStorage';
 import * as cardView from '../views/cardView';
+import * as deckView from '../views/deckView';
 
 export const state = {};
 

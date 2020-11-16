@@ -6699,7 +6699,8 @@ var elements = {
   header: document.querySelector('header'),
   overview: document.querySelector('.overview'),
   card: document.querySelector('.side-nav-card'),
-  deck: document.querySelector('.side-nav-deck')
+  deck: document.querySelector('.side-nav-deck'),
+  classroom: document.querySelector('.side-nav-classroom')
 };
 exports.elements = elements;
 
@@ -9201,7 +9202,160 @@ var loginHandler = /*#__PURE__*/function () {
 }();
 
 exports.loginHandler = loginHandler;
-},{"../views/base":"js/views/base.js","./overviewController":"js/controllers/overviewController.js","../views/headerView":"js/views/headerView.js","./cardController":"js/controllers/cardController.js","../models/userModel":"js/models/userModel.js"}],"js/controllers/overviewController.js":[function(require,module,exports) {
+},{"../views/base":"js/views/base.js","./overviewController":"js/controllers/overviewController.js","../views/headerView":"js/views/headerView.js","./cardController":"js/controllers/cardController.js","../models/userModel":"js/models/userModel.js"}],"js/models/deckModel.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _axios = _interopRequireDefault(require("axios"));
+
+var _alert = require("../utils/alert");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var Deck = /*#__PURE__*/function () {
+  function Deck() {
+    _classCallCheck(this, Deck);
+  }
+
+  _createClass(Deck, [{
+    key: "getDecks",
+    value: function () {
+      var _getDecks = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(token) {
+        var res, message;
+        return regeneratorRuntime.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _context.prev = 0;
+                _context.next = 3;
+                return _axios.default.get('https://polar-savannah-53668.herokuapp.com/api/v0/users/my-decks', {
+                  headers: {
+                    Authorization: "Bearer ".concat(token)
+                  }
+                });
+
+              case 3:
+                res = _context.sent;
+                return _context.abrupt("return", res.data.data.deck);
+
+              case 7:
+                _context.prev = 7;
+                _context.t0 = _context["catch"](0);
+                message = _context.t0.response.data.message;
+                (0, _alert.showAlert)('error', message);
+
+              case 11:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, null, [[0, 7]]);
+      }));
+
+      function getDecks(_x) {
+        return _getDecks.apply(this, arguments);
+      }
+
+      return getDecks;
+    }()
+  }, {
+    key: "createCard",
+    value: function () {
+      var _createCard = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(name, user, token) {
+        var res, message;
+        return regeneratorRuntime.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                _context2.prev = 0;
+                _context2.next = 3;
+                return _axios.default.post('https://polar-savannah-53668.herokuapp.com/api/v0/cards', {
+                  name: name,
+                  user: user
+                }, {
+                  headers: {
+                    Authorization: "Bearer ".concat(token)
+                  }
+                });
+
+              case 3:
+                res = _context2.sent;
+
+                if (res.data.status === 'success') {
+                  (0, _alert.showAlert)('success', 'Deck was created');
+                }
+
+                _context2.next = 11;
+                break;
+
+              case 7:
+                _context2.prev = 7;
+                _context2.t0 = _context2["catch"](0);
+                message = _context2.t0.response.data.message;
+                (0, _alert.showAlert)('error', message);
+
+              case 11:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2, null, [[0, 7]]);
+      }));
+
+      function createCard(_x2, _x3, _x4) {
+        return _createCard.apply(this, arguments);
+      }
+
+      return createCard;
+    }()
+  }]);
+
+  return Deck;
+}();
+
+exports.default = Deck;
+},{"axios":"../node_modules/axios/index.js","../utils/alert":"js/utils/alert.js"}],"js/views/deckView.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.renderMakeDeckGrid = exports.renderDeckGrid = void 0;
+
+var renderDeckGrid = function renderDeckGrid(parent, deckArray) {
+  var decks = '';
+  deckArray.forEach(function (deck) {
+    var deckMarkup = "\n        <div class=\"deck deck-".concat(deck.id, "\" data-deck=").concat(deck.id, ">\n            <div class=\"deck__details\">\n                <div class=\"name\">").concat(deck.name, "</div>\n            </div>\n        </div> \n        ");
+    decks += deckMarkup;
+  });
+  var markup = "\n    <div class=\"make-deck\">\n        <a href=\"#\" class=\"btn btn--ghost\">Make A New Deck</a>\n    </div>\n\n    <div class=\"deck-grid\">\n        ".concat(decks, "\n    </div>;");
+  parent.insertAdjacentHTML('afterbegin', markup);
+}; // Deck Grid here
+
+
+exports.renderDeckGrid = renderDeckGrid;
+
+var renderMakeDeckGrid = function renderMakeDeckGrid(parent) {
+  var markup = "<div class=\"make-deck-grid\">\n\n  <form action=\"#\" class=\"make-deck__form\">\n      <label for=\"deck-name\" class=\"make-deck__label\">Enter Deck name</label>\n      <textarea id=\"deck-name\" class=\"make-deck__textarea  textarea-q\" wrap=\"off\" minlength=\"5\" maxlength=\"250\" placeholder=\"Enter your deck name\" required=\"true\" spellcheck=\"true\"></textarea>\n  </form>\n\n  <div class=\"make-deck__group make-deck--right\">\n    <a href=\"#\" class=\"make-deck__link\">\n      <svg class=\"icon icon--make-deck icon--make-card-right icon--right\">\n        <use href=\"img/SVG/check.svg\"></use>\n      </svg>\n    </a>\n    <span class=\"make-deck__span\">Create The Deck</span>\n  </div>\n\n  <div class=\"make-deck__group make-deck--wrong\">\n    <a href=\"#\" class=\"make-deck__link\">\n      <svg class=\"icon icon--make-deck icon--make-deck-left icon-left icon--wrong\">\n        <use href=\"img/SVG/circle-with-cross.svg\"></use>\n      </svg>\n    </a>\n    <span class=\"make-deck__span\">Let's Stop!</span>\n  </div>\n</div>";
+  parent.insertAdjacentHTML('afterbegin', markup);
+};
+
+exports.renderMakeDeckGrid = renderMakeDeckGrid;
+},{}],"js/controllers/overviewController.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -9219,9 +9373,13 @@ var _userModel = _interopRequireDefault(require("../models/userModel"));
 
 var _cardModel = _interopRequireDefault(require("../models/cardModel"));
 
+var _deckModel = _interopRequireDefault(require("../models/deckModel"));
+
 var storage = _interopRequireWildcard(require("../utils/localStorage"));
 
 var cardView = _interopRequireWildcard(require("../views/cardView"));
+
+var deckView = _interopRequireWildcard(require("../views/deckView"));
 
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
 
@@ -9238,7 +9396,7 @@ var state = {}; // Create all instance of the model when the application starts
 exports.state = state;
 state.user = new _userModel.default();
 state.card = new _cardModel.default();
-state.deck = new Deck(); // FIXME: REFACTOR THIS PIECE OF SHIT
+state.deck = new _deckModel.default(); // FIXME: REFACTOR THIS PIECE OF SHIT
 // Overview Handler
 
 _base.elements.overview.addEventListener('click', /*#__PURE__*/function () {
@@ -9268,7 +9426,7 @@ _base.elements.overview.addEventListener('click', /*#__PURE__*/function () {
     return _ref.apply(this, arguments);
   };
 }());
-},{"../views/base":"js/views/base.js","./cardController":"js/controllers/cardController.js","./loginHandler":"js/controllers/loginHandler.js","../models/userModel":"js/models/userModel.js","../models/cardModel":"js/models/cardModel.js","../utils/localStorage":"js/utils/localStorage.js","../views/cardView":"js/views/cardView.js"}],"js/controllers/alertController.js":[function(require,module,exports) {
+},{"../views/base":"js/views/base.js","./cardController":"js/controllers/cardController.js","./loginHandler":"js/controllers/loginHandler.js","../models/userModel":"js/models/userModel.js","../models/cardModel":"js/models/cardModel.js","../models/deckModel":"js/models/deckModel.js","../utils/localStorage":"js/utils/localStorage.js","../views/cardView":"js/views/cardView.js","../views/deckView":"js/views/deckView.js"}],"js/controllers/alertController.js":[function(require,module,exports) {
 "use strict";
 
 var _alert = require("../utils/alert");
@@ -9330,12 +9488,528 @@ _base.elements.header.addEventListener('click', function (e) {
     loginView.renderLoginForm(_base.elements.overview);
   }
 });
-},{"../views/base":"js/views/base.js","./overviewController":"js/controllers/overviewController.js","../views/headerView":"js/views/headerView.js","../views/loginView":"js/views/loginView.js","../utils/localStorage":"js/utils/localStorage.js"}],"js/controllers/sidebarController.js":[function(require,module,exports) {
+},{"../views/base":"js/views/base.js","./overviewController":"js/controllers/overviewController.js","../views/headerView":"js/views/headerView.js","../views/loginView":"js/views/loginView.js","../utils/localStorage":"js/utils/localStorage.js"}],"js/controllers/deckController.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.deckMakerLoader = exports.deckLoader = exports.deckRender = exports.getDecksFromAPI = exports.deckLoaderAndRender = void 0;
+
+var _base = require("../views/base");
+
+var deckView = _interopRequireWildcard(require("../views/deckView"));
+
+var storage = _interopRequireWildcard(require("../utils/localStorage"));
+
+var _alert = require("../utils/alert");
+
+var _deckModel = _interopRequireDefault(require("../models/deckModel"));
+
+var _overviewController = require("./overviewController");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+var deckLoaderAndRender = /*#__PURE__*/function () {
+  var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+    return regeneratorRuntime.wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            _context.next = 2;
+            return getDecksFromAPI();
+
+          case 2:
+            deckRender();
+
+          case 3:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee);
+  }));
+
+  return function deckLoaderAndRender() {
+    return _ref.apply(this, arguments);
+  };
+}();
+
+exports.deckLoaderAndRender = deckLoaderAndRender;
+
+var getDecksFromAPI = /*#__PURE__*/function () {
+  var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
+    var token;
+    return regeneratorRuntime.wrap(function _callee2$(_context2) {
+      while (1) {
+        switch (_context2.prev = _context2.next) {
+          case 0:
+            token = storage.getObj('token') || _overviewController.state.user.token;
+
+            if (token) {
+              _context2.next = 3;
+              break;
+            }
+
+            return _context2.abrupt("return", new Error('You are not logged in'));
+
+          case 3:
+            _context2.next = 5;
+            return _overviewController.state.deck.getDecks(token);
+
+          case 5:
+            _overviewController.state.deck.decks = _context2.sent;
+            storage.storeObj('decks', _overviewController.state.deck.decks);
+
+          case 7:
+          case "end":
+            return _context2.stop();
+        }
+      }
+    }, _callee2);
+  }));
+
+  return function getDecksFromAPI() {
+    return _ref2.apply(this, arguments);
+  };
+}();
+
+exports.getDecksFromAPI = getDecksFromAPI;
+
+var deckRender = function deckRender() {
+  deckView.renderDeckGrid(_base.elements.overview, _overviewController.state.deck.decks);
+};
+
+exports.deckRender = deckRender;
+
+var deckLoader = function deckLoader(e) {
+  var click = e.target.closest('.deck');
+
+  if (e.target.matches('.deck, .deck *')) {
+    try {
+      // 1. Get the Deck Id
+      var deckId = click.dataset.deck; //2. Get the decks array
+
+      var decks = storage.getObj('decks') || _overviewController.state.deck.decks; //3. Find the deck in the decks array via id
+
+
+      var deckData = decks.filter(function (deck) {
+        return deck.id === deckId;
+      });
+      deckView.renderDeckName(document.querySelector(".deck-".concat(deckId)), deckData[0].name);
+    } catch (err) {}
+  }
+};
+
+exports.deckLoader = deckLoader;
+
+var createDeck = function createDeck(e) {
+  // User clicks to create the deck
+  document.querySelector('.icon--make-deck-right').addEventListener('click', function (e) {
+    var name = document.querySelector('.textarea-q').value;
+
+    var user = storage.getObj('user') || _overviewController.state.user.userData.id;
+
+    if (name && user) {
+      _overviewController.state.deck.createDeck(name, user, storage.getObj('token'));
+    } else {
+      (0, _alert.showAlert)('error', 'Please enter a name');
+    }
+  });
+};
+
+var cancelDeckMaker = function cancelDeckMaker(e) {
+  // User clicks to cancel the deck creation
+  document.querySelector('.icon--make-deck-left').addEventListener('click', function (e) {
+    (0, _base.clearOverview)();
+    deckRender(_base.elements.overview, _overviewController.state.deck.decks);
+  });
+};
+
+var deckMakerLoader = function deckMakerLoader(e) {
+  (0, _base.clearOverview)();
+  deckView.renderMakeDeckGrid(_base.elements.overview);
+  createDeck(e);
+  cancelDeckMaker(e);
+};
+
+exports.deckMakerLoader = deckMakerLoader;
+},{"../views/base":"js/views/base.js","../views/deckView":"js/views/deckView.js","../utils/localStorage":"js/utils/localStorage.js","../utils/alert":"js/utils/alert.js","../models/deckModel":"js/models/deckModel.js","./overviewController":"js/controllers/overviewController.js"}],"js/views/classroomView.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.renderMakeClassroomGrid = exports.renderClassroomGrid = void 0;
+
+var renderClassroomGrid = function renderClassroomGrid(parent, classroomArray) {
+  var classrooms = '';
+  classroomArray.forEach(function (classroom) {
+    var classroomMarkup = "\n      <div class=\"classroom classroom-".concat(classroom.id, "\" data-classroom=").concat(classroom.id, ">\n        <div class=\"classroom__details\">\n          <div class=\"name\">").concat(classroom.name, "</div>\n        </div>\n      </div> \n    ");
+    classrooms += classroomMarkup;
+  }); // Have an IF statement to determine if they are student or teacher.
+
+  var markup = "\n    <div class=\"make-classroom\">\n        <a href=\"#\" class=\"btn btn--ghost\">Make A New Classroom</a>\n    </div>\n\n    <div class=\"classroom-grid\">\n        ".concat(classrooms, "\n    </div>;");
+  parent.insertAdjacentHTML('afterbegin', markup);
+};
+
+exports.renderClassroomGrid = renderClassroomGrid;
+
+var renderMakeClassroomGrid = function renderMakeClassroomGrid(parent, studentArray, currStudentArray) {
+  // Add Students to the classroom TODO: get the add button to work
+  var studentTable = '';
+  studentArray.forEach(function (user) {
+    var studentMarkup = "\n    <tr class=\"user user-".concat(user.id, "\">\n      <th>").concat(user.name, "</th>\n      <th>").concat(user.email, "</th>\n      <th><input type=\"button\" value=\"Add\" href=\"#\"></input></th>\n    </tr>\n    ");
+    studentTable += studentMarkup;
+  });
+  var markup = "\n    <div class=\"make-classroom-grid\">\n\n    <form action=\"#\" class=\"make-classroom__form\">\n        <label for=\"deck-name\" class=\"make-classroom__label\">Enter Classroom name</label>\n        <textarea id=\"deck-name\" class=\"make-classroom__textarea  textarea-q\" wrap=\"off\" minlength=\"5\" maxlength=\"250\" placeholder=\"Enter your classroom name\" required=\"true\" spellcheck=\"true\"></textarea>\n    </form>\n    <div class=\"make-classroom__table\">\n      <div class=\"make-classroom__table-scroll\" style=\"float:left;\">\n      <label class=\"make-classroom__label\">Add Students</label>\n      <table>\n        <thead>\n          <tr>\n            <th>Name</th>\n            <th>Email</th>\n          </tr>\n        </thead>\n        <tbody class=\"classroom-table-add__body\">\n          ".concat(studentTable, "\n        </tbody>\n      </table>\n      </div>\n\n      <div class=\"make-classroom__table-scroll\" style=\"float:right;\">\n      <label class=\"make-classroom__label\">Current Students</label>\n      <table>\n        <thead>\n          <tr>\n            <th>Name</th>\n            <th>Email</th>\n          </tr>\n        </thead>\n        <tbody class=\"classroom-table-add__body\">\n          <tr>\n            <th>Tom Horne</th>\n            <th>madamot@gmail.com</th>\n            <th><input type=\"button\" value=\"Remove\" href=\"#\"></input></th>\n          </tr>\n          <tr>\n            <th>Tom Horne</th>\n            <th>madamot@gmail.com</th>\n            <th><input type=\"button\" value=\"Remove\" href=\"#\"></input></th>\n          </tr>\n          <tr>\n            <th>Tom Horne</th>\n            <th>madamot@gmail.com</th>\n            <th><input type=\"button\" value=\"Remove\" href=\"#\"></input></th>\n          </tr>\n        </tbody>\n      </table>\n      </div>\n    </div>\n    \n    <div class=\"make-classroom__group make-classroom--right\">\n      <a href=\"#\" class=\"make-classroom__link\">\n        <svg class=\"icon icon--make-classroom icon--make-classroom-right icon--right\">\n          <use href=\"img/SVG/check.svg\"></use>\n        </svg>\n      </a>\n      <span class=\"make-classroom__span\">Create The Classroom</span>\n    </div>\n\n    <div class=\"make-classroom__group make-classroom--wrong\">\n      <a href=\"#\" class=\"make-classroom__link\">\n        <svg class=\"icon icon--make-classroom icon--make-classroom-left icon-left icon--wrong\">\n          <use href=\"img/SVG/circle-with-cross.svg\"></use>\n        </svg>\n      </a>\n      <span class=\"make-classroom__span\">Let's Stop!</span>\n    </div>\n  </div>\n");
+  parent.insertAdjacentHTML('afterbegin', classroom);
+};
+
+exports.renderMakeClassroomGrid = renderMakeClassroomGrid;
+},{}],"js/models/classroomModel.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _axios = _interopRequireDefault(require("axios"));
+
+var _alert = require("../utils/alert");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var Classroom = /*#__PURE__*/function () {
+  function Classroom() {
+    _classCallCheck(this, Classroom);
+
+    _defineProperty(this, "async", void 0);
+  }
+
+  _createClass(Classroom, [{
+    key: "getClassrooms",
+    value: function () {
+      var _getClassrooms = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(token) {
+        var res, message;
+        return regeneratorRuntime.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _context.prev = 0;
+                _context.next = 3;
+                return _axios.default.get('https://polar-savannah-53668.herokuapp.com/api/v0/teacher-classrooms', {
+                  headers: {
+                    Authorization: "Bearer ".concat(token)
+                  }
+                });
+
+              case 3:
+                res = _context.sent;
+                return _context.abrupt("return", res.data.data.deck);
+
+              case 7:
+                _context.prev = 7;
+                _context.t0 = _context["catch"](0);
+                message = _context.t0.response.data.message;
+                (0, _alert.showAlert)('error', message);
+
+              case 11:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, null, [[0, 7]]);
+      }));
+
+      function getClassrooms(_x) {
+        return _getClassrooms.apply(this, arguments);
+      }
+
+      return getClassrooms;
+    }()
+  }, {
+    key: "createClassroom",
+    value: function () {
+      var _createClassroom = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(name, user, token) {
+        var res, message;
+        return regeneratorRuntime.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                _context2.prev = 0;
+                _context2.next = 3;
+                return _axios.default.post('https://polar-savannah-53668.herokuapp.com/api/v0/cards', {
+                  name: name,
+                  user: user
+                }, {
+                  headers: {
+                    Authorization: "Bearer ".concat(token)
+                  }
+                });
+
+              case 3:
+                res = _context2.sent;
+
+                if (res.data.status === 'success') {
+                  (0, _alert.showAlert)('success', 'Deck was created');
+                }
+
+                _context2.next = 11;
+                break;
+
+              case 7:
+                _context2.prev = 7;
+                _context2.t0 = _context2["catch"](0);
+                message = _context2.t0.response.data.message;
+                (0, _alert.showAlert)('error', message);
+
+              case 11:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2, null, [[0, 7]]);
+      }));
+
+      function createClassroom(_x2, _x3, _x4) {
+        return _createClassroom.apply(this, arguments);
+      }
+
+      return createClassroom;
+    }()
+  }, {
+    key: "getRole",
+    value: function () {
+      var _getRole = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(token) {
+        var res, message;
+        return regeneratorRuntime.wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                _context3.prev = 0;
+                _context3.next = 3;
+                return _axios.default.get('https://polar-savannah-53668.herokuapp.com/api/v0/users/my-account', {
+                  headers: {
+                    Authorization: "Bearer ".concat(token)
+                  }
+                });
+
+              case 3:
+                res = _context3.sent;
+                return _context3.abrupt("return", res.data.data.role);
+
+              case 7:
+                _context3.prev = 7;
+                _context3.t0 = _context3["catch"](0);
+                message = _context3.t0.response.data.message;
+                (0, _alert.showAlert)('error', message);
+
+              case 11:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee3, null, [[0, 7]]);
+      }));
+
+      function getRole(_x5) {
+        return _getRole.apply(this, arguments);
+      }
+
+      return getRole;
+    }()
+  }]);
+
+  return Classroom;
+}();
+
+exports.default = Classroom;
+},{"axios":"../node_modules/axios/index.js","../utils/alert":"js/utils/alert.js"}],"js/controllers/classroomController.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.classroomMakerLoader = exports.classroomLoader = exports.classroomRender = exports.getClassroomsFromAPI = exports.classroomLoaderAndRender = void 0;
+
+var _base = require("../views/base");
+
+var classroomView = _interopRequireWildcard(require("../views/classroomView"));
+
+var storage = _interopRequireWildcard(require("../utils/localStorage"));
+
+var _alert = require("../utils/alert");
+
+var _classroomModel = _interopRequireDefault(require("../models/classroomModel"));
+
+var _overviewController = require("./overviewController");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+var classroomLoaderAndRender = /*#__PURE__*/function () {
+  var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+    return regeneratorRuntime.wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            _context.next = 2;
+            return getClassroomsFromAPI();
+
+          case 2:
+            classroomRender();
+
+          case 3:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee);
+  }));
+
+  return function classroomLoaderAndRender() {
+    return _ref.apply(this, arguments);
+  };
+}();
+
+exports.classroomLoaderAndRender = classroomLoaderAndRender;
+
+var getClassroomsFromAPI = /*#__PURE__*/function () {
+  var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
+    var token;
+    return regeneratorRuntime.wrap(function _callee2$(_context2) {
+      while (1) {
+        switch (_context2.prev = _context2.next) {
+          case 0:
+            token = storage.getObj('token') || _overviewController.state.user.token;
+
+            if (token) {
+              _context2.next = 3;
+              break;
+            }
+
+            return _context2.abrupt("return", new Error('You are not logged in'));
+
+          case 3:
+            _context2.next = 5;
+            return _overviewController.state.classroom.getClassrooms(token);
+
+          case 5:
+            _overviewController.state.classroom.classrooms = _context2.sent;
+            storage.storeObj('classrooms', _overviewController.state.classroom.classrooms);
+
+          case 7:
+          case "end":
+            return _context2.stop();
+        }
+      }
+    }, _callee2);
+  }));
+
+  return function getClassroomsFromAPI() {
+    return _ref2.apply(this, arguments);
+  };
+}();
+
+exports.getClassroomsFromAPI = getClassroomsFromAPI;
+
+var classroomRender = function classroomRender() {
+  classroomView.renderclassroomGrid(_base.elements.overview, _overviewController.state.classroom.classrooms);
+};
+
+exports.classroomRender = classroomRender;
+
+var classroomLoader = function classroomLoader(e) {
+  var click = e.target.closest('.classroom');
+
+  if (e.target.matches('.classroom, .classroom *')) {
+    try {
+      // 1. Get the Classroom Id
+      var classroomId = click.dataset.classroom; //2. Get the classrooms array
+
+      var classrooms = storage.getObj('classrooms') || _overviewController.state.classroom.classrooms; //3. Find the classroom in the classrooms array via id
+
+
+      var classroomData = classrooms.filter(function (classroom) {
+        return classroom.id === classroomId;
+      });
+      classroomView.renderClassroomName(document.querySelector(".classroom-".concat(classroomId)), classroomData[0].name);
+    } catch (err) {}
+  }
+};
+
+exports.classroomLoader = classroomLoader;
+
+var createClassroom = function createClassroom(e) {
+  // User clicks to create the classroom
+  document.querySelector('.icon--make-classroom-right').addEventListener('click', function (e) {
+    var name = document.querySelector('.textarea-q').value;
+
+    var user = storage.getObj('user') || _overviewController.state.user.userData.id;
+
+    if (name && user) {
+      _overviewController.state.classroom.createClassroom(name, user, storage.getObj('token'));
+    } else {
+      (0, _alert.showAlert)('error', 'Please enter a name');
+    }
+  });
+};
+
+var cancelClassroomMaker = function cancelClassroomMaker(e) {
+  // User clicks to cancel the classroom creation
+  document.querySelector('.icon--make-classroom-left').addEventListener('click', function (e) {
+    (0, _base.clearOverview)();
+    classroomRender(_base.elements.overview, _overviewController.state.classroom.classrooms);
+  });
+};
+
+var classroomMakerLoader = function classroomMakerLoader(e) {
+  (0, _base.clearOverview)();
+  classroomView.renderMakeClassroomGrid(_base.elements.overview);
+  createClassroom(e);
+  cancelClassroomMaker(e);
+};
+
+exports.classroomMakerLoader = classroomMakerLoader;
+},{"../views/base":"js/views/base.js","../views/classroomView":"js/views/classroomView.js","../utils/localStorage":"js/utils/localStorage.js","../utils/alert":"js/utils/alert.js","../models/classroomModel":"js/models/classroomModel.js","./overviewController":"js/controllers/overviewController.js"}],"js/controllers/sidebarController.js":[function(require,module,exports) {
 "use strict";
 
 var _base = require("../views/base");
 
 var _cardController = require("./cardController");
+
+var _deckController = require("./deckController");
+
+var _classroomController = require("./classroomController");
 
 var _overviewController = require("./overviewController");
 
@@ -9418,10 +10092,10 @@ _base.elements.deck.addEventListener('click', /*#__PURE__*/function () {
             }
 
             _context2.next = 5;
-            return getDecksFromAPI();
+            return (0, _deckController.getDecksFromAPI)();
 
           case 5:
-            deckRender(); // 2.1 Tell them to login
+            (0, _deckController.deckRender)(); // 2.1 Tell them to login
 
             _context2.next = 9;
             break;
@@ -9449,8 +10123,58 @@ _base.elements.deck.addEventListener('click', /*#__PURE__*/function () {
   return function (_x2) {
     return _ref2.apply(this, arguments);
   };
+}()); // User clicks 'MY CLASSROOMS' in the sidebar nav
+
+
+_base.elements.classroom.addEventListener('click', /*#__PURE__*/function () {
+  var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(e) {
+    return regeneratorRuntime.wrap(function _callee3$(_context3) {
+      while (1) {
+        switch (_context3.prev = _context3.next) {
+          case 0:
+            _context3.prev = 0;
+            // 1. Clear the overview page
+            (0, _base.clearOverview)(); // 2. Check if the user is authenticated
+
+            if (!(storage.getObj('token') || _overviewController.state.user)) {
+              _context3.next = 8;
+              break;
+            }
+
+            _context3.next = 5;
+            return (0, _classroomController.getClassroomsFromAPI)();
+
+          case 5:
+            (0, _classroomController.classroomRender)(); // 2.1 Tell them to login
+
+            _context3.next = 9;
+            break;
+
+          case 8:
+            throw new Error('You are not logged in');
+
+          case 9:
+            _context3.next = 14;
+            break;
+
+          case 11:
+            _context3.prev = 11;
+            _context3.t0 = _context3["catch"](0);
+            (0, _alert.showAlert)('error', _context3.t0.message);
+
+          case 14:
+          case "end":
+            return _context3.stop();
+        }
+      }
+    }, _callee3, null, [[0, 11]]);
+  }));
+
+  return function (_x3) {
+    return _ref3.apply(this, arguments);
+  };
 }());
-},{"../views/base":"js/views/base.js","./cardController":"js/controllers/cardController.js","./overviewController":"js/controllers/overviewController.js","../utils/alert":"js/utils/alert.js","../utils/localStorage":"js/utils/localStorage.js"}],"js/index.js":[function(require,module,exports) {
+},{"../views/base":"js/views/base.js","./cardController":"js/controllers/cardController.js","./deckController":"js/controllers/deckController.js","./classroomController":"js/controllers/classroomController.js","./overviewController":"js/controllers/overviewController.js","../utils/alert":"js/utils/alert.js","../utils/localStorage":"js/utils/localStorage.js"}],"js/index.js":[function(require,module,exports) {
 "use strict";
 
 require("core-js/modules/es6.array.copy-within");
@@ -9752,7 +10476,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "59979" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "53967" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

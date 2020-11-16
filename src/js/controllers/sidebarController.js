@@ -1,5 +1,7 @@
 import { elements, clearOverview } from '../views/base';
 import { getCardsFromAPI, cardRender } from './cardController';
+import { getDecksFromAPI, deckRender } from './deckController';
+import { getClassroomsFromAPI, classroomRender } from './classroomController';
 import { state } from './overviewController';
 import { showAlert } from '../utils/alert';
 import * as storage from '../utils/localStorage';
@@ -36,6 +38,27 @@ elements.deck.addEventListener('click', async (e) => {
       // 3. Get and Load the decks
       await getDecksFromAPI();
       deckRender();
+
+      // 2.1 Tell them to login
+    } else {
+      throw new Error('You are not logged in');
+    }
+  } catch (err) {
+    showAlert('error', err.message);
+  }
+});
+
+// User clicks 'MY CLASSROOMS' in the sidebar nav
+elements.classroom.addEventListener('click', async (e) => {
+  try {
+    // 1. Clear the overview page
+    clearOverview();
+
+    // 2. Check if the user is authenticated
+    if (storage.getObj('token') || state.user) {
+      // 3. Get and Load the decks
+      await getClassroomsFromAPI();
+      classroomRender();
 
       // 2.1 Tell them to login
     } else {
