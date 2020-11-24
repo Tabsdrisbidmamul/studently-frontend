@@ -1,11 +1,29 @@
 import tick from '../../img/SVG/check.svg';
 import cross from '../../img/SVG/circle-with-cross.svg';
+import edit from '../../img/SVG/edit.svg';
+import bin from '../../img/SVG/trash.svg';
 
 export const renderCardGrid = (parent, cardArray) => {
   let cards = '';
   cardArray.forEach((card) => {
     const cardMarkup = `
     <div class="card card-${card.id}" data-card=${card.id}>
+      <div class="card__options">
+      <a href="#" class="options options--edit">
+        <svg class="icon icon--options icon--edit">
+          <use xlink:href="${edit}"></use>
+        </svg>
+        <span class="show-hide card--edit">Edit</span>
+      </a>
+
+      <a href="#" class="options options--delete">
+        <svg class="icon icon--options icon--delete">
+          <use xlink:href="${bin}"></use>
+        </svg>
+        <span class="show-hide card--delete">Delete</span>
+      </a>
+      </div>
+
       <div class="card__details">
         <div class="name">${card.question}</div>
       </div>
@@ -28,6 +46,22 @@ export const renderCardGrid = (parent, cardArray) => {
 
 export const renderCardAnswer = (HTMLCard, answer) => {
   const markup = `
+  <div class="card__options">
+      <a href="#" class="options options--edit">
+        <svg class="icon icon--options icon--edit">
+          <use class="card--edit" xlink:href="${edit}"></use>
+        </svg>
+        <span class="show-hide card--edit">Edit</span>
+      </a>
+
+      <a href="#" class="options options--delete">
+        <svg class="icon icon--options icon--delete">
+          <use class="card--delete" xlink:href="${bin}"></use>
+        </svg>
+        <span class="show-hide card--delete">Delete</span>
+      </a>
+      </div>
+
   <div class="card__details">
     <div class="card__name">${answer}</div>
   </div>
@@ -51,6 +85,22 @@ export const renderCardAnswer = (HTMLCard, answer) => {
 
 export const renderCardQuestion = (HTMLCard, question) => {
   const markup = `
+  <div class="card__options">
+      <a href="#" class="options options--edit">
+        <svg class="icon icon--options icon--edit">
+          <use xlink:href="${edit}"></use>
+        </svg>
+        <span class="show-hide card--delete">Edit</span>
+      </a>
+
+      <a href="#" class="options options--delete">
+        <svg class="icon icon--options icon--delete">
+          <use xlink:href="${bin}"></use>
+        </svg>
+        <span class="show-hide card--delete">Delete</span>
+      </a>
+      </div>
+
   <div class="card__details">
     <div class="card__name">${question}</div>
   </div>

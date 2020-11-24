@@ -4,9 +4,11 @@ import { loginHandler } from './loginHandler';
 import User from '../models/userModel';
 import Card from '../models/cardModel';
 import Deck from '../models/deckModel';
+import Classroom from '../models/classroomModel';
 import * as storage from '../utils/localStorage';
 import * as cardView from '../views/cardView';
 import * as deckView from '../views/deckView';
+import * as classroomView from '../views/classroomView';
 
 export const state = {};
 
@@ -14,6 +16,7 @@ export const state = {};
 state.user = new User();
 state.card = new Card();
 state.deck = new Deck();
+state.classroom = new Classroom();
 
 // FIXME: REFACTOR THIS PIECE OF SHIT
 // Overview Handler
@@ -29,5 +32,7 @@ elements.overview.addEventListener('click', async (e) => {
     // User click 'make a new card' button in card homepage
   } else if (e.target.closest('.make-card')) {
     cardMakerLoader(e);
+  } else if (e.target.closest('.make-classroom')) {
+    classroomView.renderMakeClassroomGrid(elements.overview);
   }
 });

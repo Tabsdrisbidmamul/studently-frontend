@@ -14,7 +14,7 @@ export const renderClassroomGrid = (parent, classroomArray) => {
   // Have an IF statement to determine if they are student or teacher.
   const markup = `
     <div class="make-classroom">
-        <a href="#" class="btn btn--ghost">Make A New Classroom</a>
+        <a href="#" class="btn btn--ghost make-classroom">Make A New Classroom</a>
     </div>
 
     <div class="classroom-grid">

@@ -7,10 +7,11 @@ export default class Classroom {
   async getTeacherClassrooms(token) {
     try {
       const res = await axios.get(
-        'https://polar-savannah-53668.herokuapp.com/api/v0/teacher-classrooms',
+        'https://polar-savannah-53668.herokuapp.com/api/v0/users/teacher-classrooms',
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      return res.data.data.classrooms;
+
+      return res.data.data.classroom;
     } catch (err) {
       const { message } = err.response.data;
       showAlert('error', message);
@@ -20,10 +21,11 @@ export default class Classroom {
   async getStudentClassrooms(token) {
     try {
       const res = await axios.get(
-        'https://polar-savannah-53668.herokuapp.com/api/v0/student-classrooms',
+        'https://polar-savannah-53668.herokuapp.com/api/v0/users/student-classrooms',
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      return res.data.data.classrooms;
+
+      return res.data.data.classroom;
     } catch (err) {
       const { message } = err.response.data;
       showAlert('error', message);

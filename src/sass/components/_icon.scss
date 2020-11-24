@@ -11,6 +11,26 @@
     transform: scale(1);
   }
 
+  &--options {
+    width: 2rem;
+    height: 2rem;
+    margin-right: 1rem;
+
+    &:hover {
+      transform: scale(1.2);
+    }
+  }
+
+  &--edit {
+    fill: $color-primary-dark;
+    transform: scale(1);
+  }
+
+  &--delete {
+    fill: $color-secondary-dark;
+    transform: scale(1);
+  }
+
   &--card {
     width: 3.75rem;
     height: 1.75rem;

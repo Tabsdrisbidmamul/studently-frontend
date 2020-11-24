@@ -10,6 +10,7 @@ export default class Card {
         'https://polar-savannah-53668.herokuapp.com/api/v0/users/my-cards',
         { headers: { Authorization: `Bearer ${token}` } }
       );
+
       return res.data.data.card;
     } catch (err) {
       const { message } = err.response.data;

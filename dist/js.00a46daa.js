@@ -6700,7 +6700,8 @@ var elements = {
   overview: document.querySelector('.overview'),
   card: document.querySelector('.side-nav-card'),
   deck: document.querySelector('.side-nav-deck'),
-  classroom: document.querySelector('.side-nav-classroom')
+  classroom: document.querySelector('.side-nav-classroom'),
+  settings: document.querySelector('.side-nav-settings')
 };
 exports.elements = elements;
 
@@ -6717,6 +6718,10 @@ exports.clearOverview = clearOverview;
 module.exports = '#030794220a577069b4c9e37f7881512d';
 },{}],"img/SVG/circle-with-cross.svg":[function(require,module,exports) {
 module.exports = '#fcba2f951158d7741a6b4f3c6594ec67';
+},{}],"img/SVG/edit.svg":[function(require,module,exports) {
+module.exports = '#0e19f3def72e51aa319d70b8512e31bc';
+},{}],"img/SVG/trash.svg":[function(require,module,exports) {
+module.exports = '#90f76b9fdc792fc4a53d17223bebcfe6';
 },{}],"js/views/cardView.js":[function(require,module,exports) {
 "use strict";
 
@@ -6729,12 +6734,16 @@ var _check = _interopRequireDefault(require("../../img/SVG/check.svg"));
 
 var _circleWithCross = _interopRequireDefault(require("../../img/SVG/circle-with-cross.svg"));
 
+var _edit = _interopRequireDefault(require("../../img/SVG/edit.svg"));
+
+var _trash = _interopRequireDefault(require("../../img/SVG/trash.svg"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var renderCardGrid = function renderCardGrid(parent, cardArray) {
   var cards = '';
   cardArray.forEach(function (card) {
-    var cardMarkup = "\n    <div class=\"card card-".concat(card.id, "\" data-card=").concat(card.id, ">\n      <div class=\"card__details\">\n        <div class=\"name\">").concat(card.question, "</div>\n      </div>\n    </div>\n    ");
+    var cardMarkup = "\n    <div class=\"card card-".concat(card.id, "\" data-card=").concat(card.id, ">\n      <div class=\"card__options\">\n      <a href=\"#\" class=\"options options--edit\">\n        <svg class=\"icon icon--options icon--edit\">\n          <use xlink:href=\"").concat(_edit.default, "\"></use>\n        </svg>\n        <span class=\"show-hide card--edit\">Edit</span>\n      </a>\n\n      <a href=\"#\" class=\"options options--delete\">\n        <svg class=\"icon icon--options icon--delete\">\n          <use xlink:href=\"").concat(_trash.default, "\"></use>\n        </svg>\n        <span class=\"show-hide card--delete\">Delete</span>\n      </a>\n      </div>\n\n      <div class=\"card__details\">\n        <div class=\"name\">").concat(card.question, "</div>\n      </div>\n    </div>\n    ");
     cards += cardMarkup;
   });
   var markup = "\n  <div class=\"make-card\">\n    <a href=\"#\" class=\"btn btn--ghost\">Make A New Card</a>\n  </div>\n\n  <div class=\"card-grid\">\n      ".concat(cards, "\n  </div>");
@@ -6744,14 +6753,14 @@ var renderCardGrid = function renderCardGrid(parent, cardArray) {
 exports.renderCardGrid = renderCardGrid;
 
 var renderCardAnswer = function renderCardAnswer(HTMLCard, answer) {
-  var markup = "\n  <div class=\"card__details\">\n    <div class=\"card__name\">".concat(answer, "</div>\n  </div>\n\n  <div class=\"answer-form\">\n    <a href=\"#\" class=\"answer-form__link\">\n      <svg class=\"icon icon--card icon--card-right icon--right\">\n        <use xlink:href=\"").concat(_check.default, "\"></use>\n      </svg>\n    </a>\n\n    <a href=\"#\" class=\"answer-form__link\">\n      <svg class=\"icon icon--card icon--card-left icon--wrong\">\n        <use xlink:href=\"").concat(_circleWithCross.default, "\"></use>\n      </svg>\n    </a>\n  ");
+  var markup = "\n  <div class=\"card__options\">\n      <a href=\"#\" class=\"options options--edit\">\n        <svg class=\"icon icon--options icon--edit\">\n          <use class=\"card--edit\" xlink:href=\"".concat(_edit.default, "\"></use>\n        </svg>\n        <span class=\"show-hide card--edit\">Edit</span>\n      </a>\n\n      <a href=\"#\" class=\"options options--delete\">\n        <svg class=\"icon icon--options icon--delete\">\n          <use class=\"card--delete\" xlink:href=\"").concat(_trash.default, "\"></use>\n        </svg>\n        <span class=\"show-hide card--delete\">Delete</span>\n      </a>\n      </div>\n\n  <div class=\"card__details\">\n    <div class=\"card__name\">").concat(answer, "</div>\n  </div>\n\n  <div class=\"answer-form\">\n    <a href=\"#\" class=\"answer-form__link\">\n      <svg class=\"icon icon--card icon--card-right icon--right\">\n        <use xlink:href=\"").concat(_check.default, "\"></use>\n      </svg>\n    </a>\n\n    <a href=\"#\" class=\"answer-form__link\">\n      <svg class=\"icon icon--card icon--card-left icon--wrong\">\n        <use xlink:href=\"").concat(_circleWithCross.default, "\"></use>\n      </svg>\n    </a>\n  ");
   HTMLCard.innerHTML = markup;
 };
 
 exports.renderCardAnswer = renderCardAnswer;
 
 var renderCardQuestion = function renderCardQuestion(HTMLCard, question) {
-  var markup = "\n  <div class=\"card__details\">\n    <div class=\"card__name\">".concat(question, "</div>\n  </div>\n  ");
+  var markup = "\n  <div class=\"card__options\">\n      <a href=\"#\" class=\"options options--edit\">\n        <svg class=\"icon icon--options icon--edit\">\n          <use xlink:href=\"".concat(_edit.default, "\"></use>\n        </svg>\n        <span class=\"show-hide card--delete\">Edit</span>\n      </a>\n\n      <a href=\"#\" class=\"options options--delete\">\n        <svg class=\"icon icon--options icon--delete\">\n          <use xlink:href=\"").concat(_trash.default, "\"></use>\n        </svg>\n        <span class=\"show-hide card--delete\">Delete</span>\n      </a>\n      </div>\n\n  <div class=\"card__details\">\n    <div class=\"card__name\">").concat(question, "</div>\n  </div>\n  ");
   HTMLCard.innerHTML = markup;
 };
 
@@ -6763,7 +6772,7 @@ var renderMakeCardGrid = function renderMakeCardGrid(parent) {
 };
 
 exports.renderMakeCardGrid = renderMakeCardGrid;
-},{"../../img/SVG/check.svg":"img/SVG/check.svg","../../img/SVG/circle-with-cross.svg":"img/SVG/circle-with-cross.svg"}],"js/utils/localStorage.js":[function(require,module,exports) {
+},{"../../img/SVG/check.svg":"img/SVG/check.svg","../../img/SVG/circle-with-cross.svg":"img/SVG/circle-with-cross.svg","../../img/SVG/edit.svg":"img/SVG/edit.svg","../../img/SVG/trash.svg":"img/SVG/trash.svg"}],"js/utils/localStorage.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -8828,37 +8837,54 @@ exports.getCardsFromAPI = getCardsFromAPI;
 var cardRender = function cardRender() {
   // 1. Render the card grid and cards on the grid
   cardView.renderCardGrid(_base.elements.overview, _overviewController.state.card.cards); // TODO: ADD IF STATEMENT FOR WHEN THE CARDS ARRAY IS EMPTY (USER HAS NO CARDS)
-}; // When the user interacts with cards in the overview
+}; // Load the card if they have click the entire card or the edit/ delete options
 
 
 exports.cardRender = cardRender;
 
 var cardLoader = function cardLoader(e) {
-  var click = e.target.closest('.card');
+  if (e.target.matches('.options, .options *')) {
+    var click = e.target.closest('.options');
+    optionsHandler(click);
+  } else if (e.target.matches('.card, .card *')) {
+    var _click = e.target.closest('.card');
 
-  if (e.target.matches('.card, .card *')) {
-    try {
-      // 1. Get the Card Id
-      var cardId = click.dataset.card; //2. Get the cards array
-
-      var cards = storage.getObj('cards') || _overviewController.state.card.cards; //3. Find the card in the cards array via id
-
-
-      var cardData = cards.filter(function (card) {
-        return card.id === cardId;
-      }); // 4. check if the card is a question card or an answer card
-
-      if (click.children.length > 1) {
-        cardView.renderCardQuestion(document.querySelector(".card-".concat(cardId)), cardData[0].question);
-      } else {
-        cardView.renderCardAnswer(document.querySelector(".card-".concat(cardId)), cardData[0].answer);
-      }
-    } catch (err) {}
+    cardHandler(_click);
   }
-}; //
-
+};
 
 exports.cardLoader = cardLoader;
+
+var optionsHandler = function optionsHandler(click) {
+  if (Array.from(click.classList).includes('options--edit')) {
+    console.log("We're are editing");
+  } else if (Array.from(click.classList).includes('options--delete')) {
+    console.log("We're deleting");
+  }
+}; // When the user interacts with cards in the overview
+
+
+var cardHandler = function cardHandler(click) {
+  try {
+    // 1. Get the Card Id
+    var cardId = click.dataset.card; //2. Get the cards array
+
+    var cards = storage.getObj('cards') || _overviewController.state.card.cards; //3. Find the card in the cards array via id
+
+
+    var cardData = cards.filter(function (card) {
+      return card.id === cardId;
+    })[0]; // 4. check if the card is a question card or an answer card
+
+    if (click.children.length === 2) {
+      cardView.renderCardAnswer(document.querySelector(".card-".concat(cardId)), cardData.answer);
+    } else if (click.children.length === 3) {
+      cardView.renderCardQuestion(document.querySelector(".card-".concat(cardId)), cardData.question);
+    }
+  } catch (err) {
+    (0, _alert.showAlert)('error', err.message);
+  }
+};
 
 var QAndAValueChanger = function QAndAValueChanger(e) {
   // 1. question box update the value in real time to the card
@@ -9328,6 +9354,220 @@ var Deck = /*#__PURE__*/function () {
 }();
 
 exports.default = Deck;
+},{"axios":"../node_modules/axios/index.js","../utils/alert":"js/utils/alert.js"}],"js/models/classroomModel.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _axios = _interopRequireDefault(require("axios"));
+
+var _alert = require("../utils/alert");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var Classroom = /*#__PURE__*/function () {
+  function Classroom() {
+    _classCallCheck(this, Classroom);
+
+    _defineProperty(this, "async", void 0);
+  }
+
+  _createClass(Classroom, [{
+    key: "getTeacherClassrooms",
+    value: function () {
+      var _getTeacherClassrooms = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(token) {
+        var res, message;
+        return regeneratorRuntime.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _context.prev = 0;
+                _context.next = 3;
+                return _axios.default.get('https://polar-savannah-53668.herokuapp.com/api/v0/users/teacher-classrooms', {
+                  headers: {
+                    Authorization: "Bearer ".concat(token)
+                  }
+                });
+
+              case 3:
+                res = _context.sent;
+                return _context.abrupt("return", res.data.data.classroom);
+
+              case 7:
+                _context.prev = 7;
+                _context.t0 = _context["catch"](0);
+                message = _context.t0.response.data.message;
+                (0, _alert.showAlert)('error', message);
+
+              case 11:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, null, [[0, 7]]);
+      }));
+
+      function getTeacherClassrooms(_x) {
+        return _getTeacherClassrooms.apply(this, arguments);
+      }
+
+      return getTeacherClassrooms;
+    }()
+  }, {
+    key: "getStudentClassrooms",
+    value: function () {
+      var _getStudentClassrooms = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(token) {
+        var res, message;
+        return regeneratorRuntime.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                _context2.prev = 0;
+                _context2.next = 3;
+                return _axios.default.get('https://polar-savannah-53668.herokuapp.com/api/v0/users/student-classrooms', {
+                  headers: {
+                    Authorization: "Bearer ".concat(token)
+                  }
+                });
+
+              case 3:
+                res = _context2.sent;
+                return _context2.abrupt("return", res.data.data.classroom);
+
+              case 7:
+                _context2.prev = 7;
+                _context2.t0 = _context2["catch"](0);
+                message = _context2.t0.response.data.message;
+                (0, _alert.showAlert)('error', message);
+
+              case 11:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2, null, [[0, 7]]);
+      }));
+
+      function getStudentClassrooms(_x2) {
+        return _getStudentClassrooms.apply(this, arguments);
+      }
+
+      return getStudentClassrooms;
+    }()
+  }, {
+    key: "createClassroom",
+    value: function () {
+      var _createClassroom = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(name, teacher, token) {
+        var res, message;
+        return regeneratorRuntime.wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                _context3.prev = 0;
+                _context3.next = 3;
+                return _axios.default.post('https://polar-savannah-53668.herokuapp.com/api/v0/classrooms/', {
+                  name: name,
+                  teacher: teacher,
+                  students: students
+                }, {
+                  headers: {
+                    Authorization: "Bearer ".concat(token)
+                  }
+                });
+
+              case 3:
+                res = _context3.sent;
+
+                if (res.data.status === 'success') {
+                  (0, _alert.showAlert)('success', 'Classroom was created');
+                }
+
+                _context3.next = 11;
+                break;
+
+              case 7:
+                _context3.prev = 7;
+                _context3.t0 = _context3["catch"](0);
+                message = _context3.t0.response.data.message;
+                (0, _alert.showAlert)('error', message);
+
+              case 11:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee3, null, [[0, 7]]);
+      }));
+
+      function createClassroom(_x3, _x4, _x5) {
+        return _createClassroom.apply(this, arguments);
+      }
+
+      return createClassroom;
+    }() // Get the User role, to determine what classrooms they get.
+
+  }, {
+    key: "getRole",
+    value: function () {
+      var _getRole = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4(token) {
+        var res, message;
+        return regeneratorRuntime.wrap(function _callee4$(_context4) {
+          while (1) {
+            switch (_context4.prev = _context4.next) {
+              case 0:
+                _context4.prev = 0;
+                _context4.next = 3;
+                return _axios.default.get('https://polar-savannah-53668.herokuapp.com/api/v0/users/my-account', {
+                  headers: {
+                    Authorization: "Bearer ".concat(token)
+                  }
+                });
+
+              case 3:
+                res = _context4.sent;
+                return _context4.abrupt("return", res.data.data.role);
+
+              case 7:
+                _context4.prev = 7;
+                _context4.t0 = _context4["catch"](0);
+                message = _context4.t0.response.data.message;
+                (0, _alert.showAlert)('error', message);
+
+              case 11:
+              case "end":
+                return _context4.stop();
+            }
+          }
+        }, _callee4, null, [[0, 7]]);
+      }));
+
+      function getRole(_x6) {
+        return _getRole.apply(this, arguments);
+      }
+
+      return getRole;
+    }()
+  }]);
+
+  return Classroom;
+}();
+
+exports.default = Classroom;
 },{"axios":"../node_modules/axios/index.js","../utils/alert":"js/utils/alert.js"}],"js/views/deckView.js":[function(require,module,exports) {
 "use strict";
 
@@ -9355,6 +9595,44 @@ var renderMakeDeckGrid = function renderMakeDeckGrid(parent) {
 };
 
 exports.renderMakeDeckGrid = renderMakeDeckGrid;
+},{}],"js/views/classroomView.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.renderMakeClassroomGrid = exports.renderClassroomGrid = void 0;
+
+var renderClassroomGrid = function renderClassroomGrid(parent, classroomArray) {
+  var classrooms = '';
+  classroomArray.forEach(function (classroom) {
+    var classroomMarkup = "\n      <div class=\"classroom classroom-".concat(classroom.id, "\" data-classroom=").concat(classroom.id, ">\n        <div class=\"classroom__details\">\n          <div class=\"name\">").concat(classroom.name, "</div>\n        </div>\n      </div> \n    ");
+    classrooms += classroomMarkup;
+  }); // Have an IF statement to determine if they are student or teacher.
+
+  var markup = "\n    <div class=\"make-classroom\">\n        <a href=\"#\" class=\"btn btn--ghost make-classroom\">Make A New Classroom</a>\n    </div>\n\n    <div class=\"classroom-grid\">\n        ".concat(classrooms, "\n    </div>;");
+  parent.insertAdjacentHTML('afterbegin', markup);
+};
+
+exports.renderClassroomGrid = renderClassroomGrid;
+
+var renderMakeClassroomGrid = function renderMakeClassroomGrid(parent, studentArray, currStudentArray) {
+  // Table for Add Students to the classroom TODO: get the add button to work
+  var studentTable = '';
+  studentArray.forEach(function (user) {
+    var studentMarkup = "\n    <tr class=\"user user-".concat(user.id, "\">\n      <th>").concat(user.name, "</th>\n      <th>").concat(user.email, "</th>\n      <th><input type=\"button\" value=\"Add\" href=\"#\"></input></th>\n    </tr>\n    ");
+    studentTable += studentMarkup;
+  }); // Table for Students in the Classroom TODO: get the remove button to work
+
+  var currStudentTable = '';
+  currStudentArray.forEach(function (user) {
+    var currStudentMarkup = "\n      <tr class=\"user user-".concat(user.id, "\">\n        <th>").concat(user.name, "</th>\n        <th>").concat(user.email, "</th>\n        <th><input type=\"button\" value=\"Remove\" href=\"#\"></input></th>\n      </tr>\n    ");
+  });
+  var markup = "\n    <div class=\"make-classroom-grid\">\n\n    <form action=\"#\" class=\"make-classroom__form\">\n        <label for=\"deck-name\" class=\"make-classroom__label\">Enter Classroom name</label>\n        <textarea id=\"deck-name\" class=\"make-classroom__textarea  textarea-q\" wrap=\"off\" minlength=\"5\" maxlength=\"250\" placeholder=\"Enter your classroom name\" required=\"true\" spellcheck=\"true\"></textarea>\n    </form>\n    <div class=\"make-classroom__table\">\n      <div class=\"make-classroom__table-scroll\" style=\"float:left;\">\n      <label class=\"make-classroom__label\">Add Students</label>\n      <table>\n        <thead>\n          <tr>\n            <th>Name</th>\n            <th>Email</th>\n          </tr>\n        </thead>\n        <tbody class=\"classroom-table-add__body\">\n          ".concat(studentTable, "\n        </tbody>\n      </table>\n      </div>\n\n      <div class=\"make-classroom__table-scroll\" style=\"float:right;\">\n      <label class=\"make-classroom__label\">Current Students</label>\n      <table>\n        <thead>\n          <tr>\n            <th>Name</th>\n            <th>Email</th>\n          </tr>\n        </thead>\n        <tbody class=\"classroom-table-add__body\">\n          ").concat(currStudentBody, "\n        </tbody>\n      </table>\n      </div>\n    </div>\n    \n    <div class=\"make-classroom__group make-classroom--right\">\n      <a href=\"#\" class=\"make-classroom__link\">\n        <svg class=\"icon icon--make-classroom icon--make-classroom-right icon--right\">\n          <use href=\"img/SVG/check.svg\"></use>\n        </svg>\n      </a>\n      <span class=\"make-classroom__span\">Create The Classroom</span>\n    </div>\n\n    <div class=\"make-classroom__group make-classroom--wrong\">\n      <a href=\"#\" class=\"make-classroom__link\">\n        <svg class=\"icon icon--make-classroom icon--make-classroom-left icon-left icon--wrong\">\n          <use href=\"img/SVG/circle-with-cross.svg\"></use>\n        </svg>\n      </a>\n      <span class=\"make-classroom__span\">Let's Stop!</span>\n    </div>\n  </div>\n");
+  parent.insertAdjacentHTML('afterbegin', markup);
+};
+
+exports.renderMakeClassroomGrid = renderMakeClassroomGrid;
 },{}],"js/controllers/overviewController.js":[function(require,module,exports) {
 "use strict";
 
@@ -9375,11 +9653,15 @@ var _cardModel = _interopRequireDefault(require("../models/cardModel"));
 
 var _deckModel = _interopRequireDefault(require("../models/deckModel"));
 
+var _classroomModel = _interopRequireDefault(require("../models/classroomModel"));
+
 var storage = _interopRequireWildcard(require("../utils/localStorage"));
 
 var cardView = _interopRequireWildcard(require("../views/cardView"));
 
 var deckView = _interopRequireWildcard(require("../views/deckView"));
+
+var classroomView = _interopRequireWildcard(require("../views/classroomView"));
 
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
 
@@ -9396,7 +9678,8 @@ var state = {}; // Create all instance of the model when the application starts
 exports.state = state;
 state.user = new _userModel.default();
 state.card = new _cardModel.default();
-state.deck = new _deckModel.default(); // FIXME: REFACTOR THIS PIECE OF SHIT
+state.deck = new _deckModel.default();
+state.classroom = new _classroomModel.default(); // FIXME: REFACTOR THIS PIECE OF SHIT
 // Overview Handler
 
 _base.elements.overview.addEventListener('click', /*#__PURE__*/function () {
@@ -9412,6 +9695,8 @@ _base.elements.overview.addEventListener('click', /*#__PURE__*/function () {
               (0, _cardController.cardLoader)(e); // User click 'make a new card' button in card homepage
             } else if (e.target.closest('.make-card')) {
               (0, _cardController.cardMakerLoader)(e);
+            } else if (e.target.closest('.make-classroom')) {
+              classroomView.renderMakeClassroomGrid(_base.elements.overview);
             }
 
           case 1:
@@ -9426,7 +9711,7 @@ _base.elements.overview.addEventListener('click', /*#__PURE__*/function () {
     return _ref.apply(this, arguments);
   };
 }());
-},{"../views/base":"js/views/base.js","./cardController":"js/controllers/cardController.js","./loginHandler":"js/controllers/loginHandler.js","../models/userModel":"js/models/userModel.js","../models/cardModel":"js/models/cardModel.js","../models/deckModel":"js/models/deckModel.js","../utils/localStorage":"js/utils/localStorage.js","../views/cardView":"js/views/cardView.js","../views/deckView":"js/views/deckView.js"}],"js/controllers/alertController.js":[function(require,module,exports) {
+},{"../views/base":"js/views/base.js","./cardController":"js/controllers/cardController.js","./loginHandler":"js/controllers/loginHandler.js","../models/userModel":"js/models/userModel.js","../models/cardModel":"js/models/cardModel.js","../models/deckModel":"js/models/deckModel.js","../models/classroomModel":"js/models/classroomModel.js","../utils/localStorage":"js/utils/localStorage.js","../views/cardView":"js/views/cardView.js","../views/deckView":"js/views/deckView.js","../views/classroomView":"js/views/classroomView.js"}],"js/controllers/alertController.js":[function(require,module,exports) {
 "use strict";
 
 var _alert = require("../utils/alert");
@@ -9642,211 +9927,7 @@ var deckMakerLoader = function deckMakerLoader(e) {
 };
 
 exports.deckMakerLoader = deckMakerLoader;
-},{"../views/base":"js/views/base.js","../views/deckView":"js/views/deckView.js","../utils/localStorage":"js/utils/localStorage.js","../utils/alert":"js/utils/alert.js","../models/deckModel":"js/models/deckModel.js","./overviewController":"js/controllers/overviewController.js"}],"js/views/classroomView.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.renderMakeClassroomGrid = exports.renderClassroomGrid = void 0;
-
-var renderClassroomGrid = function renderClassroomGrid(parent, classroomArray) {
-  var classrooms = '';
-  classroomArray.forEach(function (classroom) {
-    var classroomMarkup = "\n      <div class=\"classroom classroom-".concat(classroom.id, "\" data-classroom=").concat(classroom.id, ">\n        <div class=\"classroom__details\">\n          <div class=\"name\">").concat(classroom.name, "</div>\n        </div>\n      </div> \n    ");
-    classrooms += classroomMarkup;
-  }); // Have an IF statement to determine if they are student or teacher.
-
-  var markup = "\n    <div class=\"make-classroom\">\n        <a href=\"#\" class=\"btn btn--ghost\">Make A New Classroom</a>\n    </div>\n\n    <div class=\"classroom-grid\">\n        ".concat(classrooms, "\n    </div>;");
-  parent.insertAdjacentHTML('afterbegin', markup);
-};
-
-exports.renderClassroomGrid = renderClassroomGrid;
-
-var renderMakeClassroomGrid = function renderMakeClassroomGrid(parent, studentArray, currStudentArray) {
-  // Add Students to the classroom TODO: get the add button to work
-  var studentTable = '';
-  studentArray.forEach(function (user) {
-    var studentMarkup = "\n    <tr class=\"user user-".concat(user.id, "\">\n      <th>").concat(user.name, "</th>\n      <th>").concat(user.email, "</th>\n      <th><input type=\"button\" value=\"Add\" href=\"#\"></input></th>\n    </tr>\n    ");
-    studentTable += studentMarkup;
-  });
-  var markup = "\n    <div class=\"make-classroom-grid\">\n\n    <form action=\"#\" class=\"make-classroom__form\">\n        <label for=\"deck-name\" class=\"make-classroom__label\">Enter Classroom name</label>\n        <textarea id=\"deck-name\" class=\"make-classroom__textarea  textarea-q\" wrap=\"off\" minlength=\"5\" maxlength=\"250\" placeholder=\"Enter your classroom name\" required=\"true\" spellcheck=\"true\"></textarea>\n    </form>\n    <div class=\"make-classroom__table\">\n      <div class=\"make-classroom__table-scroll\" style=\"float:left;\">\n      <label class=\"make-classroom__label\">Add Students</label>\n      <table>\n        <thead>\n          <tr>\n            <th>Name</th>\n            <th>Email</th>\n          </tr>\n        </thead>\n        <tbody class=\"classroom-table-add__body\">\n          ".concat(studentTable, "\n        </tbody>\n      </table>\n      </div>\n\n      <div class=\"make-classroom__table-scroll\" style=\"float:right;\">\n      <label class=\"make-classroom__label\">Current Students</label>\n      <table>\n        <thead>\n          <tr>\n            <th>Name</th>\n            <th>Email</th>\n          </tr>\n        </thead>\n        <tbody class=\"classroom-table-add__body\">\n          <tr>\n            <th>Tom Horne</th>\n            <th>madamot@gmail.com</th>\n            <th><input type=\"button\" value=\"Remove\" href=\"#\"></input></th>\n          </tr>\n          <tr>\n            <th>Tom Horne</th>\n            <th>madamot@gmail.com</th>\n            <th><input type=\"button\" value=\"Remove\" href=\"#\"></input></th>\n          </tr>\n          <tr>\n            <th>Tom Horne</th>\n            <th>madamot@gmail.com</th>\n            <th><input type=\"button\" value=\"Remove\" href=\"#\"></input></th>\n          </tr>\n        </tbody>\n      </table>\n      </div>\n    </div>\n    \n    <div class=\"make-classroom__group make-classroom--right\">\n      <a href=\"#\" class=\"make-classroom__link\">\n        <svg class=\"icon icon--make-classroom icon--make-classroom-right icon--right\">\n          <use href=\"img/SVG/check.svg\"></use>\n        </svg>\n      </a>\n      <span class=\"make-classroom__span\">Create The Classroom</span>\n    </div>\n\n    <div class=\"make-classroom__group make-classroom--wrong\">\n      <a href=\"#\" class=\"make-classroom__link\">\n        <svg class=\"icon icon--make-classroom icon--make-classroom-left icon-left icon--wrong\">\n          <use href=\"img/SVG/circle-with-cross.svg\"></use>\n        </svg>\n      </a>\n      <span class=\"make-classroom__span\">Let's Stop!</span>\n    </div>\n  </div>\n");
-  parent.insertAdjacentHTML('afterbegin', classroom);
-};
-
-exports.renderMakeClassroomGrid = renderMakeClassroomGrid;
-},{}],"js/models/classroomModel.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _axios = _interopRequireDefault(require("axios"));
-
-var _alert = require("../utils/alert");
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-var Classroom = /*#__PURE__*/function () {
-  function Classroom() {
-    _classCallCheck(this, Classroom);
-
-    _defineProperty(this, "async", void 0);
-  }
-
-  _createClass(Classroom, [{
-    key: "getClassrooms",
-    value: function () {
-      var _getClassrooms = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(token) {
-        var res, message;
-        return regeneratorRuntime.wrap(function _callee$(_context) {
-          while (1) {
-            switch (_context.prev = _context.next) {
-              case 0:
-                _context.prev = 0;
-                _context.next = 3;
-                return _axios.default.get('https://polar-savannah-53668.herokuapp.com/api/v0/teacher-classrooms', {
-                  headers: {
-                    Authorization: "Bearer ".concat(token)
-                  }
-                });
-
-              case 3:
-                res = _context.sent;
-                return _context.abrupt("return", res.data.data.deck);
-
-              case 7:
-                _context.prev = 7;
-                _context.t0 = _context["catch"](0);
-                message = _context.t0.response.data.message;
-                (0, _alert.showAlert)('error', message);
-
-              case 11:
-              case "end":
-                return _context.stop();
-            }
-          }
-        }, _callee, null, [[0, 7]]);
-      }));
-
-      function getClassrooms(_x) {
-        return _getClassrooms.apply(this, arguments);
-      }
-
-      return getClassrooms;
-    }()
-  }, {
-    key: "createClassroom",
-    value: function () {
-      var _createClassroom = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(name, user, token) {
-        var res, message;
-        return regeneratorRuntime.wrap(function _callee2$(_context2) {
-          while (1) {
-            switch (_context2.prev = _context2.next) {
-              case 0:
-                _context2.prev = 0;
-                _context2.next = 3;
-                return _axios.default.post('https://polar-savannah-53668.herokuapp.com/api/v0/cards', {
-                  name: name,
-                  user: user
-                }, {
-                  headers: {
-                    Authorization: "Bearer ".concat(token)
-                  }
-                });
-
-              case 3:
-                res = _context2.sent;
-
-                if (res.data.status === 'success') {
-                  (0, _alert.showAlert)('success', 'Deck was created');
-                }
-
-                _context2.next = 11;
-                break;
-
-              case 7:
-                _context2.prev = 7;
-                _context2.t0 = _context2["catch"](0);
-                message = _context2.t0.response.data.message;
-                (0, _alert.showAlert)('error', message);
-
-              case 11:
-              case "end":
-                return _context2.stop();
-            }
-          }
-        }, _callee2, null, [[0, 7]]);
-      }));
-
-      function createClassroom(_x2, _x3, _x4) {
-        return _createClassroom.apply(this, arguments);
-      }
-
-      return createClassroom;
-    }()
-  }, {
-    key: "getRole",
-    value: function () {
-      var _getRole = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(token) {
-        var res, message;
-        return regeneratorRuntime.wrap(function _callee3$(_context3) {
-          while (1) {
-            switch (_context3.prev = _context3.next) {
-              case 0:
-                _context3.prev = 0;
-                _context3.next = 3;
-                return _axios.default.get('https://polar-savannah-53668.herokuapp.com/api/v0/users/my-account', {
-                  headers: {
-                    Authorization: "Bearer ".concat(token)
-                  }
-                });
-
-              case 3:
-                res = _context3.sent;
-                return _context3.abrupt("return", res.data.data.role);
-
-              case 7:
-                _context3.prev = 7;
-                _context3.t0 = _context3["catch"](0);
-                message = _context3.t0.response.data.message;
-                (0, _alert.showAlert)('error', message);
-
-              case 11:
-              case "end":
-                return _context3.stop();
-            }
-          }
-        }, _callee3, null, [[0, 7]]);
-      }));
-
-      function getRole(_x5) {
-        return _getRole.apply(this, arguments);
-      }
-
-      return getRole;
-    }()
-  }]);
-
-  return Classroom;
-}();
-
-exports.default = Classroom;
-},{"axios":"../node_modules/axios/index.js","../utils/alert":"js/utils/alert.js"}],"js/controllers/classroomController.js":[function(require,module,exports) {
+},{"../views/base":"js/views/base.js","../views/deckView":"js/views/deckView.js","../utils/localStorage":"js/utils/localStorage.js","../utils/alert":"js/utils/alert.js","../models/deckModel":"js/models/deckModel.js","./overviewController":"js/controllers/overviewController.js"}],"js/controllers/classroomController.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -9921,13 +10002,14 @@ var getClassroomsFromAPI = /*#__PURE__*/function () {
 
           case 3:
             _context2.next = 5;
-            return _overviewController.state.classroom.getClassrooms(token);
+            return _overviewController.state.classroom.getTeacherClassrooms(token);
 
           case 5:
             _overviewController.state.classroom.classrooms = _context2.sent;
+            console.log(_overviewController.state.classroom.classrooms);
             storage.storeObj('classrooms', _overviewController.state.classroom.classrooms);
 
-          case 7:
+          case 8:
           case "end":
             return _context2.stop();
         }
@@ -9943,7 +10025,7 @@ var getClassroomsFromAPI = /*#__PURE__*/function () {
 exports.getClassroomsFromAPI = getClassroomsFromAPI;
 
 var classroomRender = function classroomRender() {
-  classroomView.renderclassroomGrid(_base.elements.overview, _overviewController.state.classroom.classrooms);
+  classroomView.renderClassroomGrid(_base.elements.overview, _overviewController.state.classroom.classrooms);
 };
 
 exports.classroomRender = classroomRender;
@@ -10476,7 +10558,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "53967" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52355" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

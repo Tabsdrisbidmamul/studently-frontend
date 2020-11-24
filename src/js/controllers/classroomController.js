@@ -17,12 +17,16 @@ export const getClassroomsFromAPI = async () => {
     return new Error('You are not logged in');
   }
 
-  state.classroom.classrooms = await state.classroom.getClassrooms(token);
+  state.classroom.classrooms = await state.classroom.getTeacherClassrooms(
+    token
+  );
+  console.log(state.classroom.classrooms);
+
   storage.storeObj('classrooms', state.classroom.classrooms);
 };
 
 export const classroomRender = () => {
-  classroomView.renderclassroomGrid(
+  classroomView.renderClassroomGrid(
     elements.overview,
     state.classroom.classrooms
   );

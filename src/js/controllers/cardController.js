@@ -33,39 +33,56 @@ export const cardRender = () => {
   // TODO: ADD IF STATEMENT FOR WHEN THE CARDS ARRAY IS EMPTY (USER HAS NO CARDS)
 };
 
-// When the user interacts with cards in the overview
+// Load the card if they have click the entire card or the edit/ delete options
 export const cardLoader = (e) => {
-  const click = e.target.closest('.card');
-  if (e.target.matches('.card, .card *')) {
-    try {
-      // 1. Get the Card Id
-      const cardId = click.dataset.card;
-
-      //2. Get the cards array
-      const cards = storage.getObj('cards') || state.card.cards;
-
-      //3. Find the card in the cards array via id
-      const cardData = cards.filter((card) => {
-        return card.id === cardId;
-      });
-
-      // 4. check if the card is a question card or an answer card
-      if (click.children.length > 1) {
-        cardView.renderCardQuestion(
-          document.querySelector(`.card-${cardId}`),
-          cardData[0].question
-        );
-      } else {
-        cardView.renderCardAnswer(
-          document.querySelector(`.card-${cardId}`),
-          cardData[0].answer
-        );
-      }
-    } catch (err) {}
+  if (e.target.matches('.options, .options *')) {
+    const click = e.target.closest('.options');
+    optionsHandler(click);
+  } else if (e.target.matches('.card, .card *')) {
+    const click = e.target.closest('.card');
+    cardHandler(click);
   }
 };
 
-//
+const optionsHandler = (click) => {
+  if (Array.from(click.classList).includes('options--edit')) {
+    console.log("We're are editing");
+  } else if (Array.from(click.classList).includes('options--delete')) {
+    console.log("We're deleting");
+  }
+};
+
+// When the user interacts with cards in the overview
+const cardHandler = (click) => {
+  try {
+    // 1. Get the Card Id
+    const cardId = click.dataset.card;
+
+    //2. Get the cards array
+    const cards = storage.getObj('cards') || state.card.cards;
+
+    //3. Find the card in the cards array via id
+    const cardData = cards.filter((card) => {
+      return card.id === cardId;
+    })[0];
+
+    // 4. check if the card is a question card or an answer card
+    if (click.children.length === 2) {
+      cardView.renderCardAnswer(
+        document.querySelector(`.card-${cardId}`),
+        cardData.answer
+      );
+    } else if (click.children.length === 3) {
+      cardView.renderCardQuestion(
+        document.querySelector(`.card-${cardId}`),
+        cardData.question
+      );
+    }
+  } catch (err) {
+    showAlert('error', err.message);
+  }
+};
+
 const QAndAValueChanger = (e) => {
   // 1. question box update the value in real time to the card
   document.querySelector('.textarea-q').addEventListener('input', (e) => {

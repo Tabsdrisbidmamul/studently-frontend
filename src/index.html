@@ -9,7 +9,7 @@
     />
     <!-- change href to style.css at the end -->
     <!-- <link href="css/main.css" type="text/css" rel="stylesheet" /> -->
-    <title>Document</title>
+    <title>Studently Webapp</title>
   </head>
   <body>
     <!-- Alert -->
@@ -39,7 +39,7 @@
           </div>
         </nav> -->
 
-          <!-- <div class="user-nav__dropdown">
+        <!-- <div class="user-nav__dropdown">
             <a href="#" class="user-nav__link">Settings</a>
             <a href="#" class="user-nav__link">Statistics</a>
             <a href="#" class="user-nav__link">Settings</a>
@@ -50,7 +50,9 @@
       <div class="content">
         <nav class="sidebar">
           <ul class="side-nav">
-            <li class="side-nav__item side-nav__item side-nav__item--active side-nav-card">
+            <li
+              class="side-nav__item side-nav__item side-nav__item--active side-nav-card"
+            >
               <a href="#" class="side-nav__link">
                 <svg class="side-nav__icon">
                   <use href="img/SVG/documents.svg"></use>
@@ -68,7 +70,7 @@
               </a>
             </li>
 
-            <li class="side-nav__item side-nav__item">
+            <li class="side-nav__item side-nav__item side-nav-classroom">
               <a href="#" class="side-nav__link">
                 <svg class="side-nav__icon">
                   <use href="img/SVG/graduation-cap.svg"></use>
@@ -86,7 +88,7 @@
               </a>
             </li>
 
-            <li class="side-nav__item side-nav__item">
+            <li class="side-nav__item side-nav__item side-nav-settings">
               <a href="#" class="side-nav__link">
                 <svg class="side-nav__icon">
                   <use href="img/SVG/cog.svg"></use>
@@ -125,7 +127,6 @@
             </form>
           </div> -->
 
-
           <!-- CARDS -->
           <!-- <div class="make-card">
             <a href="#" class="btn btn--ghost">Make A New Card</a>
@@ -133,20 +134,43 @@
 
           <div class="card-grid">
             <div class="card">
+              <div class="card__options">
+                <a href="#" class="options options--edit">
+                  <svg class="icon icon--options icon--edit">
+                    <use xlink:href="img/SVG/edit.svg"></use>
+                  </svg>
+                  <span class="show-hide card--edit">Edit</span>
+                </a>
+
+                <a href="#" class="options options--delete">
+                  <svg class="icon icon--options icon--delete">
+                    <use xlink:href="img/SVG/trash.svg"></use>
+                  </svg>
+                  <span class="show-hide card--delete">Delete</span>
+                </a>
+              </div>
+
               <div class="card__details">
-                <span class="name">This is what a Question should look like</span>
+                <span class="name">
+                  This is what a Question should look like
+                </span>
               </div>
             </div>
-  
+
             <div class="card">
               <div class="card__details">
-                <span class="name">Is light a particle or a wave? (Hint: think of light reflecting and diffracting</span>
+                <span class="name"
+                  >Is light a particle or a wave? (Hint: think of light
+                  reflecting and diffracting</span
+                >
               </div>
             </div>
-  
+
             <div class="card">
               <div class="card__details">
-                <span class="name">This is what an Answer should look like</span>
+                <span class="name"
+                  >This is what an Answer should look like</span
+                >
               </div>
 
               <div class="answer-form">
@@ -163,7 +187,7 @@
                 </a>
               </div>
             </div>
-  
+
             <div class="card">
               <div class="card__details">
                 <span class="name">What is a Question?</span>
@@ -172,7 +196,9 @@
 
             <div class="card">
               <div class="card__details">
-                <span class="name">This is what an Answer should look like</span>
+                <span class="name"
+                  >This is what an Answer should look like</span
+                >
               </div>
 
               <div class="answer-form">
@@ -189,8 +215,6 @@
                 </a>
               </div>
             </div> -->
-
-
 
             <!-- MAKE CARD -->
             <!-- <div class="make-card-grid">
@@ -392,11 +416,11 @@
               </div>
             </div>-->
 
-          <!-- END OF OVERVIEW -->
+            <!-- END OF OVERVIEW -->
           </div>
-        <!-- END OF CONTENT -->
+          <!-- END OF CONTENT -->
         </div>
-      <!-- END OF CONTAINER -->
+        <!-- END OF CONTAINER -->
       </div>
     </div>
     <script src="./js/index.js"></script>
