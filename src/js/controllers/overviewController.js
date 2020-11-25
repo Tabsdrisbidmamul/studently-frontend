@@ -31,7 +31,9 @@ elements.overview.addEventListener('click', async (e) => {
 
     // User click 'make a new card' button in card homepage
   } else if (e.target.closest('.make-card')) {
-    cardMakerLoader(e);
+    cardMakerLoader();
+
+    // User clicks 'make a new classroom' button in the classroom homepage
   } else if (e.target.closest('.make-classroom')) {
     classroomView.renderMakeClassroomGrid(elements.overview);
   }

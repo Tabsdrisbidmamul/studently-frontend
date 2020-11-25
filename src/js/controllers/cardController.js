@@ -1,9 +1,11 @@
 import { elements, clearOverview } from '../views/base';
 import * as cardView from '../views/cardView';
-import * as storage from '../utils/localStorage';
-import { showAlert } from '../utils/alert';
+import * as windowView from '../views/windowView';
 import Card from '../models/cardModel';
 import { state } from './overviewController';
+import * as windowController from './windowController';
+import * as storage from '../utils/localStorage';
+import { showAlert } from '../utils/alert';
 
 export const cardLoaderAndRender = async () => {
   await getCardsFromAPI();
@@ -11,17 +13,14 @@ export const cardLoaderAndRender = async () => {
 };
 
 export const getCardsFromAPI = async () => {
-  // 1. Store the card instance
-  // state.card = new Card();
-
-  // 2. Get the TOKEN
+  // 1. Get the TOKEN
   const token = storage.getObj('token') || state.user.token;
 
   if (!token) {
     return new Error('You are not logged in');
   }
 
-  // 3. Save the user created cards as an array
+  // 2. Save the user created cards as an array
   state.card.cards = await state.card.getCards(token);
   storage.storeObj('cards', state.card.cards);
 };
@@ -35,21 +34,52 @@ export const cardRender = () => {
 
 // Load the card if they have click the entire card or the edit/ delete options
 export const cardLoader = (e) => {
+  // check if the user clicked either edit or delete card
   if (e.target.matches('.options, .options *')) {
     const click = e.target.closest('.options');
-    optionsHandler(click);
+    const cardId = e.target.parentNode.parentNode.parentNode.dataset.card;
+    console.log(state.card.cards);
+    optionsHandler(click, cardId);
+
+    // check if the user clicked the whole card
   } else if (e.target.matches('.card, .card *')) {
     const click = e.target.closest('.card');
     cardHandler(click);
   }
 };
 
-const optionsHandler = (click) => {
+// Handler for Edit and Delete a card
+const optionsHandler = async (click, cardId) => {
+  // user clicked edit card
   if (Array.from(click.classList).includes('options--edit')) {
-    console.log("We're are editing");
+    cardUpdaterMaker(cardId);
+
+    // user clicked delete card
   } else if (Array.from(click.classList).includes('options--delete')) {
-    console.log("We're deleting");
+    windowController.windowDeletionHandler(cardId);
   }
+};
+
+const cardUpdaterMaker = (cardId) => {
+  const cardData = getCard(cardId);
+
+  clearOverview();
+  cardView.renderUpdateCardGrid(elements.overview, cardData.question);
+  addQAtoTextBox(cardData.question, cardData.answer);
+  QAValueChanger();
+  swapCardFacing();
+  cancelCardMaker();
+  updateCard(cardId);
+};
+
+const getCard = (cardId) => {
+  //1. Get the cards array
+  const cards = storage.getObj('cards') || state.card.cards;
+
+  //2. Find the card in the cards array via id
+  return cards.filter((card) => {
+    return card.id === cardId;
+  })[0];
 };
 
 // When the user interacts with cards in the overview
@@ -58,20 +88,17 @@ const cardHandler = (click) => {
     // 1. Get the Card Id
     const cardId = click.dataset.card;
 
-    //2. Get the cards array
-    const cards = storage.getObj('cards') || state.card.cards;
+    // 2. Get the card from the cards array
+    const cardData = getCard(cardId);
 
-    //3. Find the card in the cards array via id
-    const cardData = cards.filter((card) => {
-      return card.id === cardId;
-    })[0];
-
-    // 4. check if the card is a question card or an answer card
+    // 3. check if the card is a question card or an answer card
+    // clicked the question facing side, turn it over to the answer facing side
     if (click.children.length === 2) {
       cardView.renderCardAnswer(
         document.querySelector(`.card-${cardId}`),
         cardData.answer
       );
+      // clicked the answer facing side, turn it over to the question facing side
     } else if (click.children.length === 3) {
       cardView.renderCardQuestion(
         document.querySelector(`.card-${cardId}`),
@@ -83,10 +110,17 @@ const cardHandler = (click) => {
   }
 };
 
-const QAndAValueChanger = (e) => {
+// render text of card data from when they want to edit the card
+const addQAtoTextBox = (question, answer) => {
+  document.querySelector('.textarea-q').value = question;
+  document.querySelector('.textarea-a').value = answer;
+};
+
+// render text from input boxes to the card in 'make a card'
+const QAValueChanger = () => {
   // 1. question box update the value in real time to the card
   document.querySelector('.textarea-q').addEventListener('input', (e) => {
-    cardView.renderCardQuestion(
+    cardView.renderCardQuestionMake(
       document.querySelector('.card--make'),
       document.querySelector('.textarea-q').value
     );
@@ -94,53 +128,138 @@ const QAndAValueChanger = (e) => {
 
   // 2. answer box update the value in real time to the card
   document.querySelector('.textarea-a').addEventListener('input', (e) => {
-    cardView.renderCardQuestion(
+    cardView.renderCardQuestionMake(
       document.querySelector('.card--make'),
       document.querySelector('.textarea-a').value
     );
   });
 };
 
-const swapCardFacing = (e) => {
+// Handler when the card is to be swapped to question or answer side
+const swapCardFacing = () => {
   // 1. set the boolean for card facing
   let cardFacing = 'question';
 
   // 2. swap card facing side
   document.querySelector('.btn--switch').addEventListener('click', (e) => {
     let textareaBox = '.textarea-q';
+
+    // card to be swapped over to answer side
     if (cardFacing === 'question') {
       textareaBox = '.textarea-q';
       cardFacing = 'answer';
+
+      // card to be swapped over to question side
     } else {
       textareaBox = '.textarea-a';
       cardFacing = 'question';
     }
 
-    cardView.renderCardQuestion(
+    // Reuse render question as we are just rendering text to the card not the forms attached with answer card
+    cardView.renderCardQuestionMake(
       document.querySelector('.card--make'),
       document.querySelector(textareaBox).value
     );
   });
 };
 
-const createCard = (e) => {
+const createCard = () => {
   // User clicks to create the card
   document
     .querySelector('.icon--make-card-right')
-    .addEventListener('click', (e) => {
+    .addEventListener('click', async (e) => {
+      // 1. Get the question, answer and user
       const question = document.querySelector('.textarea-q').value;
       const answer = document.querySelector('.textarea-a').value;
       const user = storage.getObj('user') || state.user.userData.id;
 
+      // 2. Check if they have written something to the text-boxes
       if (question && answer && user) {
-        state.card.createCard(question, answer, user, storage.getObj('token'));
+        // 2.1 Call API to to write card to DB
+        await state.card.createCard(
+          question,
+          answer,
+          user,
+          storage.getObj('token')
+        );
+
+        // 2.2 Clear Overview and reset the grid so they can make more cards
+        cardMakerLoader();
+
+        // 3 User has not entered all the text-boxes, send an alert to tell them to write fill it in
       } else {
         showAlert('error', 'Please enter a question and an answer');
       }
     });
 };
 
-const cancelCardMaker = (e) => {
+const updateCard = (cardId) => {
+  // User clicks to update the card
+  document
+    .querySelector('.icon--make-card-right')
+    .addEventListener('click', async (e) => {
+      // 1. Get the question, answer and user
+      const question = document.querySelector('.textarea-q').value;
+      const answer = document.querySelector('.textarea-a').value;
+
+      // 2. Check if they have written something to the text-boxes
+      if (question && answer) {
+        // 2.1 Call API to to write card to DB
+        await state.card.updateCard(
+          cardId,
+          question,
+          answer,
+          storage.getObj('token')
+        );
+
+        // 2.2 Render the homepage to show the change
+        window.setTimeout(async () => {
+          clearOverview();
+          await cardLoaderAndRender();
+        }, 1500);
+
+        // 3 User has not entered all the text-boxes, send an alert to tell them to write fill it in
+      } else {
+        showAlert('error', 'Please enter a question and an answer');
+      }
+    });
+};
+
+export const deleteCard = async (e, cardId) => {
+  const click = e.target.closest('.window__content');
+  try {
+    if (click) {
+      // 3. Check if they clicked yes or no to delete the card
+      // they clicked yes to delete the card
+      if (e.target.matches('.window__ok')) {
+        // 3.1 get the token
+        const token = storage.getObj('token') || state.user.token;
+
+        // 3.2 Check to see if they are logged in
+        if (!token) {
+          return new Error('You are not logged in!');
+        }
+
+        // 3.3 Delete the card by calling the API
+        await state.card.deleteCard(cardId, token);
+
+        // Render the homepage to show the change
+        window.setTimeout(async () => {
+          clearOverview();
+          await cardLoaderAndRender();
+        }, 1500);
+
+        // they clicked no to delete the card
+      } else {
+        windowView.clearWindow();
+      }
+    }
+  } catch (err) {
+    showAlert('error', err.message);
+  }
+};
+
+const cancelCardMaker = () => {
   // User clicks to cancel the card creation
   document
     .querySelector('.icon--make-card-left')
@@ -150,11 +269,11 @@ const cancelCardMaker = (e) => {
     });
 };
 
-export const cardMakerLoader = (e) => {
+export const cardMakerLoader = () => {
   clearOverview();
   cardView.renderMakeCardGrid(elements.overview);
-  QAndAValueChanger(e);
-  swapCardFacing(e);
-  createCard(e);
-  cancelCardMaker(e);
+  QAValueChanger();
+  swapCardFacing();
+  createCard();
+  cancelCardMaker();
 };

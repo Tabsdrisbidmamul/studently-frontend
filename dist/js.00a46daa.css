@@ -219,12 +219,43 @@
   .options:hover .show-hide {
     display: block; }
   .options .show-hide {
-    display: none;
-    transition: display 1000ms; }
+    display: none; }
   .options--edit {
     color: #7579e7; }
   .options--delete {
     color: #d11937; }
+
+.window__content {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  transform: translate(-50%, 0);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 3px;
+  width: 50%;
+  box-shadow: 0 2rem 4rem rgba(0, 0, 0, 0.2);
+  background-color: rgba(51, 51, 51, 0.9);
+  padding: 1rem;
+  padding-bottom: 2rem; }
+  .window__content > * {
+    margin: 0 2rem;
+    font-family: inherit;
+    font-size: 1.6rem;
+    color: black;
+    text-transform: uppercase;
+    backface-visibility: hidden;
+    transition: all 200ms; }
+    .window__content > *:hover {
+      transform: scale(1.03);
+      cursor: pointer; }
+
+.window__ok {
+  color: #24a19c; }
+
+.window__cancel {
+  color: #ff4b5c; }
 
 .answer-form {
   display: flex; }

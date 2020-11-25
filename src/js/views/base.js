@@ -1,6 +1,7 @@
 export const elements = {
   headerLoginBtn: document.querySelector('.header__login'),
   header: document.querySelector('header'),
+  body: document.querySelector('body'),
   overview: document.querySelector('.overview'),
   card: document.querySelector('.side-nav-card'),
   deck: document.querySelector('.side-nav-deck'),

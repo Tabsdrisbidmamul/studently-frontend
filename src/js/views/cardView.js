@@ -83,6 +83,39 @@ export const renderCardAnswer = (HTMLCard, answer) => {
   HTMLCard.innerHTML = markup;
 };
 
+export const renderCardAnswerMake = (HTMLCard, answer) => {
+  const markup = `
+  <div class="card__details">
+    <div class="card__name">${answer}</div>
+  </div>
+
+  <div class="answer-form">
+    <a href="#" class="answer-form__link">
+      <svg class="icon icon--card icon--card-right icon--right">
+        <use xlink:href="${tick}"></use>
+      </svg>
+    </a>
+
+    <a href="#" class="answer-form__link">
+      <svg class="icon icon--card icon--card-left icon--wrong">
+        <use xlink:href="${cross}"></use>
+      </svg>
+    </a>
+  `;
+
+  HTMLCard.innerHTML = markup;
+};
+
+export const renderCardQuestionMake = (HTMLCard, question) => {
+  const markup = `
+  <div class="card__details">
+    <div class="card__name">${question}</div>
+  </div>
+  `;
+
+  HTMLCard.innerHTML = markup;
+};
+
 export const renderCardQuestion = (HTMLCard, question) => {
   const markup = `
   <div class="card__options">
@@ -107,6 +140,49 @@ export const renderCardQuestion = (HTMLCard, question) => {
   `;
 
   HTMLCard.innerHTML = markup;
+};
+
+export const renderUpdateCardGrid = (parent, question) => {
+  const markup = `             
+  <div class="make-card-grid">
+  <div class="card card--make">
+    <div class="card__details">
+      <span class="name">${question}</span>
+    </div>
+  </div>
+
+  <form action="#" class="make-card__form">
+      <label for="question" class="make-card__label">Enter Your Question</label>
+      <textarea id="question" class="make-card__textarea textarea-q" wrap="on" minlength="5" maxlength="150" placeholder="Enter your question" required="true" spellcheck="true"></textarea>
+    
+      <label for="answer" class="make-card__label">Enter Your Answer</label>
+      <textarea id="answer" class="make-card__textarea textarea-a" wrap="on" minlength="5" maxlength="150" placeholder="Enter your answer" required="true" spellcheck="true"></textarea>
+  </form>
+
+  <div class="make-card__group make-card--switch">
+    <a href="#" class="make-card__switch btn btn--switch">Turn Over</a>
+  </div>
+
+  <div class="make-card__group make-card--right">
+    <a href="#" class="make-card__link">
+      <svg class="icon icon--make-card icon--make-card-right icon--right">
+        <use href="${tick}"></use>
+      </svg>
+    </a>
+    <span class="make-card__span">Update The Card</span>
+  </div>
+
+  <div class="make-card__group make-card--wrong">
+    <a href="#" class="make-card__link">
+      <svg class="icon icon--make-card icon--make-card-left icon-left icon--wrong">
+        <use href="${cross}"></use>
+      </svg>
+    </a>
+    <span class="make-card__span">Let's Stop!</span>
+  </div>
+</div>`;
+
+  parent.insertAdjacentHTML('afterbegin', markup);
 };
 
 export const renderMakeCardGrid = (parent) => {

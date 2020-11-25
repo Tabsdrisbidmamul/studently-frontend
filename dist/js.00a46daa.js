@@ -6697,6 +6697,7 @@ exports.clearOverview = exports.elements = void 0;
 var elements = {
   headerLoginBtn: document.querySelector('.header__login'),
   header: document.querySelector('header'),
+  body: document.querySelector('body'),
   overview: document.querySelector('.overview'),
   card: document.querySelector('.side-nav-card'),
   deck: document.querySelector('.side-nav-deck'),
@@ -6728,7 +6729,7 @@ module.exports = '#90f76b9fdc792fc4a53d17223bebcfe6';
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.renderMakeCardGrid = exports.renderCardQuestion = exports.renderCardAnswer = exports.renderCardGrid = void 0;
+exports.renderMakeCardGrid = exports.renderUpdateCardGrid = exports.renderCardQuestion = exports.renderCardQuestionMake = exports.renderCardAnswerMake = exports.renderCardAnswer = exports.renderCardGrid = void 0;
 
 var _check = _interopRequireDefault(require("../../img/SVG/check.svg"));
 
@@ -6759,6 +6760,20 @@ var renderCardAnswer = function renderCardAnswer(HTMLCard, answer) {
 
 exports.renderCardAnswer = renderCardAnswer;
 
+var renderCardAnswerMake = function renderCardAnswerMake(HTMLCard, answer) {
+  var markup = "\n  <div class=\"card__details\">\n    <div class=\"card__name\">".concat(answer, "</div>\n  </div>\n\n  <div class=\"answer-form\">\n    <a href=\"#\" class=\"answer-form__link\">\n      <svg class=\"icon icon--card icon--card-right icon--right\">\n        <use xlink:href=\"").concat(_check.default, "\"></use>\n      </svg>\n    </a>\n\n    <a href=\"#\" class=\"answer-form__link\">\n      <svg class=\"icon icon--card icon--card-left icon--wrong\">\n        <use xlink:href=\"").concat(_circleWithCross.default, "\"></use>\n      </svg>\n    </a>\n  ");
+  HTMLCard.innerHTML = markup;
+};
+
+exports.renderCardAnswerMake = renderCardAnswerMake;
+
+var renderCardQuestionMake = function renderCardQuestionMake(HTMLCard, question) {
+  var markup = "\n  <div class=\"card__details\">\n    <div class=\"card__name\">".concat(question, "</div>\n  </div>\n  ");
+  HTMLCard.innerHTML = markup;
+};
+
+exports.renderCardQuestionMake = renderCardQuestionMake;
+
 var renderCardQuestion = function renderCardQuestion(HTMLCard, question) {
   var markup = "\n  <div class=\"card__options\">\n      <a href=\"#\" class=\"options options--edit\">\n        <svg class=\"icon icon--options icon--edit\">\n          <use xlink:href=\"".concat(_edit.default, "\"></use>\n        </svg>\n        <span class=\"show-hide card--delete\">Edit</span>\n      </a>\n\n      <a href=\"#\" class=\"options options--delete\">\n        <svg class=\"icon icon--options icon--delete\">\n          <use xlink:href=\"").concat(_trash.default, "\"></use>\n        </svg>\n        <span class=\"show-hide card--delete\">Delete</span>\n      </a>\n      </div>\n\n  <div class=\"card__details\">\n    <div class=\"card__name\">").concat(question, "</div>\n  </div>\n  ");
   HTMLCard.innerHTML = markup;
@@ -6766,65 +6781,41 @@ var renderCardQuestion = function renderCardQuestion(HTMLCard, question) {
 
 exports.renderCardQuestion = renderCardQuestion;
 
+var renderUpdateCardGrid = function renderUpdateCardGrid(parent, question) {
+  var markup = "             \n  <div class=\"make-card-grid\">\n  <div class=\"card card--make\">\n    <div class=\"card__details\">\n      <span class=\"name\">".concat(question, "</span>\n    </div>\n  </div>\n\n  <form action=\"#\" class=\"make-card__form\">\n      <label for=\"question\" class=\"make-card__label\">Enter Your Question</label>\n      <textarea id=\"question\" class=\"make-card__textarea textarea-q\" wrap=\"on\" minlength=\"5\" maxlength=\"150\" placeholder=\"Enter your question\" required=\"true\" spellcheck=\"true\"></textarea>\n    \n      <label for=\"answer\" class=\"make-card__label\">Enter Your Answer</label>\n      <textarea id=\"answer\" class=\"make-card__textarea textarea-a\" wrap=\"on\" minlength=\"5\" maxlength=\"150\" placeholder=\"Enter your answer\" required=\"true\" spellcheck=\"true\"></textarea>\n  </form>\n\n  <div class=\"make-card__group make-card--switch\">\n    <a href=\"#\" class=\"make-card__switch btn btn--switch\">Turn Over</a>\n  </div>\n\n  <div class=\"make-card__group make-card--right\">\n    <a href=\"#\" class=\"make-card__link\">\n      <svg class=\"icon icon--make-card icon--make-card-right icon--right\">\n        <use href=\"").concat(_check.default, "\"></use>\n      </svg>\n    </a>\n    <span class=\"make-card__span\">Update The Card</span>\n  </div>\n\n  <div class=\"make-card__group make-card--wrong\">\n    <a href=\"#\" class=\"make-card__link\">\n      <svg class=\"icon icon--make-card icon--make-card-left icon-left icon--wrong\">\n        <use href=\"").concat(_circleWithCross.default, "\"></use>\n      </svg>\n    </a>\n    <span class=\"make-card__span\">Let's Stop!</span>\n  </div>\n</div>");
+  parent.insertAdjacentHTML('afterbegin', markup);
+};
+
+exports.renderUpdateCardGrid = renderUpdateCardGrid;
+
 var renderMakeCardGrid = function renderMakeCardGrid(parent) {
   var markup = "<div class=\"make-card-grid\">\n  <div class=\"card card--make\">\n    <div class=\"card__details\">\n      <span class=\"name\">What is a Question?</span>\n    </div>\n  </div>\n\n  <form action=\"#\" class=\"make-card__form\">\n      <label for=\"question\" class=\"make-card__label\">Enter Your Question</label>\n      <textarea id=\"question\" class=\"make-card__textarea textarea-q\" wrap=\"on\" minlength=\"5\" maxlength=\"150\" placeholder=\"Enter your question\" required=\"true\" spellcheck=\"true\"></textarea>\n    \n      <label for=\"answer\" class=\"make-card__label\">Enter Your Answer</label>\n      <textarea id=\"answer\" class=\"make-card__textarea textarea-a\" wrap=\"on\" minlength=\"5\" maxlength=\"150\" placeholder=\"Enter your answer\" required=\"true\" spellcheck=\"true\"></textarea>\n  </form>\n\n  <div class=\"make-card__group make-card--switch\">\n    <a href=\"#\" class=\"make-card__switch btn btn--switch\">Turn Over</a>\n  </div>\n\n  <div class=\"make-card__group make-card--right\">\n    <a href=\"#\" class=\"make-card__link\">\n      <svg class=\"icon icon--make-card icon--make-card-right icon--right\">\n        <use href=\"".concat(_check.default, "\"></use>\n      </svg>\n    </a>\n    <span class=\"make-card__span\">Create The Card</span>\n  </div>\n\n  <div class=\"make-card__group make-card--wrong\">\n    <a href=\"#\" class=\"make-card__link\">\n      <svg class=\"icon icon--make-card icon--make-card-left icon-left icon--wrong\">\n        <use href=\"").concat(_circleWithCross.default, "\"></use>\n      </svg>\n    </a>\n    <span class=\"make-card__span\">Let's Stop!</span>\n  </div>\n</div>\n");
   parent.insertAdjacentHTML('afterbegin', markup);
 };
 
 exports.renderMakeCardGrid = renderMakeCardGrid;
-},{"../../img/SVG/check.svg":"img/SVG/check.svg","../../img/SVG/circle-with-cross.svg":"img/SVG/circle-with-cross.svg","../../img/SVG/edit.svg":"img/SVG/edit.svg","../../img/SVG/trash.svg":"img/SVG/trash.svg"}],"js/utils/localStorage.js":[function(require,module,exports) {
+},{"../../img/SVG/check.svg":"img/SVG/check.svg","../../img/SVG/circle-with-cross.svg":"img/SVG/circle-with-cross.svg","../../img/SVG/edit.svg":"img/SVG/edit.svg","../../img/SVG/trash.svg":"img/SVG/trash.svg"}],"js/views/windowView.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.removeObj = exports.getObj = exports.storeObj = void 0;
+exports.clearWindow = exports.renderWindow = void 0;
 
-var storeObj = function storeObj(key, value) {
-  window.localStorage.setItem("".concat(key), JSON.stringify(value));
+var renderWindow = function renderWindow(parent) {
+  var markup = "<div class=\"window__content\">\n  <div class=\"window__ok\">\n    Yes, please delete it\n  </div>\n\n  <div class=\"window__cancel\">\n    No, I want to cancel\n  </div>\n</div>";
+  parent.insertAdjacentHTML('afterbegin', markup);
 };
 
-exports.storeObj = storeObj;
+exports.renderWindow = renderWindow;
 
-var getObj = function getObj(key) {
-  return JSON.parse(window.localStorage.getItem("".concat(key)));
+var clearWindow = function clearWindow() {
+  var windowAlert = document.querySelector('.window__content');
+  if (windowAlert) windowAlert.remove();
 };
 
-exports.getObj = getObj;
-
-var removeObj = function removeObj(key) {
-  return window.localStorage.removeItem("".concat(key));
-};
-
-exports.removeObj = removeObj;
-},{}],"js/utils/alert.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.hideAlert = exports.showAlert = void 0;
-
-var _base = require("../views/base");
-
-var showAlert = function showAlert(type, msg) {
-  hideAlert();
-  var alertMarkup = "<div class=\"alert alert-type--".concat(type, "\">").concat(msg, "<a href=\"#\" class=\"cross\">&Cross;</a></div> ");
-  document.querySelector('body').insertAdjacentHTML('afterbegin', alertMarkup);
-  window.setTimeout(function () {
-    return hideAlert;
-  }, 1000);
-};
-
-exports.showAlert = showAlert;
-
-var hideAlert = function hideAlert() {
-  var alert = document.querySelector('.alert');
-  if (alert) alert.remove();
-};
-
-exports.hideAlert = hideAlert;
-},{"../views/base":"js/views/base.js"}],"../node_modules/axios/lib/helpers/bind.js":[function(require,module,exports) {
+exports.clearWindow = clearWindow;
+},{}],"../node_modules/axios/lib/helpers/bind.js":[function(require,module,exports) {
 'use strict';
 
 module.exports = function bind(fn, thisArg) {
@@ -8608,7 +8599,59 @@ module.exports.default = axios;
 
 },{"./utils":"../node_modules/axios/lib/utils.js","./helpers/bind":"../node_modules/axios/lib/helpers/bind.js","./core/Axios":"../node_modules/axios/lib/core/Axios.js","./core/mergeConfig":"../node_modules/axios/lib/core/mergeConfig.js","./defaults":"../node_modules/axios/lib/defaults.js","./cancel/Cancel":"../node_modules/axios/lib/cancel/Cancel.js","./cancel/CancelToken":"../node_modules/axios/lib/cancel/CancelToken.js","./cancel/isCancel":"../node_modules/axios/lib/cancel/isCancel.js","./helpers/spread":"../node_modules/axios/lib/helpers/spread.js"}],"../node_modules/axios/index.js":[function(require,module,exports) {
 module.exports = require('./lib/axios');
-},{"./lib/axios":"../node_modules/axios/lib/axios.js"}],"js/models/cardModel.js":[function(require,module,exports) {
+},{"./lib/axios":"../node_modules/axios/lib/axios.js"}],"js/utils/alert.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.hideAlert = exports.showAlert = void 0;
+
+var _base = require("../views/base");
+
+var showAlert = function showAlert(type, msg) {
+  hideAlert();
+  var alertMarkup = "<div class=\"alert alert-type--".concat(type, "\">").concat(msg, "<a href=\"#\" class=\"cross\">&Cross;</a></div> ");
+  document.querySelector('body').insertAdjacentHTML('afterbegin', alertMarkup);
+  window.setTimeout(function () {
+    return hideAlert;
+  }, 1000);
+};
+
+exports.showAlert = showAlert;
+
+var hideAlert = function hideAlert() {
+  var alert = document.querySelector('.alert');
+  if (alert) alert.remove();
+};
+
+exports.hideAlert = hideAlert;
+},{"../views/base":"js/views/base.js"}],"js/utils/localStorage.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.removeObj = exports.getObj = exports.storeObj = void 0;
+
+var storeObj = function storeObj(key, value) {
+  window.localStorage.setItem("".concat(key), JSON.stringify(value));
+};
+
+exports.storeObj = storeObj;
+
+var getObj = function getObj(key) {
+  return JSON.parse(window.localStorage.getItem("".concat(key)));
+};
+
+exports.getObj = getObj;
+
+var removeObj = function removeObj(key) {
+  return window.localStorage.removeItem("".concat(key));
+};
+
+exports.removeObj = removeObj;
+},{}],"js/models/cardModel.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -8618,7 +8661,17 @@ exports.default = void 0;
 
 var _axios = _interopRequireDefault(require("axios"));
 
+var _overviewController = require("../controllers/overviewController");
+
 var _alert = require("../utils/alert");
+
+var storage = _interopRequireWildcard(require("../utils/localStorage"));
+
+var windowView = _interopRequireWildcard(require("../views/windowView"));
+
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -8729,31 +8782,187 @@ var Card = /*#__PURE__*/function () {
 
       return createCard;
     }()
+  }, {
+    key: "updateCard",
+    value: function () {
+      var _updateCard = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(cardId, question, answer, token) {
+        var res, message;
+        return regeneratorRuntime.wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                _context3.prev = 0;
+                _context3.next = 3;
+                return _axios.default.patch("https://polar-savannah-53668.herokuapp.com/api/v0/cards/".concat(cardId), {
+                  question: question,
+                  answer: answer
+                }, {
+                  headers: {
+                    Authorization: "Bearer ".concat(token)
+                  }
+                });
+
+              case 3:
+                res = _context3.sent;
+
+                if (res.data.status === 'success') {
+                  (0, _alert.showAlert)('success', 'Card was updated');
+                }
+
+                _context3.next = 11;
+                break;
+
+              case 7:
+                _context3.prev = 7;
+                _context3.t0 = _context3["catch"](0);
+                message = _context3.t0.response.data.message;
+                (0, _alert.showAlert)('error', message);
+
+              case 11:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee3, null, [[0, 7]]);
+      }));
+
+      function updateCard(_x6, _x7, _x8, _x9) {
+        return _updateCard.apply(this, arguments);
+      }
+
+      return updateCard;
+    }()
+  }, {
+    key: "deleteCard",
+    value: function () {
+      var _deleteCard = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4(cardId, token) {
+        var res, message;
+        return regeneratorRuntime.wrap(function _callee4$(_context4) {
+          while (1) {
+            switch (_context4.prev = _context4.next) {
+              case 0:
+                _context4.prev = 0;
+                _context4.next = 3;
+                return _axios.default.delete("https://polar-savannah-53668.herokuapp.com/api/v0/cards/".concat(cardId), {
+                  headers: {
+                    Authorization: "Bearer ".concat(token)
+                  }
+                });
+
+              case 3:
+                res = _context4.sent;
+
+                if (res.status === 204) {
+                  windowView.clearWindow();
+                  (0, _alert.showAlert)('success', 'Card was deleted');
+                }
+
+                _context4.next = 12;
+                break;
+
+              case 7:
+                _context4.prev = 7;
+                _context4.t0 = _context4["catch"](0);
+                console.log(_context4.t0);
+                message = _context4.t0.response.data.message;
+                (0, _alert.showAlert)('error', message);
+
+              case 12:
+              case "end":
+                return _context4.stop();
+            }
+          }
+        }, _callee4, null, [[0, 7]]);
+      }));
+
+      function deleteCard(_x10, _x11) {
+        return _deleteCard.apply(this, arguments);
+      }
+
+      return deleteCard;
+    }()
   }]);
 
   return Card;
 }();
 
 exports.default = Card;
-},{"axios":"../node_modules/axios/index.js","../utils/alert":"js/utils/alert.js"}],"js/controllers/cardController.js":[function(require,module,exports) {
+},{"axios":"../node_modules/axios/index.js","../controllers/overviewController":"js/controllers/overviewController.js","../utils/alert":"js/utils/alert.js","../utils/localStorage":"js/utils/localStorage.js","../views/windowView":"js/views/windowView.js"}],"js/controllers/windowController.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.cardMakerLoader = exports.cardLoader = exports.cardRender = exports.getCardsFromAPI = exports.cardLoaderAndRender = void 0;
+exports.windowDeletionHandler = void 0;
+
+var _base = require("../views/base");
+
+var _alert = require("../utils/alert");
+
+var _cardController = require("./cardController");
+
+var windowView = _interopRequireWildcard(require("../views/windowView"));
+
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+var windowDeletionHandler = function windowDeletionHandler(cardId) {
+  // 1. Hide any remaining alerts at the top of body
+  (0, _alert.hideAlert)(); // 2. display the yes or no box to the user
+
+  windowView.renderWindow(_base.elements.body); // 3. Add event handler to when a card is deleted
+
+  document.querySelector('body').addEventListener('click', /*#__PURE__*/function () {
+    var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(e) {
+      return regeneratorRuntime.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              (0, _cardController.deleteCard)(e, cardId);
+
+            case 1:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, _callee);
+    }));
+
+    return function (_x) {
+      return _ref.apply(this, arguments);
+    };
+  }());
+};
+
+exports.windowDeletionHandler = windowDeletionHandler;
+},{"../views/base":"js/views/base.js","../utils/alert":"js/utils/alert.js","./cardController":"js/controllers/cardController.js","../views/windowView":"js/views/windowView.js"}],"js/controllers/cardController.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.cardMakerLoader = exports.deleteCard = exports.cardLoader = exports.cardRender = exports.getCardsFromAPI = exports.cardLoaderAndRender = void 0;
 
 var _base = require("../views/base");
 
 var cardView = _interopRequireWildcard(require("../views/cardView"));
 
-var storage = _interopRequireWildcard(require("../utils/localStorage"));
-
-var _alert = require("../utils/alert");
+var windowView = _interopRequireWildcard(require("../views/windowView"));
 
 var _cardModel = _interopRequireDefault(require("../models/cardModel"));
 
 var _overviewController = require("./overviewController");
+
+var windowController = _interopRequireWildcard(require("./windowController"));
+
+var storage = _interopRequireWildcard(require("../utils/localStorage"));
+
+var _alert = require("../utils/alert");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -8799,9 +9008,7 @@ var getCardsFromAPI = /*#__PURE__*/function () {
       while (1) {
         switch (_context2.prev = _context2.next) {
           case 0:
-            // 1. Store the card instance
-            // state.card = new Card();
-            // 2. Get the TOKEN
+            // 1. Get the TOKEN
             token = storage.getObj('token') || _overviewController.state.user.token;
 
             if (token) {
@@ -8843,96 +9050,317 @@ var cardRender = function cardRender() {
 exports.cardRender = cardRender;
 
 var cardLoader = function cardLoader(e) {
+  // check if the user clicked either edit or delete card
   if (e.target.matches('.options, .options *')) {
     var click = e.target.closest('.options');
-    optionsHandler(click);
+    var cardId = e.target.parentNode.parentNode.parentNode.dataset.card;
+    console.log(_overviewController.state.card.cards);
+    optionsHandler(click, cardId); // check if the user clicked the whole card
   } else if (e.target.matches('.card, .card *')) {
     var _click = e.target.closest('.card');
 
     cardHandler(_click);
   }
-};
+}; // Handler for Edit and Delete a card
+
 
 exports.cardLoader = cardLoader;
 
-var optionsHandler = function optionsHandler(click) {
-  if (Array.from(click.classList).includes('options--edit')) {
-    console.log("We're are editing");
-  } else if (Array.from(click.classList).includes('options--delete')) {
-    console.log("We're deleting");
-  }
+var optionsHandler = /*#__PURE__*/function () {
+  var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(click, cardId) {
+    return regeneratorRuntime.wrap(function _callee3$(_context3) {
+      while (1) {
+        switch (_context3.prev = _context3.next) {
+          case 0:
+            // user clicked edit card
+            if (Array.from(click.classList).includes('options--edit')) {
+              cardUpdaterMaker(cardId); // user clicked delete card
+            } else if (Array.from(click.classList).includes('options--delete')) {
+              windowController.windowDeletionHandler(cardId);
+            }
+
+          case 1:
+          case "end":
+            return _context3.stop();
+        }
+      }
+    }, _callee3);
+  }));
+
+  return function optionsHandler(_x, _x2) {
+    return _ref3.apply(this, arguments);
+  };
+}();
+
+var cardUpdaterMaker = function cardUpdaterMaker(cardId) {
+  var cardData = getCard(cardId);
+  (0, _base.clearOverview)();
+  cardView.renderUpdateCardGrid(_base.elements.overview, cardData.question);
+  addQAtoTextBox(cardData.question, cardData.answer);
+  QAValueChanger();
+  swapCardFacing();
+  cancelCardMaker();
+  updateCard(cardId);
+};
+
+var getCard = function getCard(cardId) {
+  //1. Get the cards array
+  var cards = storage.getObj('cards') || _overviewController.state.card.cards; //2. Find the card in the cards array via id
+
+
+  return cards.filter(function (card) {
+    return card.id === cardId;
+  })[0];
 }; // When the user interacts with cards in the overview
 
 
 var cardHandler = function cardHandler(click) {
   try {
     // 1. Get the Card Id
-    var cardId = click.dataset.card; //2. Get the cards array
+    var cardId = click.dataset.card; // 2. Get the card from the cards array
 
-    var cards = storage.getObj('cards') || _overviewController.state.card.cards; //3. Find the card in the cards array via id
-
-
-    var cardData = cards.filter(function (card) {
-      return card.id === cardId;
-    })[0]; // 4. check if the card is a question card or an answer card
+    var cardData = getCard(cardId); // 3. check if the card is a question card or an answer card
+    // clicked the question facing side, turn it over to the answer facing side
 
     if (click.children.length === 2) {
-      cardView.renderCardAnswer(document.querySelector(".card-".concat(cardId)), cardData.answer);
+      cardView.renderCardAnswer(document.querySelector(".card-".concat(cardId)), cardData.answer); // clicked the answer facing side, turn it over to the question facing side
     } else if (click.children.length === 3) {
       cardView.renderCardQuestion(document.querySelector(".card-".concat(cardId)), cardData.question);
     }
   } catch (err) {
     (0, _alert.showAlert)('error', err.message);
   }
-};
+}; // render text of card data from when they want to edit the card
 
-var QAndAValueChanger = function QAndAValueChanger(e) {
+
+var addQAtoTextBox = function addQAtoTextBox(question, answer) {
+  document.querySelector('.textarea-q').value = question;
+  document.querySelector('.textarea-a').value = answer;
+}; // render text from input boxes to the card in 'make a card'
+
+
+var QAValueChanger = function QAValueChanger() {
   // 1. question box update the value in real time to the card
   document.querySelector('.textarea-q').addEventListener('input', function (e) {
-    cardView.renderCardQuestion(document.querySelector('.card--make'), document.querySelector('.textarea-q').value);
+    cardView.renderCardQuestionMake(document.querySelector('.card--make'), document.querySelector('.textarea-q').value);
   }); // 2. answer box update the value in real time to the card
 
   document.querySelector('.textarea-a').addEventListener('input', function (e) {
-    cardView.renderCardQuestion(document.querySelector('.card--make'), document.querySelector('.textarea-a').value);
+    cardView.renderCardQuestionMake(document.querySelector('.card--make'), document.querySelector('.textarea-a').value);
   });
-};
+}; // Handler when the card is to be swapped to question or answer side
 
-var swapCardFacing = function swapCardFacing(e) {
+
+var swapCardFacing = function swapCardFacing() {
   // 1. set the boolean for card facing
   var cardFacing = 'question'; // 2. swap card facing side
 
   document.querySelector('.btn--switch').addEventListener('click', function (e) {
-    var textareaBox = '.textarea-q';
+    var textareaBox = '.textarea-q'; // card to be swapped over to answer side
 
     if (cardFacing === 'question') {
       textareaBox = '.textarea-q';
-      cardFacing = 'answer';
+      cardFacing = 'answer'; // card to be swapped over to question side
     } else {
       textareaBox = '.textarea-a';
       cardFacing = 'question';
-    }
+    } // Reuse render question as we are just rendering text to the card not the forms attached with answer card
 
-    cardView.renderCardQuestion(document.querySelector('.card--make'), document.querySelector(textareaBox).value);
+
+    cardView.renderCardQuestionMake(document.querySelector('.card--make'), document.querySelector(textareaBox).value);
   });
 };
 
-var createCard = function createCard(e) {
+var createCard = function createCard() {
   // User clicks to create the card
-  document.querySelector('.icon--make-card-right').addEventListener('click', function (e) {
-    var question = document.querySelector('.textarea-q').value;
-    var answer = document.querySelector('.textarea-a').value;
+  document.querySelector('.icon--make-card-right').addEventListener('click', /*#__PURE__*/function () {
+    var _ref4 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4(e) {
+      var question, answer, user;
+      return regeneratorRuntime.wrap(function _callee4$(_context4) {
+        while (1) {
+          switch (_context4.prev = _context4.next) {
+            case 0:
+              // 1. Get the question, answer and user
+              question = document.querySelector('.textarea-q').value;
+              answer = document.querySelector('.textarea-a').value;
+              user = storage.getObj('user') || _overviewController.state.user.userData.id; // 2. Check if they have written something to the text-boxes
 
-    var user = storage.getObj('user') || _overviewController.state.user.userData.id;
+              if (!(question && answer && user)) {
+                _context4.next = 9;
+                break;
+              }
 
-    if (question && answer && user) {
-      _overviewController.state.card.createCard(question, answer, user, storage.getObj('token'));
-    } else {
-      (0, _alert.showAlert)('error', 'Please enter a question and an answer');
-    }
-  });
+              _context4.next = 6;
+              return _overviewController.state.card.createCard(question, answer, user, storage.getObj('token'));
+
+            case 6:
+              // 2.2 Clear Overview and reset the grid so they can make more cards
+              cardMakerLoader(); // 3 User has not entered all the text-boxes, send an alert to tell them to write fill it in
+
+              _context4.next = 10;
+              break;
+
+            case 9:
+              (0, _alert.showAlert)('error', 'Please enter a question and an answer');
+
+            case 10:
+            case "end":
+              return _context4.stop();
+          }
+        }
+      }, _callee4);
+    }));
+
+    return function (_x3) {
+      return _ref4.apply(this, arguments);
+    };
+  }());
 };
 
-var cancelCardMaker = function cancelCardMaker(e) {
+var updateCard = function updateCard(cardId) {
+  // User clicks to update the card
+  document.querySelector('.icon--make-card-right').addEventListener('click', /*#__PURE__*/function () {
+    var _ref5 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6(e) {
+      var question, answer;
+      return regeneratorRuntime.wrap(function _callee6$(_context6) {
+        while (1) {
+          switch (_context6.prev = _context6.next) {
+            case 0:
+              // 1. Get the question, answer and user
+              question = document.querySelector('.textarea-q').value;
+              answer = document.querySelector('.textarea-a').value; // 2. Check if they have written something to the text-boxes
+
+              if (!(question && answer)) {
+                _context6.next = 8;
+                break;
+              }
+
+              _context6.next = 5;
+              return _overviewController.state.card.updateCard(cardId, question, answer, storage.getObj('token'));
+
+            case 5:
+              // 2.2 Render the homepage to show the change
+              window.setTimeout( /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5() {
+                return regeneratorRuntime.wrap(function _callee5$(_context5) {
+                  while (1) {
+                    switch (_context5.prev = _context5.next) {
+                      case 0:
+                        (0, _base.clearOverview)();
+                        _context5.next = 3;
+                        return cardLoaderAndRender();
+
+                      case 3:
+                      case "end":
+                        return _context5.stop();
+                    }
+                  }
+                }, _callee5);
+              })), 1500); // 3 User has not entered all the text-boxes, send an alert to tell them to write fill it in
+
+              _context6.next = 9;
+              break;
+
+            case 8:
+              (0, _alert.showAlert)('error', 'Please enter a question and an answer');
+
+            case 9:
+            case "end":
+              return _context6.stop();
+          }
+        }
+      }, _callee6);
+    }));
+
+    return function (_x4) {
+      return _ref5.apply(this, arguments);
+    };
+  }());
+};
+
+var deleteCard = /*#__PURE__*/function () {
+  var _ref7 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee8(e, cardId) {
+    var click, token;
+    return regeneratorRuntime.wrap(function _callee8$(_context8) {
+      while (1) {
+        switch (_context8.prev = _context8.next) {
+          case 0:
+            click = e.target.closest('.window__content');
+            _context8.prev = 1;
+
+            if (!click) {
+              _context8.next = 13;
+              break;
+            }
+
+            if (!e.target.matches('.window__ok')) {
+              _context8.next = 12;
+              break;
+            }
+
+            // 3.1 get the token
+            token = storage.getObj('token') || _overviewController.state.user.token; // 3.2 Check to see if they are logged in
+
+            if (token) {
+              _context8.next = 7;
+              break;
+            }
+
+            return _context8.abrupt("return", new Error('You are not logged in!'));
+
+          case 7:
+            _context8.next = 9;
+            return _overviewController.state.card.deleteCard(cardId, token);
+
+          case 9:
+            // Render the homepage to show the change
+            window.setTimeout( /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee7() {
+              return regeneratorRuntime.wrap(function _callee7$(_context7) {
+                while (1) {
+                  switch (_context7.prev = _context7.next) {
+                    case 0:
+                      (0, _base.clearOverview)();
+                      _context7.next = 3;
+                      return cardLoaderAndRender();
+
+                    case 3:
+                    case "end":
+                      return _context7.stop();
+                  }
+                }
+              }, _callee7);
+            })), 1500); // they clicked no to delete the card
+
+            _context8.next = 13;
+            break;
+
+          case 12:
+            windowView.clearWindow();
+
+          case 13:
+            _context8.next = 18;
+            break;
+
+          case 15:
+            _context8.prev = 15;
+            _context8.t0 = _context8["catch"](1);
+            (0, _alert.showAlert)('error', _context8.t0.message);
+
+          case 18:
+          case "end":
+            return _context8.stop();
+        }
+      }
+    }, _callee8, null, [[1, 15]]);
+  }));
+
+  return function deleteCard(_x5, _x6) {
+    return _ref7.apply(this, arguments);
+  };
+}();
+
+exports.deleteCard = deleteCard;
+
+var cancelCardMaker = function cancelCardMaker() {
   // User clicks to cancel the card creation
   document.querySelector('.icon--make-card-left').addEventListener('click', function (e) {
     (0, _base.clearOverview)();
@@ -8940,17 +9368,17 @@ var cancelCardMaker = function cancelCardMaker(e) {
   });
 };
 
-var cardMakerLoader = function cardMakerLoader(e) {
+var cardMakerLoader = function cardMakerLoader() {
   (0, _base.clearOverview)();
   cardView.renderMakeCardGrid(_base.elements.overview);
-  QAndAValueChanger(e);
-  swapCardFacing(e);
-  createCard(e);
-  cancelCardMaker(e);
+  QAValueChanger();
+  swapCardFacing();
+  createCard();
+  cancelCardMaker();
 };
 
 exports.cardMakerLoader = cardMakerLoader;
-},{"../views/base":"js/views/base.js","../views/cardView":"js/views/cardView.js","../utils/localStorage":"js/utils/localStorage.js","../utils/alert":"js/utils/alert.js","../models/cardModel":"js/models/cardModel.js","./overviewController":"js/controllers/overviewController.js"}],"img/default.png":[function(require,module,exports) {
+},{"../views/base":"js/views/base.js","../views/cardView":"js/views/cardView.js","../views/windowView":"js/views/windowView.js","../models/cardModel":"js/models/cardModel.js","./overviewController":"js/controllers/overviewController.js","./windowController":"js/controllers/windowController.js","../utils/localStorage":"js/utils/localStorage.js","../utils/alert":"js/utils/alert.js"}],"img/default.png":[function(require,module,exports) {
 module.exports = "/default.6c87049f.png";
 },{}],"js/views/headerView.js":[function(require,module,exports) {
 "use strict";
@@ -9694,7 +10122,7 @@ _base.elements.overview.addEventListener('click', /*#__PURE__*/function () {
             } else if (e.target.closest('.card')) {
               (0, _cardController.cardLoader)(e); // User click 'make a new card' button in card homepage
             } else if (e.target.closest('.make-card')) {
-              (0, _cardController.cardMakerLoader)(e);
+              (0, _cardController.cardMakerLoader)(); // User clicks 'make a new classroom' button in the classroom homepage
             } else if (e.target.closest('.make-classroom')) {
               classroomView.renderMakeClassroomGrid(_base.elements.overview);
             }
@@ -10558,7 +10986,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52355" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "53374" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

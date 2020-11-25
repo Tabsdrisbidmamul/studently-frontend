@@ -1,5 +1,8 @@
 import axios from 'axios';
+import { state } from '../controllers/overviewController';
 import { showAlert } from '../utils/alert';
+import * as storage from '../utils/localStorage';
+import * as windowView from '../views/windowView';
 
 export default class Card {
   constructor() {}
@@ -36,6 +39,48 @@ export default class Card {
         showAlert('success', 'Card was created');
       }
     } catch (err) {
+      const { message } = err.response.data;
+      showAlert('error', message);
+    }
+  }
+
+  async updateCard(cardId, question, answer, token) {
+    try {
+      const res = await axios.patch(
+        `https://polar-savannah-53668.herokuapp.com/api/v0/cards/${cardId}`,
+        {
+          question,
+          answer,
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      if (res.data.status === 'success') {
+        showAlert('success', 'Card was updated');
+      }
+    } catch (err) {
+      const { message } = err.response.data;
+      showAlert('error', message);
+    }
+  }
+
+  async deleteCard(cardId, token) {
+    try {
+      const res = await axios.delete(
+        `https://polar-savannah-53668.herokuapp.com/api/v0/cards/${cardId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      if (res.status === 204) {
+        windowView.clearWindow();
+        showAlert('success', 'Card was deleted');
+      }
+    } catch (err) {
+      console.log(err);
       const { message } = err.response.data;
       showAlert('error', message);
     }
