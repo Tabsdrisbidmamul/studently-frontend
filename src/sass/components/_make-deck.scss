@@ -1,49 +1,48 @@
 .make-deck {
   &__form {
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
-    grid-column: 2 / -1;
+    margin-top: 2rem;
+
+    & > *:not(:last-child) {
+      margin-right: 2rem;
+    }
+    grid-column: 1 / -1;
   }
 
   &__group {
     width: 100%;
-    display: grid;
     // &:not(:last-of-type) {
     //   margin-bottom: 2rem;
     // }
   }
 
-  &__textarea {
+  &__input {
     display: block;
-    padding: 1.5rem;
-    // outline: none;
-    resize: none;
+    padding: 1rem 2rem;
     background-color: $color-grey-light-2;
     border: none;
-    width: 90%;
+    width: 60%;
     border-radius: 3px;
     box-shadow: 0 0.8rem 2rem rgba(#000, 0.2);
-    margin-bottom: 2rem;
-    overflow: auto;
-    height: 12rem;
+
     font-family: inherit;
     color: $color-grey-dark-1;
     font-size: 1.6rem;
-    border-bottom: 5px solid transparent;
+    border-bottom: 3px solid transparent;
     transition: all 200ms;
 
     &:focus {
       outline: none;
 
       box-shadow: 0 1rem 2rem rgba(#000, 0.1);
-      border-bottom: 5px solid $color-green-right;
+      border-bottom: 3px solid $color-green-right;
     }
 
     &:focus:invalid {
       outline: none;
-      border-bottom: 5px solid $color-secondary-dark;
+      border-bottom: 3px solid $color-secondary-dark;
     }
 
     &::placeholder {
@@ -57,22 +56,17 @@
     font-weight: 300;
     margin-bottom: 1rem;
     text-transform: uppercase;
-    letter-spacing: 0.1rem;
-    // color: transparent;
-    // background-color: transparent;
-    // background-image: linear-gradient(
-    //   45deg,
-    //   $color-grey-dark-1,
-    //   $color-grey-dark-3
-    // );
-    // background-clip: text;
+    letter-spacing: 0.05rem;
   }
 
-  &__switch {
+  &--switch {
     text-decoration: none;
     font-size: 1.6rem;
     text-align: center;
-    margin: 1rem;
+    margin-bottom: 1rem;
+    grid-column: 2 / 3;
+    grid-row: 2 / 3;
+    align-self: end;
   }
 
   &--switch,
@@ -87,12 +81,95 @@
   &__link:link,
   &__link:visited {
     text-decoration: none;
+    display: flex;
+    align-items: center;
+    color: $color-grey-dark-1;
+  }
+
+  &__card-details {
+    display: flex;
+    flex-flow: column;
+    width: 100%;
+    margin-top: 1rem;
   }
 
   &__span {
     text-transform: uppercase;
-    font-size: 1.6rem;
-    letter-spacing: 0.1rem;
+    font-size: 1.3rem;
     font-weight: 300;
+
+    &:not(:last-child) {
+      margin-bottom: 1rem;
+    }
+
+    transition: all 200ms;
+  }
+
+  &__name {
+    display: block;
+    color: $color-grey-light-2;
+    // margin-top: 2rem;
+    border-top-right-radius: 3px;
+    border-top-left-radius: 3px;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid black;
+    font-size: 1.4rem;
+    text-transform: uppercase;
+    background-color: $color-grey-dark-1;
+  }
+
+  &__card-nav {
+    background-color: $color-grey-light-2;
+    border-radius: 3px;
+    height: 50rem;
+    text-align: center;
+    width: 80%;
+    box-shadow: 0 2rem 3rem rgba(black, 0.2);
+
+    &--deck-cards {
+      grid-column: 3 / -1;
+      margin: 0 auto;
+    }
+
+    &--user-cards {
+      margin: 0 auto;
+    }
+  }
+
+  &__card {
+    grid-column: 2 / 3;
+    grid-row: 2 / 3;
+  }
+
+  &__list {
+    list-style: none;
+    // margin-top: 2rem;
+  }
+
+  &__item {
+    &:not(:last-child) {
+      border-bottom: 1px solid $color-grey-dark-1;
+    }
+    padding-bottom: 2rem;
+    text-align: left;
+    background-color: transparent;
+    transition: all 200ms;
+  }
+
+  &__item:hover {
+    background-color: $color-secondary;
+
+    & a .icon {
+      fill: $color-grey-light-1;
+    }
+
+    & div span {
+      color: $color-grey-light-3;
+    }
+
+    & a svg {
+      transform: scale(1.03);
+    }
   }
 }

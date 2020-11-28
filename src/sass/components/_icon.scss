@@ -35,6 +35,11 @@
     transform: scale(1);
   }
 
+  &--add {
+    fill: $color-green-right;
+    transform: scale(1);
+  }
+
   &--card {
     width: 3.75rem;
     height: 1.75rem;
@@ -62,5 +67,18 @@
     &:hover {
       transform: scale(1.3);
     }
+  }
+
+  &__make-deck {
+    &--card {
+      width: 3rem;
+      height: 3rem;
+      margin: 0 2rem;
+      fill: $color-tertiary-2;
+    }
+
+    // &:hover {
+    //   transform: scale(1.1);
+    // }
   }
 }

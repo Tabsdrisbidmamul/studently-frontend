@@ -10328,6 +10328,8 @@ _base.elements.overview.addEventListener('click', /*#__PURE__*/function () {
               classroomView.renderMakeClassroomGrid(_base.elements.overview); // User clicks a deck in the deck home page
             } else if (e.target.closest('.deck')) {
               (0, _deckController.deckLoader)(e);
+            } else if (e.target.closest('.make-deck')) {
+              (0, _deckController.deckMakerLoader)(e);
             }
 
           case 1:

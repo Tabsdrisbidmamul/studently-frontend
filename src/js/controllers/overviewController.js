@@ -9,7 +9,7 @@ import * as storage from '../utils/localStorage';
 import * as cardView from '../views/cardView';
 import * as deckView from '../views/deckView';
 import * as classroomView from '../views/classroomView';
-import { deckLoader } from './deckController';
+import { deckLoader, deckMakerLoader } from './deckController';
 
 export const state = {};
 
@@ -21,7 +21,7 @@ state.classroom = new Classroom();
 
 // FIXME: REFACTOR THIS PIECE OF SHIT
 // Overview Handler
-elements.overview.addEventListener('click', async e => {
+elements.overview.addEventListener('click', async (e) => {
   // user clicks login button in login form
   if (e.target.matches('.btn--btn-login')) {
     loginHandler(e);
@@ -41,5 +41,7 @@ elements.overview.addEventListener('click', async e => {
     // User clicks a deck in the deck home page
   } else if (e.target.closest('.deck')) {
     deckLoader(e);
+  } else if (e.target.closest('.make-deck')) {
+    deckMakerLoader(e);
   }
 });
