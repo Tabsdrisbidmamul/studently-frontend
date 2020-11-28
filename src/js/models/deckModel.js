@@ -17,16 +17,17 @@ export default class Deck {
     }
   }
 
-  async createDeck(name, user, token) {
+  async createDeck(name, user, cards, token) {
     try {
       const res = await axios.post(
         'https://polar-savannah-53668.herokuapp.com/api/v0/decks/',
         {
           name,
-          user
+          user,
+          cards,
         },
         {
-          headers: { Authorization: `Bearer ${token}` }
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
 

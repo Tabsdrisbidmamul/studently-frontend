@@ -1,3 +1,8 @@
+import plus from '../../img/SVG/plus.svg';
+import minus from '../../img/SVG/minus.svg';
+import tick from '../../img/SVG/check.svg';
+import cross from '../../img/SVG/circle-with-cross.svg';
+
 export const renderDeckGrid = (parent, deckArray) => {
   let decks = '';
   deckArray.forEach((deck) => {
@@ -23,31 +28,110 @@ export const renderDeckGrid = (parent, deckArray) => {
   parent.insertAdjacentHTML('afterbegin', markup);
 };
 
-// Deck Grid here
-export const renderMakeDeckGrid = (parent) => {
-  const markup = `<div class="make-deck-grid">
+export const renderUserCards = (card) => {
+  const markup = `
+    <li class="make-deck__item" data-card="${card.id}">
+    <a href="#" class="make-deck__link">
+      <svg class="icon icon__make-deck--card">
+        <use href="${plus}"></use>
+      </svg>
+      <div class="make-deck__card-details">
+        <span class="make-deck__span make-deck-span--question">${card.question}</span>
+      <span class="make-deck__span make-deck-span--answer">${card.answer}</span>
+      </div>
+    </a>
+  </li>`;
 
+  document
+    .querySelector('.make-deck__list--user')
+    .insertAdjacentHTML('beforeend', markup);
+};
+
+export const renderDeckCards = (card) => {
+  const markup = `
+    <li class="make-deck__item" data-card="${card.id}">
+    <a href="#" class="make-deck__link">
+      <svg class="icon icon__make-deck--card">
+        <use href="${minus}"></use>
+      </svg>
+      <div class="make-deck__card-details">
+        <span class="make-deck__span make-deck-span--question">${card.question}</span>
+      <span class="make-deck__span make-deck-span--answer">${card.answer}</span>
+      </div>
+    </a>
+  </li>`;
+
+  document
+    .querySelector('.make-deck__list--deck')
+    .insertAdjacentHTML('beforeend', markup);
+};
+
+export const deleteCard = (id) => {
+  const card = document.querySelector(`[data-card*="${id}"]`);
+  if (card) card.remove();
+};
+
+export const renderMakeDeckGrid = (parent, cards) => {
+  const markup = `<div class="make-deck-grid">
   <form action="#" class="make-deck__form">
       <label for="deck-name" class="make-deck__label">Enter Deck name</label>
-      <textarea id="deck-name" class="make-deck__textarea  textarea-q" wrap="off" minlength="5" maxlength="250" placeholder="Enter your deck name" required="true" spellcheck="true"></textarea>
+      <input class="make-deck__input" type="text" minlength="5" maxlength="50" id="deck-name" placeholder="Deck Name">
   </form>
 
-  <div class="make-deck__group make-deck--right">
-    <a href="#" class="make-deck__link">
-      <svg class="icon icon--make-deck icon--make-card-right icon--right">
-        <use href="img/SVG/check.svg"></use>
-      </svg>
-    </a>
-    <span class="make-deck__span">Create The Deck</span>
+  <div class="make-deck__card-nav make-deck__card-nav--user-cards">
+    <span class="make-deck__name">My Cards</span>
+    <ul class="make-deck__list make-deck__list--user">
+      
+    </ul>
   </div>
 
-  <div class="make-deck__group make-deck--wrong">
-    <a href="#" class="make-deck__link">
-      <svg class="icon icon--make-deck icon--make-deck-left icon-left icon--wrong">
-        <use href="img/SVG/circle-with-cross.svg"></use>
-      </svg>
-    </a>
-    <span class="make-deck__span">Let's Stop!</span>
+  <div class="make-deck__card-nav make-deck__card-nav--deck-cards">
+    <span class="make-deck__name">Deck Cards</span>
+    <ul class="make-deck__list make-deck__list--deck">
+      
+    </ul>
+  </div>
+
+  <div class="make-deck__card-switch">
+    <div class="card card--make make-deck__card">
+    <div class="card__options">
+      <a href="#" class="options options--add">
+        <svg class="icon icon--options icon--add">
+          <use xlink:href="${plus}"></use>
+        </svg>
+        <span class="show-hide card--edit">Add card</span>
+      </a>
+
+    </div>
+
+    <div class="card__details">
+      <span class="name">What is a Question?</span>
+    </div>
+    </div>
+
+    <div class="make-deck__group make-deck--switch">
+      <a href="#" class="make-deck__switch btn btn--switch">Turn Over</a>
+    </div>
+  </div>
+  
+  <div class="make-deck__options">
+    <div class="make-deck__group make-deck--right">
+      <a href="#" class="make-deck__link">
+        <svg class="icon icon--make-deck icon--make-deck-right icon--right">
+          <use href="${tick}"></use>
+        </svg>
+      </a>
+      <span class="make-deck__span">Create The Deck</span>
+    </div>
+
+    <div class="make-deck__group make-deck--wrong">
+      <a href="#" class="make-deck__link">
+        <svg class="icon icon--make-deck icon--make-deck-left icon-left icon--wrong">
+          <use href="${cross}"></use>
+        </svg>
+      </a>
+      <span class="make-deck__span">Let's Stop!</span>
+    </div>
   </div>
 </div>`;
 

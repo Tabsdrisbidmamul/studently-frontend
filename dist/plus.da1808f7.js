@@ -117,8 +117,8 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"img/SVG/trash.svg":[function(require,module,exports) {
-module.exports = '#90f76b9fdc792fc4a53d17223bebcfe6';
+})({"img/SVG/plus.svg":[function(require,module,exports) {
+module.exports = '#5879339dda63c178b7ce0ee777d422bd';
 },{}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
@@ -324,4 +324,4 @@ function hmrAcceptRun(bundle, id) {
   }
 }
 },{}]},{},["../node_modules/parcel-bundler/src/builtins/hmr-runtime.js"], null)
-//# sourceMappingURL=/trash.05abf329.js.map
+//# sourceMappingURL=/plus.da1808f7.js.map
