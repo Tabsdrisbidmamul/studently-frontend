@@ -26,18 +26,18 @@ export const deckRender = () => {
   deckView.renderDeckGrid(elements.overview, state.deck.decks);
 };
 
-export const deckLoader = e => {
+export const deckLoader = (e) => {
   if (e.target.matches('.deck, .deck *')) {
     const click = e.target.closest('.deck');
     deckHandler(click);
   }
 };
 
-const createDeck = e => {
+const createDeck = (e) => {
   // User clicks to create the deck
   document
     .querySelector('.icon--make-deck-right')
-    .addEventListener('click', e => {
+    .addEventListener('click', (e) => {
       const name = document.querySelector('.textarea-q').value;
       const user = storage.getObj('user') || state.user.userData.id;
 
@@ -49,27 +49,27 @@ const createDeck = e => {
     });
 };
 
-const cancelDeckMaker = e => {
+const cancelDeckMaker = (e) => {
   // User clicks to cancel the deck creation
   document
     .querySelector('.icon--make-deck-left')
-    .addEventListener('click', e => {
+    .addEventListener('click', (e) => {
       clearOverview();
       deckRender(elements.overview, state.deck.decks);
     });
 };
 
-const getDeck = deckId => {
+const getDeck = (deckId) => {
   //1. Get the decks array
   const decks = storage.getObj('decks') || state.deck.decks;
 
   //2. Find the deck in the decks array via id
-  return decks.filter(deck => {
+  return decks.filter((deck) => {
     return deck.id === deckId;
   })[0];
 };
 
-export const deckMakerLoader = e => {
+export const deckMakerLoader = (e) => {
   clearOverview();
   deckView.renderMakeDeckGrid(elements.overview);
   createDeck(e);
@@ -77,13 +77,14 @@ export const deckMakerLoader = e => {
 };
 
 // When the user interacts with the decks in the overview
-const deckHandler = click => {
+const deckHandler = (click) => {
   try {
     // 1. Get the Deck Id
     const deckId = click.dataset.deck;
 
     //2. Get the deck data from the Id
     const deckData = getDeck(deckId);
+    console.log(deckData);
 
     //3. Get the cards associated with the deck
     const deckCards = deckData.cards;

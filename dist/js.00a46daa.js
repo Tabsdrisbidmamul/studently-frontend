@@ -8946,7 +8946,7 @@ exports.windowDeletionHandler = windowDeletionHandler;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.cardMakerLoader = exports.deleteCard = exports.cardLoader = exports.cardRender = exports.getCardsFromAPI = exports.cardLoaderAndRender = void 0;
+exports.cardMakerLoader = exports.deleteCard = exports.cardLoader = exports.deckCardRender = exports.cardRender = exports.getCardsFromAPI = exports.cardLoaderAndRender = void 0;
 
 var _base = require("../views/base");
 
@@ -9044,10 +9044,20 @@ exports.getCardsFromAPI = getCardsFromAPI;
 var cardRender = function cardRender() {
   // 1. Render the card grid and cards on the grid
   cardView.renderCardGrid(_base.elements.overview, _overviewController.state.card.cards); // TODO: ADD IF STATEMENT FOR WHEN THE CARDS ARRAY IS EMPTY (USER HAS NO CARDS)
-}; // Load the card if they have click the entire card or the edit/ delete options
+}; // Render the cards that belong to the deck that the User clicked on
 
 
 exports.cardRender = cardRender;
+
+var deckCardRender = function deckCardRender(deckCards) {
+  // 1. Clear the overview
+  (0, _base.clearOverview)(); // 2. Render the card grid and cards from the deck on the grid
+
+  cardView.renderCardGrid(_base.elements.overview, deckCards);
+}; // Load the card if they have click the entire card or the edit/ delete options
+
+
+exports.deckCardRender = deckCardRender;
 
 var cardLoader = function cardLoader(e) {
   // check if the user clicked either edit or delete card
@@ -9727,9 +9737,9 @@ var Deck = /*#__PURE__*/function () {
       return getDecks;
     }()
   }, {
-    key: "createCard",
+    key: "createDeck",
     value: function () {
-      var _createCard = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(name, user, token) {
+      var _createDeck = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(name, user, token) {
         var res, message;
         return regeneratorRuntime.wrap(function _callee2$(_context2) {
           while (1) {
@@ -9737,7 +9747,7 @@ var Deck = /*#__PURE__*/function () {
               case 0:
                 _context2.prev = 0;
                 _context2.next = 3;
-                return _axios.default.post('https://polar-savannah-53668.herokuapp.com/api/v0/cards', {
+                return _axios.default.post('https://polar-savannah-53668.herokuapp.com/api/v0/decks/', {
                   name: name,
                   user: user
                 }, {
@@ -9770,11 +9780,11 @@ var Deck = /*#__PURE__*/function () {
         }, _callee2, null, [[0, 7]]);
       }));
 
-      function createCard(_x2, _x3, _x4) {
-        return _createCard.apply(this, arguments);
+      function createDeck(_x2, _x3, _x4) {
+        return _createDeck.apply(this, arguments);
       }
 
-      return createCard;
+      return createDeck;
     }()
   }]);
 
@@ -10061,147 +10071,7 @@ var renderMakeClassroomGrid = function renderMakeClassroomGrid(parent, studentAr
 };
 
 exports.renderMakeClassroomGrid = renderMakeClassroomGrid;
-},{}],"js/controllers/overviewController.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.state = void 0;
-
-var _base = require("../views/base");
-
-var _cardController = require("./cardController");
-
-var _loginHandler = require("./loginHandler");
-
-var _userModel = _interopRequireDefault(require("../models/userModel"));
-
-var _cardModel = _interopRequireDefault(require("../models/cardModel"));
-
-var _deckModel = _interopRequireDefault(require("../models/deckModel"));
-
-var _classroomModel = _interopRequireDefault(require("../models/classroomModel"));
-
-var storage = _interopRequireWildcard(require("../utils/localStorage"));
-
-var cardView = _interopRequireWildcard(require("../views/cardView"));
-
-var deckView = _interopRequireWildcard(require("../views/deckView"));
-
-var classroomView = _interopRequireWildcard(require("../views/classroomView"));
-
-function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-
-var state = {}; // Create all instance of the model when the application starts
-
-exports.state = state;
-state.user = new _userModel.default();
-state.card = new _cardModel.default();
-state.deck = new _deckModel.default();
-state.classroom = new _classroomModel.default(); // FIXME: REFACTOR THIS PIECE OF SHIT
-// Overview Handler
-
-_base.elements.overview.addEventListener('click', /*#__PURE__*/function () {
-  var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(e) {
-    return regeneratorRuntime.wrap(function _callee$(_context) {
-      while (1) {
-        switch (_context.prev = _context.next) {
-          case 0:
-            // user clicks login button in login form
-            if (e.target.matches('.btn--btn-login')) {
-              (0, _loginHandler.loginHandler)(e); // User clicks a card in the card home page
-            } else if (e.target.closest('.card')) {
-              (0, _cardController.cardLoader)(e); // User click 'make a new card' button in card homepage
-            } else if (e.target.closest('.make-card')) {
-              (0, _cardController.cardMakerLoader)(); // User clicks 'make a new classroom' button in the classroom homepage
-            } else if (e.target.closest('.make-classroom')) {
-              classroomView.renderMakeClassroomGrid(_base.elements.overview);
-            }
-
-          case 1:
-          case "end":
-            return _context.stop();
-        }
-      }
-    }, _callee);
-  }));
-
-  return function (_x) {
-    return _ref.apply(this, arguments);
-  };
-}());
-},{"../views/base":"js/views/base.js","./cardController":"js/controllers/cardController.js","./loginHandler":"js/controllers/loginHandler.js","../models/userModel":"js/models/userModel.js","../models/cardModel":"js/models/cardModel.js","../models/deckModel":"js/models/deckModel.js","../models/classroomModel":"js/models/classroomModel.js","../utils/localStorage":"js/utils/localStorage.js","../views/cardView":"js/views/cardView.js","../views/deckView":"js/views/deckView.js","../views/classroomView":"js/views/classroomView.js"}],"js/controllers/alertController.js":[function(require,module,exports) {
-"use strict";
-
-var _alert = require("../utils/alert");
-
-document.querySelector('body').addEventListener('click', function (e) {
-  if (e.target.matches('.cross')) {
-    (0, _alert.hideAlert)();
-  }
-});
-},{"../utils/alert":"js/utils/alert.js"}],"js/views/loginView.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.renderLoginForm = void 0;
-
-var _base = require("./base");
-
-var renderLoginForm = function renderLoginForm(parent) {
-  var loginForm = "          \n  <div class=\"login\">\n    <form action=\"#\" class=\"form\">\n      <div class=\"form__group\">\n        <input type=\"email\" class=\"form__input\" id=\"email\" placeholder=\"Email Address\" required>\n        <label for=\"email\" class=\"form__label\">Email Address</label>\n      </div>\n      \n      <div class=\"form__group\">\n        <input type=\"password\" class=\"form__input\" id=\"password\" placeholder=\"Password\" required>\n        <label for=\"password\" class=\"form__label\">Password</label>\n      </div>\n\n      <div class=\"form__group\">\n        <span class=\"form__span\"><a href=\"#\" class=\"form__link\">Forgot your password?</a></span>\n      </div>\n      \n      <div class=\"form__group\">\n        <button class=\"btn--btn-login\">Login</button>\n      </div>\n    </form>\n  </div>";
-  parent.insertAdjacentHTML('afterbegin', loginForm);
-};
-
-exports.renderLoginForm = renderLoginForm;
-},{"./base":"js/views/base.js"}],"js/controllers/headerController.js":[function(require,module,exports) {
-"use strict";
-
-var _base = require("../views/base");
-
-var _overviewController = require("./overviewController");
-
-var headerView = _interopRequireWildcard(require("../views/headerView"));
-
-var loginView = _interopRequireWildcard(require("../views/loginView"));
-
-var storage = _interopRequireWildcard(require("../utils/localStorage"));
-
-function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
-
-// When there is a token render the user information to the Header UI
-if (storage.getObj('token')) {
-  var user = storage.getObj('user') || _overviewController.state.user.userData;
-
-  headerView.renderHeaderLogin(user);
-} // User clicks logout button in header
-
-
-_base.elements.header.addEventListener('click', function (e) {
-  // User presses logout, render the default login and signup buttons
-  if (e.target.matches('.btn--logout')) {
-    (0, _base.clearOverview)();
-    headerView.renderHeaderDefault();
-    storage.removeObj('token'); // User clicks login render the login form in the overview
-  } else if (e.target.matches('.btn--login')) {
-    (0, _base.clearOverview)();
-    loginView.renderLoginForm(_base.elements.overview);
-  }
-});
-},{"../views/base":"js/views/base.js","./overviewController":"js/controllers/overviewController.js","../views/headerView":"js/views/headerView.js","../views/loginView":"js/views/loginView.js","../utils/localStorage":"js/utils/localStorage.js"}],"js/controllers/deckController.js":[function(require,module,exports) {
+},{}],"js/controllers/deckController.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -10212,6 +10082,8 @@ exports.deckMakerLoader = exports.deckLoader = exports.deckRender = exports.getD
 var _base = require("../views/base");
 
 var deckView = _interopRequireWildcard(require("../views/deckView"));
+
+var cardController = _interopRequireWildcard(require("../controllers/cardController"));
 
 var storage = _interopRequireWildcard(require("../utils/localStorage"));
 
@@ -10304,21 +10176,9 @@ var deckRender = function deckRender() {
 exports.deckRender = deckRender;
 
 var deckLoader = function deckLoader(e) {
-  var click = e.target.closest('.deck');
-
   if (e.target.matches('.deck, .deck *')) {
-    try {
-      // 1. Get the Deck Id
-      var deckId = click.dataset.deck; //2. Get the decks array
-
-      var decks = storage.getObj('decks') || _overviewController.state.deck.decks; //3. Find the deck in the decks array via id
-
-
-      var deckData = decks.filter(function (deck) {
-        return deck.id === deckId;
-      });
-      deckView.renderDeckName(document.querySelector(".deck-".concat(deckId)), deckData[0].name);
-    } catch (err) {}
+    var click = e.target.closest('.deck');
+    deckHandler(click);
   }
 };
 
@@ -10347,15 +10207,186 @@ var cancelDeckMaker = function cancelDeckMaker(e) {
   });
 };
 
+var getDeck = function getDeck(deckId) {
+  //1. Get the decks array
+  var decks = storage.getObj('decks') || _overviewController.state.deck.decks; //2. Find the deck in the decks array via id
+
+
+  return decks.filter(function (deck) {
+    return deck.id === deckId;
+  })[0];
+};
+
 var deckMakerLoader = function deckMakerLoader(e) {
   (0, _base.clearOverview)();
   deckView.renderMakeDeckGrid(_base.elements.overview);
   createDeck(e);
   cancelDeckMaker(e);
-};
+}; // When the user interacts with the decks in the overview
+
 
 exports.deckMakerLoader = deckMakerLoader;
-},{"../views/base":"js/views/base.js","../views/deckView":"js/views/deckView.js","../utils/localStorage":"js/utils/localStorage.js","../utils/alert":"js/utils/alert.js","../models/deckModel":"js/models/deckModel.js","./overviewController":"js/controllers/overviewController.js"}],"js/controllers/classroomController.js":[function(require,module,exports) {
+
+var deckHandler = function deckHandler(click) {
+  try {
+    // 1. Get the Deck Id
+    var deckId = click.dataset.deck; //2. Get the deck data from the Id
+
+    var deckData = getDeck(deckId);
+    console.log(deckData); //3. Get the cards associated with the deck
+
+    var deckCards = deckData.cards; //4. Render the deck cards
+
+    cardController.deckCardRender(deckCards);
+  } catch (err) {
+    (0, _alert.showAlert)('error', err.message);
+  }
+};
+},{"../views/base":"js/views/base.js","../views/deckView":"js/views/deckView.js","../controllers/cardController":"js/controllers/cardController.js","../utils/localStorage":"js/utils/localStorage.js","../utils/alert":"js/utils/alert.js","../models/deckModel":"js/models/deckModel.js","./overviewController":"js/controllers/overviewController.js"}],"js/controllers/overviewController.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.state = void 0;
+
+var _base = require("../views/base");
+
+var _cardController = require("./cardController");
+
+var _loginHandler = require("./loginHandler");
+
+var _userModel = _interopRequireDefault(require("../models/userModel"));
+
+var _cardModel = _interopRequireDefault(require("../models/cardModel"));
+
+var _deckModel = _interopRequireDefault(require("../models/deckModel"));
+
+var _classroomModel = _interopRequireDefault(require("../models/classroomModel"));
+
+var storage = _interopRequireWildcard(require("../utils/localStorage"));
+
+var cardView = _interopRequireWildcard(require("../views/cardView"));
+
+var deckView = _interopRequireWildcard(require("../views/deckView"));
+
+var classroomView = _interopRequireWildcard(require("../views/classroomView"));
+
+var _deckController = require("./deckController");
+
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+var state = {}; // Create all instance of the model when the application starts
+
+exports.state = state;
+state.user = new _userModel.default();
+state.card = new _cardModel.default();
+state.deck = new _deckModel.default();
+state.classroom = new _classroomModel.default(); // FIXME: REFACTOR THIS PIECE OF SHIT
+// Overview Handler
+
+_base.elements.overview.addEventListener('click', /*#__PURE__*/function () {
+  var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(e) {
+    return regeneratorRuntime.wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            // user clicks login button in login form
+            if (e.target.matches('.btn--btn-login')) {
+              (0, _loginHandler.loginHandler)(e); // User clicks a card in the card home page
+            } else if (e.target.closest('.card')) {
+              (0, _cardController.cardLoader)(e); // User click 'make a new card' button in card homepage
+            } else if (e.target.closest('.make-card')) {
+              (0, _cardController.cardMakerLoader)(); // User clicks 'make a new classroom' button in the classroom homepage
+            } else if (e.target.closest('.make-classroom')) {
+              classroomView.renderMakeClassroomGrid(_base.elements.overview); // User clicks a deck in the deck home page
+            } else if (e.target.closest('.deck')) {
+              (0, _deckController.deckLoader)(e);
+            }
+
+          case 1:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee);
+  }));
+
+  return function (_x) {
+    return _ref.apply(this, arguments);
+  };
+}());
+},{"../views/base":"js/views/base.js","./cardController":"js/controllers/cardController.js","./loginHandler":"js/controllers/loginHandler.js","../models/userModel":"js/models/userModel.js","../models/cardModel":"js/models/cardModel.js","../models/deckModel":"js/models/deckModel.js","../models/classroomModel":"js/models/classroomModel.js","../utils/localStorage":"js/utils/localStorage.js","../views/cardView":"js/views/cardView.js","../views/deckView":"js/views/deckView.js","../views/classroomView":"js/views/classroomView.js","./deckController":"js/controllers/deckController.js"}],"js/controllers/alertController.js":[function(require,module,exports) {
+"use strict";
+
+var _alert = require("../utils/alert");
+
+document.querySelector('body').addEventListener('click', function (e) {
+  if (e.target.matches('.cross')) {
+    (0, _alert.hideAlert)();
+  }
+});
+},{"../utils/alert":"js/utils/alert.js"}],"js/views/loginView.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.renderLoginForm = void 0;
+
+var _base = require("./base");
+
+var renderLoginForm = function renderLoginForm(parent) {
+  var loginForm = "          \n  <div class=\"login\">\n    <form action=\"#\" class=\"form\">\n      <div class=\"form__group\">\n        <input type=\"email\" class=\"form__input\" id=\"email\" placeholder=\"Email Address\" required>\n        <label for=\"email\" class=\"form__label\">Email Address</label>\n      </div>\n      \n      <div class=\"form__group\">\n        <input type=\"password\" class=\"form__input\" id=\"password\" placeholder=\"Password\" required>\n        <label for=\"password\" class=\"form__label\">Password</label>\n      </div>\n\n      <div class=\"form__group\">\n        <span class=\"form__span\"><a href=\"#\" class=\"form__link\">Forgot your password?</a></span>\n      </div>\n      \n      <div class=\"form__group\">\n        <button class=\"btn--btn-login\">Login</button>\n      </div>\n    </form>\n  </div>";
+  parent.insertAdjacentHTML('afterbegin', loginForm);
+};
+
+exports.renderLoginForm = renderLoginForm;
+},{"./base":"js/views/base.js"}],"js/controllers/headerController.js":[function(require,module,exports) {
+"use strict";
+
+var _base = require("../views/base");
+
+var _overviewController = require("./overviewController");
+
+var headerView = _interopRequireWildcard(require("../views/headerView"));
+
+var loginView = _interopRequireWildcard(require("../views/loginView"));
+
+var storage = _interopRequireWildcard(require("../utils/localStorage"));
+
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
+// When there is a token render the user information to the Header UI
+if (storage.getObj('token')) {
+  var user = storage.getObj('user') || _overviewController.state.user.userData;
+
+  headerView.renderHeaderLogin(user);
+} // User clicks logout button in header
+
+
+_base.elements.header.addEventListener('click', function (e) {
+  // User presses logout, render the default login and signup buttons
+  if (e.target.matches('.btn--logout')) {
+    (0, _base.clearOverview)();
+    headerView.renderHeaderDefault();
+    storage.removeObj('token'); // User clicks login render the login form in the overview
+  } else if (e.target.matches('.btn--login')) {
+    (0, _base.clearOverview)();
+    loginView.renderLoginForm(_base.elements.overview);
+  }
+});
+},{"../views/base":"js/views/base.js","./overviewController":"js/controllers/overviewController.js","../views/headerView":"js/views/headerView.js","../views/loginView":"js/views/loginView.js","../utils/localStorage":"js/utils/localStorage.js"}],"js/controllers/classroomController.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -10986,7 +11017,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "53374" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64034" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

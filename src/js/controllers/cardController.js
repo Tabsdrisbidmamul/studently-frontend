@@ -33,13 +33,16 @@ export const cardRender = () => {
 };
 
 // Render the cards that belong to the deck that the User clicked on
-export const deckCardRender = deckCards => {
-  // 1. Render the card grid and cards from the deck on the grid
+export const deckCardRender = (deckCards) => {
+  // 1. Clear the overview
+  clearOverview();
+
+  // 2. Render the card grid and cards from the deck on the grid
   cardView.renderCardGrid(elements.overview, deckCards);
 };
 
 // Load the card if they have click the entire card or the edit/ delete options
-export const cardLoader = e => {
+export const cardLoader = (e) => {
   // check if the user clicked either edit or delete card
   if (e.target.matches('.options, .options *')) {
     const click = e.target.closest('.options');
@@ -66,7 +69,7 @@ const optionsHandler = async (click, cardId) => {
   }
 };
 
-const cardUpdaterMaker = cardId => {
+const cardUpdaterMaker = (cardId) => {
   const cardData = getCard(cardId);
 
   clearOverview();
@@ -78,18 +81,18 @@ const cardUpdaterMaker = cardId => {
   updateCard(cardId);
 };
 
-const getCard = cardId => {
+const getCard = (cardId) => {
   //1. Get the cards array
   const cards = storage.getObj('cards') || state.card.cards;
 
   //2. Find the card in the cards array via id
-  return cards.filter(card => {
+  return cards.filter((card) => {
     return card.id === cardId;
   })[0];
 };
 
 // When the user interacts with cards in the overview
-const cardHandler = click => {
+const cardHandler = (click) => {
   try {
     // 1. Get the Card Id
     const cardId = click.dataset.card;
@@ -125,7 +128,7 @@ const addQAtoTextBox = (question, answer) => {
 // render text from input boxes to the card in 'make a card'
 const QAValueChanger = () => {
   // 1. question box update the value in real time to the card
-  document.querySelector('.textarea-q').addEventListener('input', e => {
+  document.querySelector('.textarea-q').addEventListener('input', (e) => {
     cardView.renderCardQuestionMake(
       document.querySelector('.card--make'),
       document.querySelector('.textarea-q').value
@@ -133,7 +136,7 @@ const QAValueChanger = () => {
   });
 
   // 2. answer box update the value in real time to the card
-  document.querySelector('.textarea-a').addEventListener('input', e => {
+  document.querySelector('.textarea-a').addEventListener('input', (e) => {
     cardView.renderCardQuestionMake(
       document.querySelector('.card--make'),
       document.querySelector('.textarea-a').value
@@ -147,7 +150,7 @@ const swapCardFacing = () => {
   let cardFacing = 'question';
 
   // 2. swap card facing side
-  document.querySelector('.btn--switch').addEventListener('click', e => {
+  document.querySelector('.btn--switch').addEventListener('click', (e) => {
     let textareaBox = '.textarea-q';
 
     // card to be swapped over to answer side
@@ -173,7 +176,7 @@ const createCard = () => {
   // User clicks to create the card
   document
     .querySelector('.icon--make-card-right')
-    .addEventListener('click', async e => {
+    .addEventListener('click', async (e) => {
       // 1. Get the question, answer and user
       const question = document.querySelector('.textarea-q').value;
       const answer = document.querySelector('.textarea-a').value;
@@ -199,11 +202,11 @@ const createCard = () => {
     });
 };
 
-const updateCard = cardId => {
+const updateCard = (cardId) => {
   // User clicks to update the card
   document
     .querySelector('.icon--make-card-right')
-    .addEventListener('click', async e => {
+    .addEventListener('click', async (e) => {
       // 1. Get the question, answer and user
       const question = document.querySelector('.textarea-q').value;
       const answer = document.querySelector('.textarea-a').value;
@@ -269,7 +272,7 @@ const cancelCardMaker = () => {
   // User clicks to cancel the card creation
   document
     .querySelector('.icon--make-card-left')
-    .addEventListener('click', e => {
+    .addEventListener('click', (e) => {
       clearOverview();
       cardRender(elements.overview, state.card.cards);
     });
