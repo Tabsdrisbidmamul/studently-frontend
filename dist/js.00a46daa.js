@@ -10061,14 +10061,14 @@ exports.renderDeckGrid = renderDeckGrid;
 
 var renderUserCards = function renderUserCards(card) {
   var markup = "\n    <li class=\"make-deck__item\" data-card=\"".concat(card.id, "\">\n    <a href=\"#\" class=\"make-deck__link\">\n      <svg class=\"icon icon__make-deck--card\">\n        <use href=\"").concat(_plus.default, "\"></use>\n      </svg>\n      <div class=\"make-deck__card-details\">\n        <span class=\"make-deck__span make-deck-span--question\">").concat(card.question, "</span>\n      <span class=\"make-deck__span make-deck-span--answer\">").concat(card.answer, "</span>\n      </div>\n    </a>\n  </li>");
-  document.querySelector('.make-deck__list--user').insertAdjacentHTML('beforebegin', markup);
+  document.querySelector('.make-deck__list--user').insertAdjacentHTML('beforeend', markup);
 };
 
 exports.renderUserCards = renderUserCards;
 
 var renderDeckCards = function renderDeckCards(card) {
   var markup = "\n    <li class=\"make-deck__item\" data-card=\"".concat(card.id, "\">\n    <a href=\"#\" class=\"make-deck__link\">\n      <svg class=\"icon icon__make-deck--card\">\n        <use href=\"").concat(_minus.default, "\"></use>\n      </svg>\n      <div class=\"make-deck__card-details\">\n        <span class=\"make-deck__span make-deck-span--question\">").concat(card.question, "</span>\n      <span class=\"make-deck__span make-deck-span--answer\">").concat(card.answer, "</span>\n      </div>\n    </a>\n  </li>");
-  document.querySelector('.make-deck__list--deck').insertAdjacentHTML('beforebegin', markup);
+  document.querySelector('.make-deck__list--deck').insertAdjacentHTML('beforeend', markup);
 };
 
 exports.renderDeckCards = renderDeckCards;

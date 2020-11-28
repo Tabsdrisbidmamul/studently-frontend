@@ -44,7 +44,7 @@ export const renderUserCards = (card) => {
 
   document
     .querySelector('.make-deck__list--user')
-    .insertAdjacentHTML('beforebegin', markup);
+    .insertAdjacentHTML('beforeend', markup);
 };
 
 export const renderDeckCards = (card) => {
@@ -63,7 +63,7 @@ export const renderDeckCards = (card) => {
 
   document
     .querySelector('.make-deck__list--deck')
-    .insertAdjacentHTML('beforebegin', markup);
+    .insertAdjacentHTML('beforeend', markup);
 };
 
 export const deleteCard = (id) => {
