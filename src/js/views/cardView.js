@@ -2,6 +2,7 @@ import tick from '../../img/SVG/check.svg';
 import cross from '../../img/SVG/circle-with-cross.svg';
 import edit from '../../img/SVG/edit.svg';
 import bin from '../../img/SVG/trash.svg';
+import card from '../../img/SVG/documents.svg';
 
 export const renderCardGrid = (parent, cardArray) => {
   let cards = '';
@@ -224,6 +225,23 @@ export const renderMakeCardGrid = (parent) => {
   </div>
 </div>
 `;
+
+  parent.insertAdjacentHTML('afterbegin', markup);
+};
+
+export const renderEmptyCardGrid = (parent) => {
+  const markup = `<div class="make-card">
+  <a href="#" class="btn btn--ghost">Make A New Card</a>
+</div>
+
+<div class="card-grid">
+  <div class="no-item">
+      <svg class="icon icon--no-card">
+        <use href="${card}"></use>
+      </svg>
+      <span>make some cards to see them here!</span>
+  </div>
+</div>`;
 
   parent.insertAdjacentHTML('afterbegin', markup);
 };

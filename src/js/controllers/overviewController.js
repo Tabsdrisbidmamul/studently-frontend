@@ -1,6 +1,6 @@
 import { elements, clearOverview } from '../views/base';
 import { cardLoader, cardRender, cardMakerLoader } from './cardController';
-import { loginHandler } from './loginHandler';
+import { loginHandler } from './loginController';
 import User from '../models/userModel';
 import Card from '../models/cardModel';
 import Deck from '../models/deckModel';
