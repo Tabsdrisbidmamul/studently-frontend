@@ -1,6 +1,10 @@
 .icon {
   transition: all 250ms;
 
+  &--no-card {
+    fill: $color-grey-dark-1;
+  }
+
   &--right {
     fill: $color-green-right;
     transform: scale(1);

@@ -6698,6 +6698,8 @@ var elements = {
   headerLoginBtn: document.querySelector('.header__login'),
   header: document.querySelector('header'),
   body: document.querySelector('body'),
+  sidebar: document.querySelector('.sidebar'),
+  sidebarItem: document.querySelectorAll('.side-nav__item'),
   overview: document.querySelector('.overview'),
   card: document.querySelector('.side-nav-card'),
   deck: document.querySelector('.side-nav-deck'),
@@ -6723,13 +6725,15 @@ module.exports = '#fcba2f951158d7741a6b4f3c6594ec67';
 module.exports = '#0e19f3def72e51aa319d70b8512e31bc';
 },{}],"img/SVG/trash.svg":[function(require,module,exports) {
 module.exports = '#90f76b9fdc792fc4a53d17223bebcfe6';
+},{}],"img/SVG/documents.svg":[function(require,module,exports) {
+module.exports = '#95917fb7c3750e6d156bfd5bdffe39d2';
 },{}],"js/views/cardView.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.renderMakeCardGrid = exports.renderUpdateCardGrid = exports.renderCardQuestion = exports.renderCardQuestionMake = exports.renderCardAnswerMake = exports.renderCardAnswer = exports.renderCardGrid = void 0;
+exports.renderEmptyCardGrid = exports.renderMakeCardGrid = exports.renderUpdateCardGrid = exports.renderCardQuestion = exports.renderCardQuestionMake = exports.renderCardAnswerMake = exports.renderCardAnswer = exports.renderCardGrid = void 0;
 
 var _check = _interopRequireDefault(require("../../img/SVG/check.svg"));
 
@@ -6738,6 +6742,8 @@ var _circleWithCross = _interopRequireDefault(require("../../img/SVG/circle-with
 var _edit = _interopRequireDefault(require("../../img/SVG/edit.svg"));
 
 var _trash = _interopRequireDefault(require("../../img/SVG/trash.svg"));
+
+var _documents = _interopRequireDefault(require("../../img/SVG/documents.svg"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -6794,7 +6800,14 @@ var renderMakeCardGrid = function renderMakeCardGrid(parent) {
 };
 
 exports.renderMakeCardGrid = renderMakeCardGrid;
-},{"../../img/SVG/check.svg":"img/SVG/check.svg","../../img/SVG/circle-with-cross.svg":"img/SVG/circle-with-cross.svg","../../img/SVG/edit.svg":"img/SVG/edit.svg","../../img/SVG/trash.svg":"img/SVG/trash.svg"}],"js/views/windowView.js":[function(require,module,exports) {
+
+var renderEmptyCardGrid = function renderEmptyCardGrid(parent) {
+  var markup = "<div class=\"make-card\">\n  <a href=\"#\" class=\"btn btn--ghost\">Make A New Card</a>\n</div>\n\n<div class=\"card-grid\">\n  <div class=\"no-item\">\n      <svg class=\"icon icon--no-card\">\n        <use href=\"".concat(_documents.default, "\"></use>\n      </svg>\n      <span>make some cards to see them here!</span>\n  </div>\n</div>");
+  parent.insertAdjacentHTML('afterbegin', markup);
+};
+
+exports.renderEmptyCardGrid = renderEmptyCardGrid;
+},{"../../img/SVG/check.svg":"img/SVG/check.svg","../../img/SVG/circle-with-cross.svg":"img/SVG/circle-with-cross.svg","../../img/SVG/edit.svg":"img/SVG/edit.svg","../../img/SVG/trash.svg":"img/SVG/trash.svg","../../img/SVG/documents.svg":"img/SVG/documents.svg"}],"js/views/windowView.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -9042,8 +9055,15 @@ var getCardsFromAPI = /*#__PURE__*/function () {
 exports.getCardsFromAPI = getCardsFromAPI;
 
 var cardRender = function cardRender() {
-  // 1. Render the card grid and cards on the grid
-  cardView.renderCardGrid(_base.elements.overview, _overviewController.state.card.cards); // TODO: ADD IF STATEMENT FOR WHEN THE CARDS ARRAY IS EMPTY (USER HAS NO CARDS)
+  // 1. Get the cards
+  var cards = _overviewController.state.card.cards || storage.getObj('cards'); // 2. Check if they are empty, if so render and exit function
+
+  if (cards.length === 0) {
+    return cardView.renderEmptyCardGrid(_base.elements.overview);
+  } // 3. Render the card grid and cards on the grid
+
+
+  cardView.renderCardGrid(_base.elements.overview, cards);
 }; // Load the card if they have click the entire card or the edit/ delete options
 
 
@@ -9583,7 +9603,7 @@ var User = /*#__PURE__*/function () {
 }();
 
 exports.default = User;
-},{"axios":"../node_modules/axios/index.js","../utils/localStorage":"js/utils/localStorage.js","../utils/alert":"js/utils/alert.js"}],"js/controllers/loginHandler.js":[function(require,module,exports) {
+},{"axios":"../node_modules/axios/index.js","../utils/localStorage":"js/utils/localStorage.js","../utils/alert":"js/utils/alert.js"}],"js/controllers/loginController.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -9621,9 +9641,7 @@ var loginHandler = /*#__PURE__*/function () {
           case 0:
             e.preventDefault();
             email = document.querySelector('#email').value;
-            password = document.querySelector('#password').value; // 1. add current instance of user to global object
-            // state.user = new User();
-            // 2. Check if the login was successful
+            password = document.querySelector('#password').value; // 1. Check if the login was successful
 
             _context.next = 5;
             return _overviewController.state.user.login(email, password);
@@ -9631,13 +9649,13 @@ var loginHandler = /*#__PURE__*/function () {
           case 5:
             loggedIn = _context.sent;
 
-            // 3. Only render the User Ui for a successful login
+            // 2. Only render the User Ui for a successful login
             if (loggedIn) {
-              _overviewController.state.user.email = email; // 3.2. Clear the Login Form
+              _overviewController.state.user.email = email; // 2.2. Clear the Login Form
 
-              window.setTimeout(_base.clearOverview, 2500); // 3.3 Render the user info to the Login UI
+              window.setTimeout(_base.clearOverview, 2500); // 2.3 Render the user info to the Login UI
 
-              window.setTimeout(headerView.renderHeaderLogin, 2500); // 3.4. Load and render User cards
+              window.setTimeout(headerView.renderHeaderLogin, 2500); // 2.4. Load and render User cards
 
               window.setTimeout(_cardController.cardLoaderAndRender, 3500);
             }
@@ -10073,7 +10091,7 @@ var _base = require("../views/base");
 
 var _cardController = require("./cardController");
 
-var _loginHandler = require("./loginHandler");
+var _loginController = require("./loginController");
 
 var _userModel = _interopRequireDefault(require("../models/userModel"));
 
@@ -10118,7 +10136,7 @@ _base.elements.overview.addEventListener('click', /*#__PURE__*/function () {
           case 0:
             // user clicks login button in login form
             if (e.target.matches('.btn--btn-login')) {
-              (0, _loginHandler.loginHandler)(e); // User clicks a card in the card home page
+              (0, _loginController.loginHandler)(e); // User clicks a card in the card home page
             } else if (e.target.closest('.card')) {
               (0, _cardController.cardLoader)(e); // User click 'make a new card' button in card homepage
             } else if (e.target.closest('.make-card')) {
@@ -10139,7 +10157,7 @@ _base.elements.overview.addEventListener('click', /*#__PURE__*/function () {
     return _ref.apply(this, arguments);
   };
 }());
-},{"../views/base":"js/views/base.js","./cardController":"js/controllers/cardController.js","./loginHandler":"js/controllers/loginHandler.js","../models/userModel":"js/models/userModel.js","../models/cardModel":"js/models/cardModel.js","../models/deckModel":"js/models/deckModel.js","../models/classroomModel":"js/models/classroomModel.js","../utils/localStorage":"js/utils/localStorage.js","../views/cardView":"js/views/cardView.js","../views/deckView":"js/views/deckView.js","../views/classroomView":"js/views/classroomView.js"}],"js/controllers/alertController.js":[function(require,module,exports) {
+},{"../views/base":"js/views/base.js","./cardController":"js/controllers/cardController.js","./loginController":"js/controllers/loginController.js","../models/userModel":"js/models/userModel.js","../models/cardModel":"js/models/cardModel.js","../models/deckModel":"js/models/deckModel.js","../models/classroomModel":"js/models/classroomModel.js","../utils/localStorage":"js/utils/localStorage.js","../views/cardView":"js/views/cardView.js","../views/deckView":"js/views/deckView.js","../views/classroomView":"js/views/classroomView.js"}],"js/controllers/alertController.js":[function(require,module,exports) {
 "use strict";
 
 var _alert = require("../utils/alert");
@@ -10535,7 +10553,19 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
-// User clicks 'MY CARDS' in the sidebar nav
+_base.elements.sidebar.addEventListener('click', function (e) {
+  renderActiveItem(e.target.closest('.side-nav__item'));
+});
+
+var renderActiveItem = function renderActiveItem(click) {
+  _base.elements.sidebarItem.forEach(function (item) {
+    item.classList.remove('side-nav__item--active');
+  });
+
+  click.classList.add('side-nav__item--active');
+}; // User clicks 'MY CARDS' in the sidebar nav
+
+
 _base.elements.card.addEventListener('click', /*#__PURE__*/function () {
   var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(e) {
     return regeneratorRuntime.wrap(function _callee$(_context) {
@@ -10986,7 +11016,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "63712" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64750" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

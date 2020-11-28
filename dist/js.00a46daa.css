@@ -173,6 +173,8 @@
 
 .icon {
   transition: all 250ms; }
+  .icon--no-card {
+    fill: #333; }
   .icon--right {
     fill: #24a19c;
     transform: scale(1); }
@@ -256,6 +258,18 @@
 
 .window__cancel {
   color: #ff4b5c; }
+
+.no-item {
+  grid-column: 2 / 3;
+  align-self: center; }
+  .no-item span {
+    font-size: 1.6rem;
+    font-weight: 400;
+    text-transform: uppercase;
+    display: inline-block;
+    text-align: center;
+    margin-top: 6rem;
+    color: #f0eeee; }
 
 .answer-form {
   display: flex; }

@@ -10,23 +10,20 @@ export const loginHandler = async (e) => {
   const email = document.querySelector('#email').value;
   const password = document.querySelector('#password').value;
 
-  // 1. add current instance of user to global object
-  // state.user = new User();
-
-  // 2. Check if the login was successful
+  // 1. Check if the login was successful
   const loggedIn = await state.user.login(email, password);
 
-  // 3. Only render the User Ui for a successful login
+  // 2. Only render the User Ui for a successful login
   if (loggedIn) {
     state.user.email = email;
 
-    // 3.2. Clear the Login Form
+    // 2.2. Clear the Login Form
     window.setTimeout(clearOverview, 2500);
 
-    // 3.3 Render the user info to the Login UI
+    // 2.3 Render the user info to the Login UI
     window.setTimeout(headerView.renderHeaderLogin, 2500);
 
-    // 3.4. Load and render User cards
+    // 2.4. Load and render User cards
     window.setTimeout(cardLoaderAndRender, 3500);
   }
 };

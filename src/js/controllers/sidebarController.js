@@ -6,6 +6,18 @@ import { state } from './overviewController';
 import { showAlert } from '../utils/alert';
 import * as storage from '../utils/localStorage';
 
+elements.sidebar.addEventListener('click', (e) => {
+  renderActiveItem(e.target.closest('.side-nav__item'));
+});
+
+const renderActiveItem = (click) => {
+  elements.sidebarItem.forEach((item) => {
+    item.classList.remove('side-nav__item--active');
+  });
+
+  click.classList.add('side-nav__item--active');
+};
+
 // User clicks 'MY CARDS' in the sidebar nav
 elements.card.addEventListener('click', async (e) => {
   try {

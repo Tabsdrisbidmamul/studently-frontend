@@ -26,10 +26,16 @@ export const getCardsFromAPI = async () => {
 };
 
 export const cardRender = () => {
-  // 1. Render the card grid and cards on the grid
-  cardView.renderCardGrid(elements.overview, state.card.cards);
+  // 1. Get the cards
+  const cards = state.card.cards || storage.getObj('cards');
 
-  // TODO: ADD IF STATEMENT FOR WHEN THE CARDS ARRAY IS EMPTY (USER HAS NO CARDS)
+  // 2. Check if they are empty, if so render and exit function
+  if (cards.length === 0) {
+    return cardView.renderEmptyCardGrid(elements.overview);
+  }
+
+  // 3. Render the card grid and cards on the grid
+  cardView.renderCardGrid(elements.overview, cards);
 };
 
 // Load the card if they have click the entire card or the edit/ delete options
