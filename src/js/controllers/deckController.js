@@ -70,10 +70,29 @@ const getDeck = (deckId) => {
 };
 
 export const deckMakerLoader = (e) => {
+  // 1. Clear the overview
   clearOverview();
+
+  // 2. Render the make a deck grid layout
   deckView.renderMakeDeckGrid(elements.overview);
+
+  // 3. Get the user cards
+  const cards = state.card.cards || storage.getObj('cards');
+
+  // 3.1 If they have cards, render them to the page
+  if (cards.length !== 0) {
+    renderUserCards(cards);
+  }
+
+  // 4. Add the event handlers
   createDeck(e);
   cancelDeckMaker(e);
+};
+
+const renderUserCards = (cards) => {
+  cards.forEach((card) => {
+    deckView.renderUserCards(card);
+  });
 };
 
 // When the user interacts with the decks in the overview

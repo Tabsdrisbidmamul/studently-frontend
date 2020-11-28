@@ -2,13 +2,20 @@
   &__form {
     display: flex;
     align-items: center;
-    justify-content: center;
-    margin-top: 2rem;
+    // justify-content: center;
+    margin: 2rem 0 0 0;
 
     & > *:not(:last-child) {
       margin-right: 2rem;
     }
     grid-column: 1 / -1;
+    grid-row: 1 / 2;
+  }
+
+  &__options {
+    grid-column: 3 / 4;
+    grid-row: 1 / 2;
+    display: flex;
   }
 
   &__group {
@@ -23,7 +30,7 @@
     padding: 1rem 2rem;
     background-color: $color-grey-light-2;
     border: none;
-    width: 60%;
+    width: 40%;
     border-radius: 3px;
     box-shadow: 0 0.8rem 2rem rgba(#000, 0.2);
 
@@ -64,9 +71,9 @@
     font-size: 1.6rem;
     text-align: center;
     margin-bottom: 1rem;
-    grid-column: 2 / 3;
-    grid-row: 2 / 3;
-    align-self: end;
+    // grid-column: 2 / 3;
+    // grid-row: 2 / 3;
+    // align-self: end;
   }
 
   &--switch,
@@ -137,7 +144,7 @@
     }
   }
 
-  &__card {
+  &__card-switch {
     grid-column: 2 / 3;
     grid-row: 2 / 3;
   }

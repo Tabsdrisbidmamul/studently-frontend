@@ -76,9 +76,15 @@
       margin: 0 2rem;
       fill: $color-tertiary-2;
     }
+  }
 
-    // &:hover {
-    //   transform: scale(1.1);
-    // }
+  &--make-deck {
+    width: 4rem;
+    height: 4rem;
+    transform: scale(1);
+
+    &:hover {
+      transform: scale(1.2);
+    }
   }
 }

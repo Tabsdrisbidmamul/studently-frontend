@@ -9757,7 +9757,7 @@ var Deck = /*#__PURE__*/function () {
   }, {
     key: "createDeck",
     value: function () {
-      var _createDeck = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(name, user, token) {
+      var _createDeck = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(name, user, cards, token) {
         var res, message;
         return regeneratorRuntime.wrap(function _callee2$(_context2) {
           while (1) {
@@ -9767,7 +9767,8 @@ var Deck = /*#__PURE__*/function () {
                 _context2.next = 3;
                 return _axios.default.post('https://polar-savannah-53668.herokuapp.com/api/v0/decks/', {
                   name: name,
-                  user: user
+                  user: user,
+                  cards: cards
                 }, {
                   headers: {
                     Authorization: "Bearer ".concat(token)
@@ -9798,7 +9799,7 @@ var Deck = /*#__PURE__*/function () {
         }, _callee2, null, [[0, 7]]);
       }));
 
-      function createDeck(_x2, _x3, _x4) {
+      function createDeck(_x2, _x3, _x4, _x5) {
         return _createDeck.apply(this, arguments);
       }
 
@@ -10024,13 +10025,27 @@ var Classroom = /*#__PURE__*/function () {
 }();
 
 exports.default = Classroom;
-},{"axios":"../node_modules/axios/index.js","../utils/alert":"js/utils/alert.js"}],"js/views/deckView.js":[function(require,module,exports) {
+},{"axios":"../node_modules/axios/index.js","../utils/alert":"js/utils/alert.js"}],"img/SVG/plus.svg":[function(require,module,exports) {
+module.exports = '#5879339dda63c178b7ce0ee777d422bd';
+},{}],"img/SVG/minus.svg":[function(require,module,exports) {
+module.exports = '#06146f99ecc58ac979ac7b502d6cd836';
+},{}],"js/views/deckView.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.renderMakeDeckGrid = exports.renderDeckGrid = void 0;
+exports.renderMakeDeckGrid = exports.deleteCard = exports.renderDeckCards = exports.renderUserCards = exports.renderDeckGrid = void 0;
+
+var _plus = _interopRequireDefault(require("../../img/SVG/plus.svg"));
+
+var _minus = _interopRequireDefault(require("../../img/SVG/minus.svg"));
+
+var _check = _interopRequireDefault(require("../../img/SVG/check.svg"));
+
+var _circleWithCross = _interopRequireDefault(require("../../img/SVG/circle-with-cross.svg"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var renderDeckGrid = function renderDeckGrid(parent, deckArray) {
   var decks = '';
@@ -10040,18 +10055,38 @@ var renderDeckGrid = function renderDeckGrid(parent, deckArray) {
   });
   var markup = "\n    <div class=\"make-deck\">\n        <a href=\"#\" class=\"btn btn--ghost\">Make A New Deck</a>\n    </div>\n\n    <div class=\"deck-grid\">\n        ".concat(decks, "\n    </div>;");
   parent.insertAdjacentHTML('afterbegin', markup);
-}; // Deck Grid here
-
+};
 
 exports.renderDeckGrid = renderDeckGrid;
 
-var renderMakeDeckGrid = function renderMakeDeckGrid(parent) {
-  var markup = "<div class=\"make-deck-grid\">\n\n  <form action=\"#\" class=\"make-deck__form\">\n      <label for=\"deck-name\" class=\"make-deck__label\">Enter Deck name</label>\n      <textarea id=\"deck-name\" class=\"make-deck__textarea  textarea-q\" wrap=\"off\" minlength=\"5\" maxlength=\"250\" placeholder=\"Enter your deck name\" required=\"true\" spellcheck=\"true\"></textarea>\n  </form>\n\n  <div class=\"make-deck__group make-deck--right\">\n    <a href=\"#\" class=\"make-deck__link\">\n      <svg class=\"icon icon--make-deck icon--make-card-right icon--right\">\n        <use href=\"img/SVG/check.svg\"></use>\n      </svg>\n    </a>\n    <span class=\"make-deck__span\">Create The Deck</span>\n  </div>\n\n  <div class=\"make-deck__group make-deck--wrong\">\n    <a href=\"#\" class=\"make-deck__link\">\n      <svg class=\"icon icon--make-deck icon--make-deck-left icon-left icon--wrong\">\n        <use href=\"img/SVG/circle-with-cross.svg\"></use>\n      </svg>\n    </a>\n    <span class=\"make-deck__span\">Let's Stop!</span>\n  </div>\n</div>";
+var renderUserCards = function renderUserCards(card) {
+  var markup = "\n    <li class=\"make-deck__item\" data-card=\"".concat(card.id, "\">\n    <a href=\"#\" class=\"make-deck__link\">\n      <svg class=\"icon icon__make-deck--card\">\n        <use href=\"").concat(_plus.default, "\"></use>\n      </svg>\n      <div class=\"make-deck__card-details\">\n        <span class=\"make-deck__span make-deck-span--question\">").concat(card.question, "</span>\n      <span class=\"make-deck__span make-deck-span--answer\">").concat(card.answer, "</span>\n      </div>\n    </a>\n  </li>");
+  document.querySelector('.make-deck__list--user').insertAdjacentHTML('beforebegin', markup);
+};
+
+exports.renderUserCards = renderUserCards;
+
+var renderDeckCards = function renderDeckCards(card) {
+  var markup = "\n    <li class=\"make-deck__item\" data-card=\"".concat(card.id, "\">\n    <a href=\"#\" class=\"make-deck__link\">\n      <svg class=\"icon icon__make-deck--card\">\n        <use href=\"").concat(_minus.default, "\"></use>\n      </svg>\n      <div class=\"make-deck__card-details\">\n        <span class=\"make-deck__span make-deck-span--question\">").concat(card.question, "</span>\n      <span class=\"make-deck__span make-deck-span--answer\">").concat(card.answer, "</span>\n      </div>\n    </a>\n  </li>");
+  document.querySelector('.make-deck__list--deck').insertAdjacentHTML('beforebegin', markup);
+};
+
+exports.renderDeckCards = renderDeckCards;
+
+var deleteCard = function deleteCard(id) {
+  var card = document.querySelector("[data-card*=\"".concat(id, "\"]"));
+  if (card) card.remove();
+};
+
+exports.deleteCard = deleteCard;
+
+var renderMakeDeckGrid = function renderMakeDeckGrid(parent, cards) {
+  var markup = "<div class=\"make-deck-grid\">\n  <form action=\"#\" class=\"make-deck__form\">\n      <label for=\"deck-name\" class=\"make-deck__label\">Enter Deck name</label>\n      <input class=\"make-deck__input\" type=\"text\" minlength=\"5\" maxlength=\"50\" id=\"deck-name\" placeholder=\"Deck Name\">\n  </form>\n\n  <div class=\"make-deck__card-nav make-deck__card-nav--user-cards\">\n    <span class=\"make-deck__name\">My Cards</span>\n    <ul class=\"make-deck__list make-deck__list--user\">\n      \n    </ul>\n  </div>\n\n  <div class=\"make-deck__card-nav make-deck__card-nav--deck-cards\">\n    <span class=\"make-deck__name\">Deck Cards</span>\n    <ul class=\"make-deck__list make-deck__list--deck\">\n      \n    </ul>\n  </div>\n\n  <div class=\"make-deck__card-switch\">\n    <div class=\"card card--make make-deck__card\">\n    <div class=\"card__options\">\n      <a href=\"#\" class=\"options options--add\">\n        <svg class=\"icon icon--options icon--add\">\n          <use xlink:href=\"".concat(_plus.default, "\"></use>\n        </svg>\n        <span class=\"show-hide card--edit\">Add card</span>\n      </a>\n\n    </div>\n\n    <div class=\"card__details\">\n      <span class=\"name\">What is a Question?</span>\n    </div>\n    </div>\n\n    <div class=\"make-deck__group make-deck--switch\">\n      <a href=\"#\" class=\"make-deck__switch btn btn--switch\">Turn Over</a>\n    </div>\n  </div>\n  \n  <div class=\"make-deck__options\">\n    <div class=\"make-deck__group make-deck--right\">\n      <a href=\"#\" class=\"make-deck__link\">\n        <svg class=\"icon icon--make-deck icon--make-deck-right icon--right\">\n          <use href=\"").concat(_check.default, "\"></use>\n        </svg>\n      </a>\n      <span class=\"make-deck__span\">Create The Deck</span>\n    </div>\n\n    <div class=\"make-deck__group make-deck--wrong\">\n      <a href=\"#\" class=\"make-deck__link\">\n        <svg class=\"icon icon--make-deck icon--make-deck-left icon-left icon--wrong\">\n          <use href=\"").concat(_circleWithCross.default, "\"></use>\n        </svg>\n      </a>\n      <span class=\"make-deck__span\">Let's Stop!</span>\n    </div>\n  </div>\n</div>");
   parent.insertAdjacentHTML('afterbegin', markup);
 };
 
 exports.renderMakeDeckGrid = renderMakeDeckGrid;
-},{}],"js/views/classroomView.js":[function(require,module,exports) {
+},{"../../img/SVG/plus.svg":"img/SVG/plus.svg","../../img/SVG/minus.svg":"img/SVG/minus.svg","../../img/SVG/check.svg":"img/SVG/check.svg","../../img/SVG/circle-with-cross.svg":"img/SVG/circle-with-cross.svg"}],"js/views/classroomView.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -10236,14 +10271,30 @@ var getDeck = function getDeck(deckId) {
 };
 
 var deckMakerLoader = function deckMakerLoader(e) {
-  (0, _base.clearOverview)();
-  deckView.renderMakeDeckGrid(_base.elements.overview);
+  // 1. Clear the overview
+  (0, _base.clearOverview)(); // 2. Render the make a deck grid layout
+
+  deckView.renderMakeDeckGrid(_base.elements.overview); // 3. Get the user cards
+
+  var cards = _overviewController.state.card.cards || storage.getObj('cards'); // 3.1 If they have cards, render them to the page
+
+  if (cards.length !== 0) {
+    renderUserCards(cards);
+  } // 4. Add the event handlers
+
+
   createDeck(e);
   cancelDeckMaker(e);
-}; // When the user interacts with the decks in the overview
-
+};
 
 exports.deckMakerLoader = deckMakerLoader;
+
+var renderUserCards = function renderUserCards(cards) {
+  cards.forEach(function (card) {
+    deckView.renderUserCards(card);
+  });
+}; // When the user interacts with the decks in the overview
+
 
 var deckHandler = function deckHandler(click) {
   try {

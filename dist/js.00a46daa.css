@@ -214,6 +214,12 @@
     height: 3rem;
     margin: 0 2rem;
     fill: #ff6a88; }
+  .icon--make-deck {
+    width: 4rem;
+    height: 4rem;
+    transform: scale(1); }
+    .icon--make-deck:hover {
+      transform: scale(1.2); }
 
 .options {
   text-decoration: none;
@@ -493,11 +499,16 @@
 .make-deck__form {
   display: flex;
   align-items: center;
-  justify-content: center;
-  margin-top: 2rem;
-  grid-column: 1 / -1; }
+  margin: 2rem 0 0 0;
+  grid-column: 1 / -1;
+  grid-row: 1 / 2; }
   .make-deck__form > *:not(:last-child) {
     margin-right: 2rem; }
+
+.make-deck__options {
+  grid-column: 3 / 4;
+  grid-row: 1 / 2;
+  display: flex; }
 
 .make-deck__group {
   width: 100%; }
@@ -507,7 +518,7 @@
   padding: 1rem 2rem;
   background-color: #f7f7f7;
   border: none;
-  width: 60%;
+  width: 40%;
   border-radius: 3px;
   box-shadow: 0 0.8rem 2rem rgba(0, 0, 0, 0.2);
   font-family: inherit;
@@ -536,10 +547,7 @@
   text-decoration: none;
   font-size: 1.6rem;
   text-align: center;
-  margin-bottom: 1rem;
-  grid-column: 2 / 3;
-  grid-row: 2 / 3;
-  align-self: end; }
+  margin-bottom: 1rem; }
 
 .make-deck--switch, .make-deck--right, .make-deck--wrong {
   display: flex;
@@ -592,7 +600,7 @@
   .make-deck__card-nav--user-cards {
     margin: 0 auto; }
 
-.make-deck__card {
+.make-deck__card-switch {
   grid-column: 2 / 3;
   grid-row: 2 / 3; }
 

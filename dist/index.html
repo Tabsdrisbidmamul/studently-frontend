@@ -333,7 +333,7 @@
             -->
 
             <!-- MAKE DECKS -->
-            <div class="make-deck-grid">
+            <!-- <div class="make-deck-grid">
 
               <form action="#" class="make-deck__form">
                   <label for="deck-name" class="make-deck__label">Enter Deck name</label>
@@ -346,7 +346,7 @@
                   <li class="make-deck__item">
                     <a href="#" class="make-deck__link">
                       <svg class="icon icon__make-deck--card">
-                        <use xlink:href="#5879339dda63c178b7ce0ee777d422bd"></use>
+                        <use href="img/SVG/plus.svg"></use>
                       </svg>
                       <div class="make-deck__card-details">
                         <span class="make-deck__span make-deck-span--question">ipsum lorem ipsum dolor sit amet ipsum lorem ipsum dolor sit amet ipsum lorem ipsum dolor sit amet ipsum lorem ipsum dolor sit amet</span>
@@ -358,7 +358,7 @@
                   <li class="make-deck__item">
                     <a href="#" class="make-deck__link">
                       <svg class="icon icon__make-deck--card">
-                        <use xlink:href="#5879339dda63c178b7ce0ee777d422bd"></use>
+                        <use href="img/SVG/plus.svg"></use>
                       </svg>
                       <div class="make-deck__card-details">
                         <span class="make-deck__span make-deck-span--question">Card Question</span>
@@ -370,7 +370,7 @@
                   <li class="make-deck__item">
                     <a href="#" class="make-deck__link">
                       <svg class="icon icon__make-deck--card">
-                        <use xlink:href="#5879339dda63c178b7ce0ee777d422bd"></use>
+                        <use href="img/SVG/plus.svg"></use>
                       </svg>
                       <div class="make-deck__card-details">
                         <span class="make-deck__span make-deck-span--question">Card Question</span>
@@ -382,7 +382,7 @@
                   <li class="make-deck__item">
                     <a href="#" class="make-deck__link">
                       <svg class="icon icon__make-deck--card">
-                        <use xlink:href="#5879339dda63c178b7ce0ee777d422bd"></use>
+                        <use href="img/SVG/plus.svg"></use>
                       </svg>
                       <div class="make-deck__card-details">
                         <span class="make-deck__span make-deck-span--question">Card Question</span>
@@ -400,7 +400,7 @@
 
                     <a href="#" class="make-deck__link">
                       <svg class="icon icon__make-deck--card">
-                        <use xlink:href="#06146f99ecc58ac979ac7b502d6cd836"></use>
+                        <use href="img/SVG/minus.svg"></use>
                       </svg>
                       <div class="make-deck__card-details">
                         <span class="make-deck__span make-deck-span--question">What is the speed of light?</span>
@@ -412,7 +412,7 @@
                   <li class="make-deck__item">
                     <a href="#" class="make-deck__link">
                       <svg class="icon icon__make-deck--card">
-                        <use xlink:href="#06146f99ecc58ac979ac7b502d6cd836"></use>
+                        <use href="img/SVG/minus.svg"></use>
                       </svg>
                       <div class="make-deck__card-details">
                         <span class="make-deck__span make-deck-span--question">Card Question</span>
@@ -424,7 +424,7 @@
                   <li class="make-deck__item">
                     <a href="#" class="make-deck__link">
                       <svg class="icon icon__make-deck--card">
-                        <use xlink:href="#06146f99ecc58ac979ac7b502d6cd836"></use>
+                        <use href="img/SVG/minus.svg"></use>
                       </svg>
                       <div class="make-deck__card-details">
                         <span class="make-deck__span make-deck-span--question">Card Question</span>
@@ -435,11 +435,12 @@
                 </ul>
               </div>
 
-              <div class="card card--make make-deck__card">
+              <div class="make-deck__card-switch">
+                <div class="card card--make make-deck__card">
                 <div class="card__options">
                   <a href="#" class="options options--add">
                     <svg class="icon icon--options icon--add">
-                      <use xlink:href="#5879339dda63c178b7ce0ee777d422bd"></use>
+                      <use xlink:href="img/SVG/plus.svg"></use>
                     </svg>
                     <span class="show-hide card--edit">Add card</span>
                   </a>
@@ -449,29 +450,35 @@
                 <div class="card__details">
                   <span class="name">What is a Question?</span>
                 </div>
-              </div>
+                </div>
 
-              <div class="make-deck__group make-deck--switch">
-                <a href="#" class="make-deck__switch btn btn--switch">Turn Over</a>
+                <div class="make-deck__group make-deck--switch">
+                  <a href="#" class="make-deck__switch btn btn--switch">Turn Over</a>
+                </div>
               </div>
-              <!-- <div class="make-deck__group make-deck--right">
-                <a href="#" class="make-deck__link">
-                  <svg class="icon icon--make-deck icon--make-card-right icon--right">
-                    <use href="img/SVG/check.svg"></use>
-                  </svg>
-                </a>
-                <span class="make-deck__span">Create The Deck</span>
-              </div>
+              
+              <div class="make-deck__options">
+                <div class="make-deck__group make-deck--right">
+                  <a href="#" class="make-deck__link">
+                    <svg class="icon icon--make-deck icon--make-card-right icon--right">
+                      <use href="img/SVG/check.svg"></use>
+                    </svg>
+                  </a>
+                  <span class="make-deck__span">Create The Deck</span>
+                </div>
 
-              <div class="make-deck__group make-deck--wrong">
-                <a href="#" class="make-deck__link">
-                  <svg class="icon icon--make-deck icon--make-deck-left icon-left icon--wrong">
-                    <use href="img/SVG/circle-with-cross.svg"></use>
-                  </svg>
-                </a>
-                <span class="make-deck__span">Let's Stop!</span>
-              </div> -->
-            </div>
+                <div class="make-deck__group make-deck--wrong">
+                  <a href="#" class="make-deck__link">
+                    <svg class="icon icon--make-deck icon--make-deck-left icon-left icon--wrong">
+                      <use href="img/SVG/circle-with-cross.svg"></use>
+                    </svg>
+                  </a>
+                  <span class="make-deck__span">Let's Stop!</span>
+                </div>
+              </div>
+              
+
+            </div> -->
 
             <!--CLASSROOM-->
             <!--<div class="make-classroom">
