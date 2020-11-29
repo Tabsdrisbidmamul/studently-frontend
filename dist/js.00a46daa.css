@@ -499,7 +499,7 @@
 .make-deck__form {
   display: flex;
   align-items: center;
-  margin: 2rem 0 0 0;
+  margin: 2rem 0 0 2rem;
   grid-column: 1 / -1;
   grid-row: 1 / 2; }
   .make-deck__form > *:not(:last-child) {
@@ -538,7 +538,7 @@
 
 .make-deck__label {
   font-size: 1.6rem;
-  font-weight: 300;
+  font-weight: 400;
   margin-bottom: 1rem;
   text-transform: uppercase;
   letter-spacing: 0.05rem; }
@@ -570,7 +570,7 @@
 .make-deck__span {
   text-transform: uppercase;
   font-size: 1.3rem;
-  font-weight: 300;
+  font-weight: 400;
   transition: all 200ms; }
   .make-deck__span:not(:last-child) {
     margin-bottom: 1rem; }
