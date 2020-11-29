@@ -87,7 +87,7 @@ const cardUpdaterMaker = (cardId) => {
   updateCard(cardId);
 };
 
-const getCard = (cardId) => {
+export const getCard = (cardId) => {
   //1. Get the cards array
   const cards = storage.getObj('cards') || state.card.cards;
 
@@ -121,7 +121,7 @@ const cardHandler = (click) => {
       );
     }
   } catch (err) {
-    showAlert('error', err.message);
+    // showAlert('error', err.message);
   }
 };
 
@@ -151,7 +151,7 @@ const QAValueChanger = () => {
 };
 
 // Handler when the card is to be swapped to question or answer side
-const swapCardFacing = () => {
+export const swapCardFacing = () => {
   // 1. set the boolean for card facing
   let cardFacing = 'question';
 

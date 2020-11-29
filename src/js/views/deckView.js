@@ -49,6 +49,11 @@ export const renderUserCards = (card) => {
     .insertAdjacentHTML('beforeend', markup);
 };
 
+export const clearUserCardsResults = () => {
+  document.querySelector('.make-deck__list--user').innerHTML = '';
+  document.querySelector('.make-deck__paginate--user').innerHTML = '';
+};
+
 export const renderDeckCards = (card) => {
   const markup = `
     <li class="make-deck__item" data-card="${card.id}">
@@ -68,12 +73,120 @@ export const renderDeckCards = (card) => {
     .insertAdjacentHTML('beforeend', markup);
 };
 
+export const clearDeckCardsResults = () => {
+  document.querySelector('.make-deck__list--deck').innerHTML = '';
+  document.querySelector('.make-deck__paginate--deck').innerHTML = '';
+};
+
 export const deleteCard = (id) => {
   const card = document.querySelector(`[data-card*="${id}"]`);
   if (card) card.remove();
 };
 
-export const renderMakeDeckGrid = (parent, cards) => {
+const createButton = (page, type) => `
+<button class="btn--inline btn__search btn__search--${type}" data-goto=${
+  type === 'prev' ? page - 1 : page + 1
+}>
+<span>Page ${type === 'prev' ? page - 1 : page + 1}</span>  
+<svg class="icon icon__search icon__search--${
+  type === 'prev' ? 'prev' : 'next'
+}">
+    <use href="${type === 'prev' ? prev : next}"></use>
+  </svg>
+</button>`;
+
+const renderButtonsUser = (page, numResults, resPerPage) => {
+  const pages = Math.ceil(numResults / resPerPage);
+
+  let btn;
+  if (page === 1 && pages > 1) {
+    // Only Button to go to the next page
+    btn = createButton(page, 'next');
+  } else if (page < pages) {
+    // Both Buttons
+    btn = `
+        ${createButton(page, 'prev')} 
+        ${createButton(page, 'next')}
+        `;
+  } else if (page === pages && pages > 1) {
+    // Only Button to go to the prev page
+    btn = createButton(page, 'prev');
+  }
+
+  if (btn)
+    document
+      .querySelector('.make-deck__paginate--user')
+      .insertAdjacentHTML('afterbegin', btn);
+};
+
+const renderButtonsDeck = (page, numResults, resPerPage) => {
+  const pages = Math.ceil(numResults / resPerPage);
+
+  let btn;
+  if (page === 1 && pages > 1) {
+    // Only Button to go to the next page
+    btn = createButton(page, 'next');
+  } else if (page < pages) {
+    // Both Buttons
+    btn = `
+        ${createButton(page, 'prev')} 
+        ${createButton(page, 'next')}
+        `;
+  } else if (page === pages && pages > 1) {
+    // Only Button to go to the prev page
+    btn = createButton(page, 'prev');
+  }
+
+  if (btn)
+    document
+      .querySelector('.make-deck__paginate--deck')
+      .insertAdjacentHTML('afterbegin', btn);
+};
+
+export const renderResultsDeck = (array, page = 1, resPerPage = 4) => {
+  clearDeckCardsResults();
+
+  // render the results of the current page
+  const start = (page - 1) * resPerPage;
+  const end = page * resPerPage;
+
+  array.slice(start, end).forEach(renderDeckCards);
+
+  // render pagination button
+  renderButtonsDeck(page, array.length, resPerPage);
+};
+
+export const renderResults = (array, page = 1, resPerPage = 4) => {
+  // render the results of the current page
+  const start = (page - 1) * resPerPage;
+  const end = page * resPerPage;
+
+  array.slice(start, end).forEach(renderUserCards);
+
+  // render pagination button
+  renderButtonsUser(page, array.length, resPerPage);
+};
+
+export const renderMakeCard = (HTMLCard, value) => {
+  const markup = `
+  <div class="card__options">
+  <a href="#" class="options options--add">
+    <svg class="icon icon--options icon--add">
+      <use xlink:href="${plus}"></use>
+    </svg>
+    <span class="show-hide card--edit">Add card</span>
+  </a>
+
+</div>
+
+<div class="card__details">
+  <span class="name">${value}</span>
+</div>`;
+
+  HTMLCard.innerHTML = markup;
+};
+
+export const renderMakeDeckGrid = (parent) => {
   const markup = `<div class="make-deck-grid">
   <form action="#" class="make-deck__form">
       <label for="deck-name" class="make-deck__label">Enter Deck name</label>
@@ -86,20 +199,8 @@ export const renderMakeDeckGrid = (parent, cards) => {
       
     </ul>
 
-    <div class="make-deck__paginate">
-      <button class="btn--inline btn__search btn__search--next" data-goto="1">
-      <span>Page 1</span>  
-      <svg class="icon icon__search icon__search--next">
-          <use href="${prev}"></use>
-        </svg>
-      </button>
-
-      <button class="btn--inline btn__search btn__search--prev" data-goto="4">
-        <span>Page 4</span>
-        <svg class="icon icon__search icon__search--prev">
-          <use href="${next}"></use>
-        </svg>
-      </button>
+    <div class="make-deck__paginate make-deck__paginate--user">
+      
     </div>
   </div>
 
@@ -108,6 +209,10 @@ export const renderMakeDeckGrid = (parent, cards) => {
     <ul class="make-deck__list make-deck__list--deck">
       
     </ul>
+
+    <div class="make-deck__paginate make-deck__paginate--deck">
+      
+    </div>
   </div>
 
   <div class="make-deck__card-switch">
