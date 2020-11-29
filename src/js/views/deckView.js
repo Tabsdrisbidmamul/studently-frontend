@@ -2,6 +2,8 @@ import plus from '../../img/SVG/plus.svg';
 import minus from '../../img/SVG/minus.svg';
 import tick from '../../img/SVG/check.svg';
 import cross from '../../img/SVG/circle-with-cross.svg';
+import next from '../../img/SVG/chevron-thin-right.svg';
+import prev from '../../img/SVG/chevron-thin-left.svg';
 
 export const renderDeckGrid = (parent, deckArray) => {
   let decks = '';
@@ -83,6 +85,22 @@ export const renderMakeDeckGrid = (parent, cards) => {
     <ul class="make-deck__list make-deck__list--user">
       
     </ul>
+
+    <div class="make-deck__paginate">
+      <button class="btn--inline btn__search btn__search--next" data-goto="1">
+      <span>Page 1</span>  
+      <svg class="icon icon__search icon__search--next">
+          <use href="${prev}"></use>
+        </svg>
+      </button>
+
+      <button class="btn--inline btn__search btn__search--prev" data-goto="4">
+        <span>Page 4</span>
+        <svg class="icon icon__search icon__search--prev">
+          <use href="${next}"></use>
+        </svg>
+      </button>
+    </div>
   </div>
 
   <div class="make-deck__card-nav make-deck__card-nav--deck-cards">

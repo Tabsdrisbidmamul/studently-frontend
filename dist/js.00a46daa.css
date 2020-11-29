@@ -153,6 +153,29 @@
     box-shadow: 0 0.8rem 1rem rgba(0, 0, 0, 0.2); }
   .btn--switch:hover, .btn--switch:active {
     background-image: linear-gradient(315deg, #ff99ac, #ff6a88, #ff9a8b); }
+  .btn--inline {
+    display: inline-block;
+    border-radius: 100rem;
+    padding: 1.5rem;
+    cursor: pointer;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-flow: column;
+    background-color: transparent; }
+  .btn__search span {
+    color: #f7f7f7;
+    margin: 0 1rem;
+    transition: all 200ms;
+    text-transform: uppercase;
+    margin-bottom: 1rem; }
+  .btn__search:hover svg {
+    transform: scale(1.2); }
+  .btn__search--next:hover span {
+    color: #24a19c; }
+  .btn__search--prev:hover span {
+    color: #ff6a88; }
 
 .btn--btn-login {
   text-transform: uppercase;
@@ -179,7 +202,7 @@
     fill: #24a19c;
     transform: scale(1); }
   .icon--wrong {
-    fill: #ff4b5c;
+    fill: #d11937;
     transform: scale(1); }
   .icon--options {
     width: 2rem;
@@ -203,6 +226,13 @@
       transform: scale(1.2); }
     .icon--card-right {
       margin-right: 2rem; }
+  .icon__search {
+    width: 1.5rem;
+    height: 1.5rem; }
+    .icon__search--next {
+      fill: #24a19c; }
+    .icon__search--prev {
+      fill: #ff6a88; }
   .icon--make-card {
     width: 5rem; }
     .icon--make-card-left {
@@ -213,7 +243,7 @@
     width: 3rem;
     height: 3rem;
     margin: 0 2rem;
-    fill: #ff6a88; }
+    fill: #e94560; }
   .icon--make-deck {
     width: 4rem;
     height: 4rem;
@@ -511,7 +541,18 @@
   display: flex; }
 
 .make-deck__group {
-  width: 100%; }
+  width: 100%;
+  margin-top: 1rem; }
+
+.make-deck__paginate {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  padding: 2rem 0;
+  background-color: #333;
+  border-bottom-left-radius: 3px;
+  border-bottom-right-radius: 3px;
+  backface-visibility: hidden; }
 
 .make-deck__input {
   display: block;

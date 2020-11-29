@@ -10029,6 +10029,10 @@ exports.default = Classroom;
 module.exports = '#42274f9c0f0bc0524f4b86d684834329';
 },{}],"img/SVG/minus.svg":[function(require,module,exports) {
 module.exports = '#687401b9368affa5df8150e820f8ce5c';
+},{}],"img/SVG/chevron-thin-right.svg":[function(require,module,exports) {
+module.exports = '#0670a98b8aa1a7eb0a0c37f3cdfba06b';
+},{}],"img/SVG/chevron-thin-left.svg":[function(require,module,exports) {
+module.exports = '#c5773b9a7bce81278c6aba3cd721ec79';
 },{}],"js/views/deckView.js":[function(require,module,exports) {
 "use strict";
 
@@ -10044,6 +10048,10 @@ var _minus = _interopRequireDefault(require("../../img/SVG/minus.svg"));
 var _check = _interopRequireDefault(require("../../img/SVG/check.svg"));
 
 var _circleWithCross = _interopRequireDefault(require("../../img/SVG/circle-with-cross.svg"));
+
+var _chevronThinRight = _interopRequireDefault(require("../../img/SVG/chevron-thin-right.svg"));
+
+var _chevronThinLeft = _interopRequireDefault(require("../../img/SVG/chevron-thin-left.svg"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -10081,12 +10089,12 @@ var deleteCard = function deleteCard(id) {
 exports.deleteCard = deleteCard;
 
 var renderMakeDeckGrid = function renderMakeDeckGrid(parent, cards) {
-  var markup = "<div class=\"make-deck-grid\">\n  <form action=\"#\" class=\"make-deck__form\">\n      <label for=\"deck-name\" class=\"make-deck__label\">Enter Deck name</label>\n      <input class=\"make-deck__input\" type=\"text\" minlength=\"5\" maxlength=\"50\" id=\"deck-name\" placeholder=\"Deck Name\">\n  </form>\n\n  <div class=\"make-deck__card-nav make-deck__card-nav--user-cards\">\n    <span class=\"make-deck__name\">My Cards</span>\n    <ul class=\"make-deck__list make-deck__list--user\">\n      \n    </ul>\n  </div>\n\n  <div class=\"make-deck__card-nav make-deck__card-nav--deck-cards\">\n    <span class=\"make-deck__name\">Deck Cards</span>\n    <ul class=\"make-deck__list make-deck__list--deck\">\n      \n    </ul>\n  </div>\n\n  <div class=\"make-deck__card-switch\">\n    <div class=\"card card--make make-deck__card\">\n    <div class=\"card__options\">\n      <a href=\"#\" class=\"options options--add\">\n        <svg class=\"icon icon--options icon--add\">\n          <use xlink:href=\"".concat(_plus.default, "\"></use>\n        </svg>\n        <span class=\"show-hide card--edit\">Add card</span>\n      </a>\n\n    </div>\n\n    <div class=\"card__details\">\n      <span class=\"name\">What is a Question?</span>\n    </div>\n    </div>\n\n    <div class=\"make-deck__group make-deck--switch\">\n      <a href=\"#\" class=\"make-deck__switch btn btn--switch\">Turn Over</a>\n    </div>\n  </div>\n  \n  <div class=\"make-deck__options\">\n    <div class=\"make-deck__group make-deck--right\">\n      <a href=\"#\" class=\"make-deck__link\">\n        <svg class=\"icon icon--make-deck icon--make-deck-right icon--right\">\n          <use href=\"").concat(_check.default, "\"></use>\n        </svg>\n      </a>\n      <span class=\"make-deck__span\">Create The Deck</span>\n    </div>\n\n    <div class=\"make-deck__group make-deck--wrong\">\n      <a href=\"#\" class=\"make-deck__link\">\n        <svg class=\"icon icon--make-deck icon--make-deck-left icon-left icon--wrong\">\n          <use href=\"").concat(_circleWithCross.default, "\"></use>\n        </svg>\n      </a>\n      <span class=\"make-deck__span\">Let's Stop!</span>\n    </div>\n  </div>\n</div>");
+  var markup = "<div class=\"make-deck-grid\">\n  <form action=\"#\" class=\"make-deck__form\">\n      <label for=\"deck-name\" class=\"make-deck__label\">Enter Deck name</label>\n      <input class=\"make-deck__input\" type=\"text\" minlength=\"5\" maxlength=\"50\" id=\"deck-name\" placeholder=\"Deck Name\">\n  </form>\n\n  <div class=\"make-deck__card-nav make-deck__card-nav--user-cards\">\n    <span class=\"make-deck__name\">My Cards</span>\n    <ul class=\"make-deck__list make-deck__list--user\">\n      \n    </ul>\n\n    <div class=\"make-deck__paginate\">\n      <button class=\"btn--inline btn__search btn__search--next\" data-goto=\"1\">\n      <span>Page 1</span>  \n      <svg class=\"icon icon__search icon__search--next\">\n          <use href=\"".concat(_chevronThinLeft.default, "\"></use>\n        </svg>\n      </button>\n\n      <button class=\"btn--inline btn__search btn__search--prev\" data-goto=\"4\">\n        <span>Page 4</span>\n        <svg class=\"icon icon__search icon__search--prev\">\n          <use href=\"").concat(_chevronThinRight.default, "\"></use>\n        </svg>\n      </button>\n    </div>\n  </div>\n\n  <div class=\"make-deck__card-nav make-deck__card-nav--deck-cards\">\n    <span class=\"make-deck__name\">Deck Cards</span>\n    <ul class=\"make-deck__list make-deck__list--deck\">\n      \n    </ul>\n  </div>\n\n  <div class=\"make-deck__card-switch\">\n    <div class=\"card card--make make-deck__card\">\n    <div class=\"card__options\">\n      <a href=\"#\" class=\"options options--add\">\n        <svg class=\"icon icon--options icon--add\">\n          <use xlink:href=\"").concat(_plus.default, "\"></use>\n        </svg>\n        <span class=\"show-hide card--edit\">Add card</span>\n      </a>\n\n    </div>\n\n    <div class=\"card__details\">\n      <span class=\"name\">What is a Question?</span>\n    </div>\n    </div>\n\n    <div class=\"make-deck__group make-deck--switch\">\n      <a href=\"#\" class=\"make-deck__switch btn btn--switch\">Turn Over</a>\n    </div>\n  </div>\n  \n  <div class=\"make-deck__options\">\n    <div class=\"make-deck__group make-deck--right\">\n      <a href=\"#\" class=\"make-deck__link\">\n        <svg class=\"icon icon--make-deck icon--make-deck-right icon--right\">\n          <use href=\"").concat(_check.default, "\"></use>\n        </svg>\n      </a>\n      <span class=\"make-deck__span\">Create The Deck</span>\n    </div>\n\n    <div class=\"make-deck__group make-deck--wrong\">\n      <a href=\"#\" class=\"make-deck__link\">\n        <svg class=\"icon icon--make-deck icon--make-deck-left icon-left icon--wrong\">\n          <use href=\"").concat(_circleWithCross.default, "\"></use>\n        </svg>\n      </a>\n      <span class=\"make-deck__span\">Let's Stop!</span>\n    </div>\n  </div>\n</div>");
   parent.insertAdjacentHTML('afterbegin', markup);
 };
 
 exports.renderMakeDeckGrid = renderMakeDeckGrid;
-},{"../../img/SVG/plus.svg":"img/SVG/plus.svg","../../img/SVG/minus.svg":"img/SVG/minus.svg","../../img/SVG/check.svg":"img/SVG/check.svg","../../img/SVG/circle-with-cross.svg":"img/SVG/circle-with-cross.svg"}],"js/views/classroomView.js":[function(require,module,exports) {
+},{"../../img/SVG/plus.svg":"img/SVG/plus.svg","../../img/SVG/minus.svg":"img/SVG/minus.svg","../../img/SVG/check.svg":"img/SVG/check.svg","../../img/SVG/circle-with-cross.svg":"img/SVG/circle-with-cross.svg","../../img/SVG/chevron-thin-right.svg":"img/SVG/chevron-thin-right.svg","../../img/SVG/chevron-thin-left.svg":"img/SVG/chevron-thin-left.svg"}],"js/views/classroomView.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -11100,7 +11108,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58403" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "60448" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

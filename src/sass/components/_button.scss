@@ -56,6 +56,44 @@
       $color-tertiary-3
     );
   }
+
+  &--inline {
+    // width: 5rem;
+    // height: 5rem;
+    display: inline-block;
+    border-radius: 100rem;
+    padding: 1.5rem;
+    cursor: pointer;
+    border: none;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-flow: column;
+    background-color: transparent;
+  }
+
+  &__search {
+    & span {
+      color: $color-grey-light-2;
+      margin: 0 1rem;
+      transition: all 200ms;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    &:hover svg {
+      transform: scale(1.2);
+    }
+
+    &--next:hover span {
+      color: $color-green-right;
+    }
+
+    &--prev:hover span {
+      color: $color-tertiary-2;
+    }
+  }
 }
 
 .btn--btn-login {

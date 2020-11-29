@@ -11,7 +11,7 @@
   }
 
   &--wrong {
-    fill: $color-red-wrong;
+    fill: $color-secondary-dark;
     transform: scale(1);
   }
 
@@ -53,6 +53,19 @@
     }
   }
 
+  &__search {
+    width: 1.5rem;
+    height: 1.5rem;
+
+    &--next {
+      fill: $color-green-right;
+    }
+
+    &--prev {
+      fill: $color-tertiary-2;
+    }
+  }
+
   &--make-card {
     width: 5rem;
 
@@ -74,7 +87,7 @@
       width: 3rem;
       height: 3rem;
       margin: 0 2rem;
-      fill: $color-tertiary-2;
+      fill: $color-secondary;
     }
   }
 
