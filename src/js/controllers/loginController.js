@@ -2,7 +2,7 @@ import { clearOverview } from '../views/base';
 import { state } from './overviewController';
 import * as headerView from '../views/headerView';
 import { cardLoaderAndRender } from './cardController';
-import User from '../models/userModel';
+import { renderActiveItem } from './sidebarController';
 
 // Logging in handler
 export const loginHandler = async (e) => {
@@ -22,6 +22,9 @@ export const loginHandler = async (e) => {
 
     // 2.3 Render the user info to the Login UI
     window.setTimeout(headerView.renderHeaderLogin, 2500);
+
+    // 2.4 set the active on sidebar to 'my cards'
+    renderActiveItem(document.querySelector('.side-nav-card'));
 
     // 2.4. Load and render User cards
     window.setTimeout(cardLoaderAndRender, 3500);

@@ -1,73 +1,55 @@
 import { elements, clearOverview } from '../views/base';
 import * as deckView from '../views/deckView';
+import * as windowView from '../views/windowView';
 import * as cardView from '../views/cardView';
 import * as cardController from '../controllers/cardController';
+import * as windowController from '../controllers/windowController';
 import * as storage from '../utils/localStorage';
 import { showAlert } from '../utils/alert';
 import Deck from '../models/deckModel';
 import { state } from './overviewController';
-import { doc } from 'prettier';
 
 export const deckLoaderAndRender = async () => {
   await getDecksFromAPI();
   deckRender();
 };
 
-export const getDecksFromAPI = async () => {
-  const token = storage.getObj('token') || state.user.token;
-
-  if (!token) {
-    return new Error('You are not logged in');
-  }
-
-  state.deck.decks = await state.deck.getDecks(token);
-  storage.storeObj('decks', state.deck.decks);
-};
-
 export const deckRender = () => {
-  deckView.renderDeckGrid(elements.overview, state.deck.decks);
+  // 1. Get the cards
+  const decks = state.deck.decks || storage.getObj('decks');
+
+  // 2. Check if they are empty, if so render and exit function
+  // if (decks.length === 0) {
+  //   return cardView.renderEmptyCardGrid(elements.overview);
+  // }
+
+  // 3. Render the card grid and cards on the grid
+  deckView.renderDeckGrid(elements.overview, decks);
 };
 
 export const deckLoader = (e) => {
-  if (e.target.matches('.deck, .deck *')) {
+  // User has clicked an option
+  if (e.target.matches('.options, .options *')) {
+    const click = e.target.closest('.options');
+    const deckId = e.target.parentNode.parentNode.parentNode.dataset.deck;
+    optionsHandler(click, deckId);
+
+    // User has clicked the deck itself
+  } else if (e.target.matches('.deck, .deck *')) {
     const click = e.target.closest('.deck');
     deckHandler(click);
   }
 };
 
-const createDeck = () => {
-  // User clicks to create the deck
-  document
-    .querySelector('.icon--make-deck-right')
-    .addEventListener('click', async (e) => {
-      // 1. Get all the input from user
-      const name = document.querySelector('.make-deck__input').value;
-      const user = storage.getObj('user') || state.user.userData.id;
-      const deck = state.deck.deckArray;
-      const token = storage.getObj('token');
+const optionsHandler = (click, deckId) => {
+  // user clicked edit deck
+  if (Array.from(click.classList).includes('options--edit')) {
+    deckUpdateMaker(deckId);
 
-      // 2. Check if they have a deck of cards or gave it a name
-      if (name && deck) {
-        // 2.1 Create the Deck and reload a new deckMaker Session
-        await state.deck.createDeck(name, user, deck, token);
-        deckMakerLoader();
-      } else {
-        showAlert('error', 'Please provide a name and cards');
-      }
-    });
-};
-
-const cancelDeckMaker = () => {
-  // User clicks to cancel the deck creation
-  document
-    .querySelector('.icon--make-deck-left')
-    .addEventListener('click', (e) => {
-      // 1. Clear the Overview
-      clearOverview();
-
-      // 2. Bring the user back to the deck homepage
-      deckRender(elements.overview, state.deck.decks);
-    });
+    // user clicked delete deck
+  } else if (Array.from(click.classList).includes('options--delete')) {
+    windowController.windowDeletionHandlerDeck(deckId);
+  }
 };
 
 // Get one deck from the array in local storage
@@ -79,34 +61,6 @@ const getDeck = (deckId) => {
   return decks.filter((deck) => {
     return deck.id === deckId;
   })[0];
-};
-
-export const deckMakerLoader = (e) => {
-  // 1. Clear the overview
-  clearOverview();
-
-  // 2. Render the make a deck grid layout
-  deckView.renderMakeDeckGrid(elements.overview);
-
-  // 3. Get the user cards
-  const cards = state.card.cards || storage.getObj('cards');
-
-  // 3.1 If they have cards, render them to the page
-  if (cards.length !== 0) {
-    deckView.renderResults(cards);
-    searchButtonHandler();
-  }
-
-  // 4. Create the DeckArray reference
-  const deckArray = [];
-
-  // 5. Add the event handlers
-  getCardItem();
-  swapCardFacing();
-  addCardToDeckHandler(deckArray);
-  removeCardFromDeck(deckArray);
-  createDeck();
-  cancelDeckMaker();
 };
 
 const addCardToDeckHandler = (deckArray) => {
@@ -143,14 +97,6 @@ const addCardToDeckHandler = (deckArray) => {
     });
 };
 
-const getCardFromDeckArray = (deckArray, cardId) => {
-  deckArray.forEach((el, i) => {
-    if (el.id === cardId) {
-      return i;
-    }
-  });
-};
-
 const removeCardFromDeck = (deckArray) => {
   document
     .querySelector('.make-deck__list--deck')
@@ -172,7 +118,6 @@ const removeCardFromDeck = (deckArray) => {
         });
 
         // 2.3 Remove it from the Deck array
-        // const index = getCardFromDeckArray(deckArray, cardId);
         deckArray.splice(index, 1);
 
         // 2.4 Re-render the deck cards back to the screen
@@ -183,6 +128,11 @@ const removeCardFromDeck = (deckArray) => {
 
 // When the user presses next or prev
 const searchButtonHandler = () => {
+  searchButtonUser();
+  searchButtonDeck();
+};
+
+const searchButtonUser = () => {
   document
     .querySelector('.make-deck__paginate--user')
     .addEventListener('click', (e) => {
@@ -201,7 +151,9 @@ const searchButtonHandler = () => {
         window.scroll(0, 0);
       }
     });
+};
 
+const searchButtonDeck = () => {
   document
     .querySelector('.make-deck__paginate--deck')
     .addEventListener('click', (e) => {
@@ -285,6 +237,112 @@ const swapCardFacing = () => {
     });
 };
 
+const cancelDeckMaker = () => {
+  // User clicks to cancel the deck creation
+  document
+    .querySelector('.icon--make-deck-left')
+    .addEventListener('click', (e) => {
+      // 1. Clear the Overview
+      clearOverview();
+
+      // 2. Bring the user back to the deck homepage
+      deckRender(elements.overview, state.deck.decks);
+    });
+};
+
+export const getDecksFromAPI = async () => {
+  const token = storage.getObj('token') || state.user.token;
+
+  if (!token) {
+    return new Error('You are not logged in');
+  }
+
+  state.deck.decks = await state.deck.getDecks(token);
+  storage.storeObj('decks', state.deck.decks);
+};
+
+const createDeck = () => {
+  // User clicks to create the deck
+  document
+    .querySelector('.icon--make-deck-right')
+    .addEventListener('click', async (e) => {
+      // 1. Get all the input from user
+      const name = document.querySelector('.make-deck__input').value;
+      const user = storage.getObj('user') || state.user.userData.id;
+      const deck = state.deck.deckArray;
+      const token = storage.getObj('token');
+
+      // 2. Check if they have a deck of cards or gave it a name
+      if (name && deck) {
+        // 2.1 Create the Deck and reload a new deckMaker Session
+        await state.deck.createDeck(name, user, deck, token);
+        deckMakerLoader();
+      } else {
+        showAlert('error', 'Please provide a name and cards');
+      }
+    });
+};
+
+const updateDeck = (deckId) => {
+  // User clicks to create the deck
+  document
+    .querySelector('.icon--make-deck-right')
+    .addEventListener('click', async (e) => {
+      // 1. Get all the input from user
+      const name = document.querySelector('.make-deck__input').value;
+      const deck = state.deck.deckArray;
+      const token = storage.getObj('token');
+
+      // 2. Check if they have a deck of cards or gave it a name
+      if (name && deck) {
+        // 2.1 Create the Deck and reload a new deckMaker Session
+        await state.deck.updateDeck(deckId, name, deck, token);
+
+        // 2.2 Render the homepage to show the change
+        window.setTimeout(async () => {
+          clearOverview();
+          await deckLoaderAndRender();
+        }, 1500);
+      } else {
+        showAlert('error', 'Please provide a name and cards');
+      }
+    });
+};
+
+export const deleteDeck = async (e, cardId) => {
+  const click = e.target.closest('.window__content');
+  try {
+    if (click) {
+      // 3. Check if they clicked yes or no to delete the card
+      // they clicked yes to delete the card
+      if (e.target.matches('.window__ok')) {
+        // 3.1 get the token
+        const token = storage.getObj('token') || state.user.token;
+
+        // 3.2 Check to see if they are logged in
+        if (!token) {
+          return new Error('You are not logged in!');
+        }
+
+        // 3.3 Delete the card by calling the API
+        await state.deck.deleteDeck(cardId, token);
+
+        // Render the homepage to show the change
+        window.setTimeout(async () => {
+          clearOverview();
+          await deckLoaderAndRender();
+        }, 1500);
+
+        // they clicked no to delete the card
+      } else {
+        windowView.clearWindow();
+      }
+    }
+  } catch (err) {
+    showAlert('error', err.message);
+  }
+};
+
 // When the user interacts with the decks in the overview
 const deckHandler = (click) => {
   try {
@@ -302,4 +360,59 @@ const deckHandler = (click) => {
   } catch (err) {
     showAlert('error', err.message);
   }
+};
+
+// When the user selects to make a deck
+export const deckMakerLoader = () => {
+  // 1. Clear the overview
+  clearOverview();
+
+  // 2. Render the make a deck grid layout
+  deckView.renderMakeDeckGrid(elements.overview);
+
+  // 3. Get the user cards
+  const cards = state.card.cards || storage.getObj('cards');
+
+  // 3.1 If they have cards, render them to the page
+  if (cards.length !== 0) {
+    deckView.renderResults(cards);
+    searchButtonHandler();
+  }
+
+  // 4. Create the DeckArray reference
+  const deckArray = [];
+
+  // 5. Add the event handlers
+  getCardItem();
+  swapCardFacing();
+  addCardToDeckHandler(deckArray);
+  removeCardFromDeck(deckArray);
+  cancelDeckMaker();
+  createDeck();
+};
+
+export const deckUpdateMaker = (deckId) => {
+  // 1. Get the deck and user cards
+  const deckData = getDeck(deckId);
+  const cards = state.card.cards || storage.getObj('cards');
+
+  // 2. Create the Deck array
+  const deckArray = deckData.cards;
+
+  // 3. clear Overview
+  clearOverview();
+
+  // 4. Render the update deck and handlers
+  deckView.renderUpdateDeckGrid(elements.overview, deckData);
+  deckView.renderResults(cards);
+  deckView.renderResultsDeck(deckArray);
+  searchButtonHandler();
+  swapCardFacing();
+  getCardItem();
+  addCardToDeckHandler(deckArray);
+  removeCardFromDeck(deckArray);
+  cancelDeckMaker();
+
+  // 5. Call the update deck handler
+  updateDeck(deckId);
 };

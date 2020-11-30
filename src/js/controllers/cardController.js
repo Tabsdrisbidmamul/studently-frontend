@@ -53,7 +53,6 @@ export const cardLoader = (e) => {
   if (e.target.matches('.options, .options *')) {
     const click = e.target.closest('.options');
     const cardId = e.target.parentNode.parentNode.parentNode.dataset.card;
-    console.log(state.card.cards);
     optionsHandler(click, cardId);
 
     // check if the user clicked the whole card
@@ -64,26 +63,31 @@ export const cardLoader = (e) => {
 };
 
 // Handler for Edit and Delete a card
-const optionsHandler = async (click, cardId) => {
+const optionsHandler = (click, cardId) => {
   // user clicked edit card
   if (Array.from(click.classList).includes('options--edit')) {
     cardUpdaterMaker(cardId);
 
     // user clicked delete card
   } else if (Array.from(click.classList).includes('options--delete')) {
-    windowController.windowDeletionHandler(cardId);
+    windowController.windowDeletionHandlerCard(cardId);
   }
 };
 
 const cardUpdaterMaker = (cardId) => {
   const cardData = getCard(cardId);
 
+  // 1. Clear overview
   clearOverview();
+
+  // 2. Render the update card and handlers
   cardView.renderUpdateCardGrid(elements.overview, cardData.question);
   addQAtoTextBox(cardData.question, cardData.answer);
   QAValueChanger();
   swapCardFacing();
   cancelCardMaker();
+
+  // 3. Call update Card handler
   updateCard(cardId);
 };
 

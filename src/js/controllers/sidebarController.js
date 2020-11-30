@@ -7,10 +7,11 @@ import { showAlert } from '../utils/alert';
 import * as storage from '../utils/localStorage';
 
 elements.sidebar.addEventListener('click', (e) => {
-  renderActiveItem(e.target.closest('.side-nav__item'));
+  const click = e.target.closest('.side-nav__item');
+  if (click) renderActiveItem(e.target.closest('.side-nav__item'));
 });
 
-const renderActiveItem = (click) => {
+export const renderActiveItem = (click) => {
   elements.sidebarItem.forEach((item) => {
     item.classList.remove('side-nav__item--active');
   });

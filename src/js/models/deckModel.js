@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { showAlert } from '../utils/alert';
+import * as windowView from '../views/windowView';
 
 export default class Deck {
   constructor() {}
@@ -33,6 +34,47 @@ export default class Deck {
 
       if (res.data.status === 'success') {
         showAlert('success', 'Deck was created');
+      }
+    } catch (err) {
+      const { message } = err.response.data;
+      showAlert('error', message);
+    }
+  }
+
+  async updateDeck(deckId, name, cards, token) {
+    try {
+      const res = await axios.patch(
+        `https://polar-savannah-53668.herokuapp.com/api/v0/decks/${deckId}`,
+        {
+          name,
+          cards,
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      if (res.data.status === 'success') {
+        showAlert('success', 'Deck was updated');
+      }
+    } catch (err) {
+      const { message } = err.response.data;
+      showAlert('error', message);
+    }
+  }
+
+  async deleteDeck(deckId, token) {
+    try {
+      const res = await axios.delete(
+        `https://polar-savannah-53668.herokuapp.com/api/v0/decks/${deckId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      if (res.status === 204) {
+        windowView.clearWindow();
+        showAlert('success', 'Deck was deleted');
       }
     } catch (err) {
       const { message } = err.response.data;
