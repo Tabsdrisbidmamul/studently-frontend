@@ -9987,9 +9987,9 @@ var Classroom = /*#__PURE__*/function () {
 
 exports.default = Classroom;
 },{"axios":"../node_modules/axios/index.js","../utils/alert":"js/utils/alert.js"}],"img/SVG/plus.svg":[function(require,module,exports) {
-module.exports = '#5879339dda63c178b7ce0ee777d422bd';
+module.exports = '#42274f9c0f0bc0524f4b86d684834329';
 },{}],"img/SVG/minus.svg":[function(require,module,exports) {
-module.exports = '#06146f99ecc58ac979ac7b502d6cd836';
+module.exports = '#687401b9368affa5df8150e820f8ce5c';
 },{}],"img/SVG/chevron-thin-right.svg":[function(require,module,exports) {
 module.exports = '#0670a98b8aa1a7eb0a0c37f3cdfba06b';
 },{}],"img/SVG/chevron-thin-left.svg":[function(require,module,exports) {
@@ -32093,15 +32093,31 @@ var getClassroomsFromAPI = /*#__PURE__*/function () {
             return _context2.abrupt("return", new Error('You are not logged in'));
 
           case 3:
-            _context2.next = 5;
+            if (!(storage.getObj('user').role === 'teacher')) {
+              _context2.next = 9;
+              break;
+            }
+
+            _context2.next = 6;
             return _overviewController.state.classroom.getTeacherClassrooms(token);
 
-          case 5:
+          case 6:
             _overviewController.state.classroom.classrooms = _context2.sent;
+            _context2.next = 12;
+            break;
+
+          case 9:
+            _context2.next = 11;
+            return _overviewController.state.classroom.getStudentClassrooms(token);
+
+          case 11:
+            _overviewController.state.classroom.classrooms = _context2.sent;
+
+          case 12:
             console.log(_overviewController.state.classroom.classrooms);
             storage.storeObj('classrooms', _overviewController.state.classroom.classrooms);
 
-          case 8:
+          case 14:
           case "end":
             return _context2.stop();
         }
@@ -32198,7 +32214,8 @@ var searchButtonHandler = function searchButtonHandler() {
 
     if (btn) {
       // 1.1 get the page number from the dataset
-      var goToPage = parseInt(btn.dataset.goto, 10);
+      var goToPage = parseInt(btn.dataset.goto, 10); // FIXME
+
       var users = _overviewController.state.user.users || storage.getObj('users'); // 1.2 clear the user results and pagination
 
       classroomView.clearAllUsersResults(); // 1.3 Render the new users and new buttons
@@ -32213,7 +32230,8 @@ var searchButtonHandler = function searchButtonHandler() {
 
     if (btn) {
       // 1.1 get the page number from the dataset
-      var goToPage = parseInt(btn.dataset.goto, 10);
+      var goToPage = parseInt(btn.dataset.goto, 10); // FIXME
+
       var users = _overviewController.state.user.users || storage.getObj('users'); // 1.2 clear the user results and pagination
 
       classroomView.clearAllUsersResults(); // 1.3 Render the new users and new buttons
@@ -32775,11 +32793,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-<<<<<<< HEAD
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "56440" + '/');
-=======
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "60360" + '/');
->>>>>>> ae7c785c98b15b39956de8533e57ef573a7d8633
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57421" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

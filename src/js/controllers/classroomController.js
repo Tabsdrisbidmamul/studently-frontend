@@ -17,9 +17,17 @@ export const getClassroomsFromAPI = async () => {
     return new Error('You are not logged in');
   }
 
-  state.classroom.classrooms = await state.classroom.getTeacherClassrooms(
-    token
-  );
+  // TODO: verify the user role
+  if (storage.getObj('user').role === 'teacher') {
+    state.classroom.classrooms = await state.classroom.getTeacherClassrooms(
+      token
+    );
+  } else {
+    state.classroom.classrooms = await state.classroom.getStudentClassrooms(
+      token
+    );
+  }
+
   console.log(state.classroom.classrooms);
 
   storage.storeObj('classrooms', state.classroom.classrooms);
@@ -127,6 +135,7 @@ const searchButtonHandler = () => {
       if (btn) {
         // 1.1 get the page number from the dataset
         const goToPage = parseInt(btn.dataset.goto, 10);
+        // FIXME
         const users = state.user.users || storage.getObj('users');
 
         // 1.2 clear the user results and pagination
@@ -146,6 +155,7 @@ const searchButtonHandler = () => {
       if (btn) {
         // 1.1 get the page number from the dataset
         const goToPage = parseInt(btn.dataset.goto, 10);
+        // FIXME
         const users = state.user.users || storage.getObj('users');
 
         // 1.2 clear the user results and pagination
