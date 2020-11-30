@@ -705,54 +705,67 @@
 
 .make-classroom__form {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  grid-column: 2 / -1; }
+  margin: 2rem 0 0 2rem;
+  grid-column: 1 / -1;
+  grid-row: 1 / 2; }
+  .make-classroom__form > *:not(:last-child) {
+    margin-right: 2rem; }
+
+.make-classroom__options {
+  grid-column: 3 / 4;
+  grid-row: 1 / 2;
+  display: flex; }
 
 .make-classroom__group {
   width: 100%;
-  display: grid; }
+  margin-top: 1rem; }
 
-.make-classroom__textarea {
+.make-classroom__paginate {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  padding: 2rem 0;
+  background-color: #333;
+  border-bottom-left-radius: 3px;
+  border-bottom-right-radius: 3px;
+  backface-visibility: hidden; }
+
+.make-classroom__input {
   display: block;
-  padding: 1.5rem;
-  resize: none;
+  padding: 1rem 2rem;
   background-color: #f7f7f7;
   border: none;
-  width: 90%;
+  width: 40%;
   border-radius: 3px;
   box-shadow: 0 0.8rem 2rem rgba(0, 0, 0, 0.2);
-  margin-bottom: 2rem;
-  overflow: auto;
-  height: 6rem;
   font-family: inherit;
   color: #333;
   font-size: 1.6rem;
-  border-bottom: 5px solid transparent;
+  border-bottom: 3px solid transparent;
   transition: all 200ms; }
-  .make-classroom__textarea:focus {
+  .make-classroom__input:focus {
     outline: none;
     box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.1);
-    border-bottom: 5px solid #24a19c; }
-  .make-classroom__textarea:focus:invalid {
+    border-bottom: 3px solid #24a19c; }
+  .make-classroom__input:focus:invalid {
     outline: none;
-    border-bottom: 5px solid #d11937; }
-  .make-classroom__textarea::placeholder {
+    border-bottom: 3px solid #d11937; }
+  .make-classroom__input::placeholder {
     color: #777; }
 
 .make-classroom__label {
   font-size: 1.6rem;
-  font-weight: 300;
+  font-weight: 400;
   margin-bottom: 1rem;
   text-transform: uppercase;
-  letter-spacing: 0.1rem; }
+  letter-spacing: 0.05rem; }
 
-.make-classroom__switch {
+.make-classroom--switch {
   text-decoration: none;
   font-size: 1.6rem;
   text-align: center;
-  margin: 1rem; }
+  margin-bottom: 1rem; }
 
 .make-classroom--switch, .make-classroom--right, .make-classroom--wrong {
   display: flex;
@@ -761,29 +774,69 @@
   justify-content: center; }
 
 .make-classroom__link:link, .make-classroom__link:visited {
-  text-decoration: none; }
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  color: #333; }
+
+.make-classroom__user-details {
+  display: flex;
+  flex-flow: column;
+  width: 100%;
+  margin-top: 1rem; }
 
 .make-classroom__span {
   text-transform: uppercase;
-  font-size: 1.6rem;
-  letter-spacing: 0.1rem;
-  font-weight: 300; }
-
-.make-classroom__table {
-  text-transform: uppercase;
   font-size: 1.3rem;
-  letter-spacing: 0.1rem;
-  width: 100%; }
-  .make-classroom__table table,
-  .make-classroom__table th {
-    margin: auto;
-    border: 3px solid #ff4b5c;
-    height: 4rem; }
+  font-weight: 400;
+  transition: all 200ms; }
+  .make-classroom__span:not(:last-child) {
+    margin-bottom: 1rem; }
 
-.make-classroom__table-scroll {
-  height: 18rem;
-  overflow-y: auto;
-  margin: 0rem 5rem; }
+.make-classroom__name {
+  display: block;
+  color: #f7f7f7;
+  border-top-right-radius: 3px;
+  border-top-left-radius: 3px;
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid black;
+  font-size: 1.4rem;
+  text-transform: uppercase;
+  background-color: #333; }
+
+.make-classroom__user-nav {
+  background-color: #f7f7f7;
+  border-radius: 3px;
+  height: 50rem;
+  text-align: center;
+  width: 80%;
+  box-shadow: 0 2rem 3rem rgba(0, 0, 0, 0.2); }
+  .make-classroom__user-nav--curr-users {
+    grid-column: 3 / -1;
+    margin: 0 auto; }
+  .make-classroom__user-nav--all-users {
+    margin: 0 auto; }
+
+.make-classroom__list {
+  list-style: none; }
+
+.make-classroom__item {
+  padding-bottom: 2rem;
+  text-align: left;
+  background-color: transparent;
+  transition: all 200ms; }
+  .make-classroom__item:not(:last-child) {
+    border-bottom: 1px solid #333; }
+
+.make-classroom__item:hover {
+  background-color: #e94560; }
+  .make-classroom__item:hover a .icon {
+    fill: #faf9f9; }
+  .make-classroom__item:hover div span {
+    color: #f4f2f2; }
+  .make-classroom__item:hover a svg {
+    transform: scale(1.03); }
 
 *,
 *::before,
