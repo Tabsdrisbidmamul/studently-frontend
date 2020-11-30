@@ -121,7 +121,7 @@ const addCardToDeckHandler = (deckArray) => {
         // 2.1 Get the card Id from the item
         const cardId = item.parentNode.parentNode.dataset.card;
 
-        // 2.2 Store and get the card the card from state or local storage
+        // 2.2 Store and get the card from state or local storage
         storeCard(cardId);
         const card = cardController.getCard(cardId);
 

@@ -39,10 +39,10 @@ export default class Classroom {
         {
           name,
           teacher,
-          students,
+          students
         },
         {
-          headers: { Authorization: `Bearer ${token}` },
+          headers: { Authorization: `Bearer ${token}` }
         }
       );
 
@@ -54,22 +54,5 @@ export default class Classroom {
       showAlert('error', message);
     }
   }
-
-  // Get the User role, to determine what classrooms they get.
-  async getRole(token) {
-    try {
-      const res = await axios.get(
-        'https://polar-savannah-53668.herokuapp.com/api/v0/users/my-account',
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-      return res.data.data.role;
-    } catch (err) {
-      const { message } = err.response.data;
-      showAlert('error', message);
-    }
-  }
-
   async;
 }

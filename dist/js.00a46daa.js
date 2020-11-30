@@ -9979,48 +9979,6 @@ var Classroom = /*#__PURE__*/function () {
       }
 
       return createClassroom;
-    }() // Get the User role, to determine what classrooms they get.
-
-  }, {
-    key: "getRole",
-    value: function () {
-      var _getRole = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4(token) {
-        var res, message;
-        return regeneratorRuntime.wrap(function _callee4$(_context4) {
-          while (1) {
-            switch (_context4.prev = _context4.next) {
-              case 0:
-                _context4.prev = 0;
-                _context4.next = 3;
-                return _axios.default.get('https://polar-savannah-53668.herokuapp.com/api/v0/users/my-account', {
-                  headers: {
-                    Authorization: "Bearer ".concat(token)
-                  }
-                });
-
-              case 3:
-                res = _context4.sent;
-                return _context4.abrupt("return", res.data.data.role);
-
-              case 7:
-                _context4.prev = 7;
-                _context4.t0 = _context4["catch"](0);
-                message = _context4.t0.response.data.message;
-                (0, _alert.showAlert)('error', message);
-
-              case 11:
-              case "end":
-                return _context4.stop();
-            }
-          }
-        }, _callee4, null, [[0, 7]]);
-      }));
-
-      function getRole(_x6) {
-        return _getRole.apply(this, arguments);
-      }
-
-      return getRole;
     }()
   }]);
 
@@ -10029,9 +9987,9 @@ var Classroom = /*#__PURE__*/function () {
 
 exports.default = Classroom;
 },{"axios":"../node_modules/axios/index.js","../utils/alert":"js/utils/alert.js"}],"img/SVG/plus.svg":[function(require,module,exports) {
-module.exports = '#42274f9c0f0bc0524f4b86d684834329';
+module.exports = '#5879339dda63c178b7ce0ee777d422bd';
 },{}],"img/SVG/minus.svg":[function(require,module,exports) {
-module.exports = '#687401b9368affa5df8150e820f8ce5c';
+module.exports = '#06146f99ecc58ac979ac7b502d6cd836';
 },{}],"img/SVG/chevron-thin-right.svg":[function(require,module,exports) {
 module.exports = '#0670a98b8aa1a7eb0a0c37f3cdfba06b';
 },{}],"img/SVG/chevron-thin-left.svg":[function(require,module,exports) {
@@ -10191,39 +10149,191 @@ exports.renderMakeDeckGrid = renderMakeDeckGrid;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.renderMakeClassroomGrid = exports.renderClassroomGrid = void 0;
+exports.renderMakeClassroomGrid = exports.renderMakeClassroom = exports.renderResultsCurrent = exports.renderResultsAll = exports.deleteUser = exports.clearCurrentUsersResults = exports.renderCurrentUsers = exports.clearAllUsersResults = exports.renderAllUsers = exports.renderClassroomGrid = void 0;
+
+var _plus = _interopRequireDefault(require("../../img/SVG/plus.svg"));
+
+var _minus = _interopRequireDefault(require("../../img/SVG/minus.svg"));
+
+var _check = _interopRequireDefault(require("../../img/SVG/check.svg"));
+
+var _circleWithCross = _interopRequireDefault(require("../../img/SVG/circle-with-cross.svg"));
+
+var _chevronThinRight = _interopRequireDefault(require("../../img/SVG/chevron-thin-right.svg"));
+
+var _chevronThinLeft = _interopRequireDefault(require("../../img/SVG/chevron-thin-left.svg"));
+
+var _overviewController = require("../controllers/overviewController");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _readOnlyError(name) { throw new TypeError("\"" + name + "\" is read-only"); }
 
 var renderClassroomGrid = function renderClassroomGrid(parent, classroomArray) {
   var classrooms = '';
   classroomArray.forEach(function (classroom) {
     var classroomMarkup = "\n      <div class=\"classroom classroom-".concat(classroom.id, "\" data-classroom=").concat(classroom.id, ">\n        <div class=\"classroom__details\">\n          <div class=\"name\">").concat(classroom.name, "</div>\n        </div>\n      </div> \n    ");
     classrooms += classroomMarkup;
-  }); // Have an IF statement to determine if they are student or teacher.
+  }); // checks if the user is a teacher and then allows them to create a new classroom if they are.
 
-  var markup = "\n    <div class=\"make-classroom\">\n        <a href=\"#\" class=\"btn btn--ghost make-classroom\">Make A New Classroom</a>\n    </div>\n\n    <div class=\"classroom-grid\">\n        ".concat(classrooms, "\n    </div>;");
+  var markup = "";
+
+  if (_overviewController.state.users.user.role === 'teacher' || Storage.getObj('role')) {
+    markup += (_readOnlyError("markup"), "\n    <div class=\"make-classroom\">\n        <a href=\"#\" class=\"btn btn--ghost make-classroom\">Make A New Classroom</a>\n    </div>");
+  }
+
+  markup += (_readOnlyError("markup"), "\n    <div class=\"classroom-grid\">\n        ".concat(classrooms, "\n    </div>;"));
   parent.insertAdjacentHTML('afterbegin', markup);
-};
+}; // Renders all the users in the 'All Users' list
+
 
 exports.renderClassroomGrid = renderClassroomGrid;
 
-var renderMakeClassroomGrid = function renderMakeClassroomGrid(parent, studentArray, currStudentArray) {
-  // Table for Add Students to the classroom TODO: get the add button to work
-  var studentTable = '';
-  studentArray.forEach(function (user) {
-    var studentMarkup = "\n    <tr class=\"user user-".concat(user.id, "\">\n      <th>").concat(user.name, "</th>\n      <th>").concat(user.email, "</th>\n      <th><input type=\"button\" value=\"Add\" href=\"#\"></input></th>\n    </tr>\n    ");
-    studentTable += studentMarkup;
-  }); // Table for Students in the Classroom TODO: get the remove button to work
+var renderAllUsers = function renderAllUsers(user) {
+  var markup = "\n    <li class=\"make-deck__item\" data-card=\"".concat(user.id, "\">\n    <a href=\"#\" class=\"make-classroom__link\">\n      <svg class=\"icon icon__make-classroom--user\">\n        <use href=\"").concat(_plus.default, "\"></use>\n      </svg>\n      <div class=\"make-classroom__user-details\">\n        <span class=\"make-classroom__span make-deck-span--name\">").concat(user.name, "</span>\n      </div>\n    </a>\n  </li>");
+  document.querySelector('.make-classroom__list--user').insertAdjacentHTML('beforeend', markup);
+}; // Clears the users from the 'All Users' list
 
-  var currStudentTable = '';
-  currStudentArray.forEach(function (user) {
-    var currStudentMarkup = "\n      <tr class=\"user user-".concat(user.id, "\">\n        <th>").concat(user.name, "</th>\n        <th>").concat(user.email, "</th>\n        <th><input type=\"button\" value=\"Remove\" href=\"#\"></input></th>\n      </tr>\n    ");
-  });
-  var markup = "\n    <div class=\"make-classroom-grid\">\n\n    <form action=\"#\" class=\"make-classroom__form\">\n        <label for=\"deck-name\" class=\"make-classroom__label\">Enter Classroom name</label>\n        <textarea id=\"deck-name\" class=\"make-classroom__textarea  textarea-q\" wrap=\"off\" minlength=\"5\" maxlength=\"250\" placeholder=\"Enter your classroom name\" required=\"true\" spellcheck=\"true\"></textarea>\n    </form>\n    <div class=\"make-classroom__table\">\n      <div class=\"make-classroom__table-scroll\" style=\"float:left;\">\n      <label class=\"make-classroom__label\">Add Students</label>\n      <table>\n        <thead>\n          <tr>\n            <th>Name</th>\n            <th>Email</th>\n          </tr>\n        </thead>\n        <tbody class=\"classroom-table-add__body\">\n          ".concat(studentTable, "\n        </tbody>\n      </table>\n      </div>\n\n      <div class=\"make-classroom__table-scroll\" style=\"float:right;\">\n      <label class=\"make-classroom__label\">Current Students</label>\n      <table>\n        <thead>\n          <tr>\n            <th>Name</th>\n            <th>Email</th>\n          </tr>\n        </thead>\n        <tbody class=\"classroom-table-add__body\">\n          ").concat(currStudentBody, "\n        </tbody>\n      </table>\n      </div>\n    </div>\n    \n    <div class=\"make-classroom__group make-classroom--right\">\n      <a href=\"#\" class=\"make-classroom__link\">\n        <svg class=\"icon icon--make-classroom icon--make-classroom-right icon--right\">\n          <use href=\"img/SVG/check.svg\"></use>\n        </svg>\n      </a>\n      <span class=\"make-classroom__span\">Create The Classroom</span>\n    </div>\n\n    <div class=\"make-classroom__group make-classroom--wrong\">\n      <a href=\"#\" class=\"make-classroom__link\">\n        <svg class=\"icon icon--make-classroom icon--make-classroom-left icon-left icon--wrong\">\n          <use href=\"img/SVG/circle-with-cross.svg\"></use>\n        </svg>\n      </a>\n      <span class=\"make-classroom__span\">Let's Stop!</span>\n    </div>\n  </div>\n");
+
+exports.renderAllUsers = renderAllUsers;
+
+var clearAllUsersResults = function clearAllUsersResults() {
+  document.querySelector('.make-classroom__list--user').innerHTML = '';
+  document.querySelector('.make-classroom__paginate--user').innerHTML = '';
+}; // Renders all the users in the 'Current Users' list
+
+
+exports.clearAllUsersResults = clearAllUsersResults;
+
+var renderCurrentUsers = function renderCurrentUsers(user) {
+  var markup = "\n    <li class=\"make-deck__item\" data-card=\"".concat(user.id, "\">\n        <a href=\"#\" class=\"make-classroom__link\">\n            <svg class=\"icon icon__make-classroom--user\">\n                <use href=\"").concat(_minus.default, "\"></use>\n            </svg>\n            <div class=\"make-classroom__user-details\">\n                <span class=\"make-classroom__span make-deck-span--name\">").concat(user.name, "</span>\n            </div>\n        </a>\n    </li>");
+  document.querySelector('.make-classroom__list--user').insertAdjacentHTML('beforeend', markup);
+}; // Clears the users from the 'Current Users' list
+
+
+exports.renderCurrentUsers = renderCurrentUsers;
+
+var clearCurrentUsersResults = function clearCurrentUsersResults() {
+  document.querySelector('.make-classroom__list--user').innerHTML = '';
+  document.querySelector('.make-classroom__paginate--user').innerHTML = '';
+}; // Deletes the user from the list
+
+
+exports.clearCurrentUsersResults = clearCurrentUsersResults;
+
+var deleteUser = function deleteUser(id) {
+  var user = document.querySelector("[data-user*=\"".concat(id, "\"]"));
+  if (user) user.remove();
+};
+
+exports.deleteUser = deleteUser;
+
+var createButton = function createButton(page, type) {
+  return "\n<button class=\"btn--inline btn__search btn__search--".concat(type, "\" data-goto=").concat(type === 'prev' ? page - 1 : page + 1, ">\n<span>Page ").concat(type === 'prev' ? page - 1 : page + 1, "</span>  \n<svg class=\"icon icon__search icon__search--").concat(type === 'prev' ? 'prev' : 'next', "\">\n    <use href=\"").concat(type === 'prev' ? _chevronThinLeft.default : _chevronThinRight.default, "\"></use>\n  </svg>\n</button>");
+}; // Pagination for the 'All Users' list
+
+
+var renderButtonAll = function renderButtonAll(page, numResults, resPerPage) {
+  var pages = Math.ceil(numResults / resPerPage);
+  var btn;
+
+  if (page === 1 && pages > 1) {
+    // Only Button to go to the next page
+    btn = createButton(page, 'next');
+  } else if (page < pages) {
+    // Both Buttons
+    btn = "\n      ".concat(createButton(page, 'prev'), "\n      ").concat(createButton(page, 'next'), "\n    ");
+  } else if (page === pages && pages > 1) {
+    // Only Button to go to the prev page
+    btn = createButton(page, 'prev');
+  }
+
+  if (btn) {
+    document.querySelector('.make-classroom__paginate--user').insertAdjacentHTML('afterbegin', btn);
+  }
+}; // Pagination for the 'Current Users' list
+
+
+var renderButtonsCurrent = function renderButtonsCurrent(page, numResults, resPerPage) {
+  var pages = Math.ceil(numResults / resPerPage);
+  var btn;
+
+  if (page === 1 && pages > 1) {
+    // Only Button to go to the next page
+    btn = createButton(page, 'next');
+  } else if (page < pages) {
+    // Both Buttons
+    btn = "\n        ".concat(createButton(page, 'prev'), " \n        ").concat(createButton(page, 'next'), "\n        ");
+  } else if (page === pages && pages > 1) {
+    // Only Button to go to the prev page
+    btn = createButton(page, 'prev');
+  }
+
+  if (btn) document.querySelector('.make-deck__paginate--curr').insertAdjacentHTML('afterbegin', btn);
+}; // Render the results and pagination for the 'All Users' list
+
+
+var renderResultsAll = function renderResultsAll(array) {
+  var page = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
+  var resPerPage = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 4;
+  clearAllUsersResults();
+  var start = (page - 1) * resPerPage;
+  var end = page * resPerPage;
+  array.slice(start, end).forEach(renderAllUsers);
+  renderButtonAll(page, array.length, resPerPage);
+};
+
+exports.renderResultsAll = renderResultsAll;
+
+var renderResultsCurrent = function renderResultsCurrent(array) {
+  var page = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
+  var resPerPage = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 4;
+  // render the results of the current page
+  var start = (page - 1) * resPerPage;
+  var end = page * resPerPage;
+  array.slice(start, end).forEach(renderCurrentUsers); // render pagination button
+
+  renderButtonsCurrent(page, array.length, resPerPage);
+};
+
+exports.renderResultsCurrent = renderResultsCurrent;
+
+var renderMakeClassroom = function renderMakeClassroom(HTMLCard, value) {
+  var markup = "\n\n  ";
+}; // ----- wtf does this dooooo
+
+/*
+export const renderMakeCard = (HTMLCard, value) => {
+  const markup = `
+  <div class="card__options">
+  <a href="#" class="options options--add">
+    <svg class="icon icon--options icon--add">
+      <use xlink:href="${plus}"></use>
+    </svg>
+    <span class="show-hide card--edit">Add card</span>
+  </a>
+
+</div>
+
+<div class="card__details">
+  <span class="name">${value}</span>
+</div>`;
+
+  HTMLCard.innerHTML = markup;
+};
+*/
+// Renders the make class grid
+
+
+exports.renderMakeClassroom = renderMakeClassroom;
+
+var renderMakeClassroomGrid = function renderMakeClassroomGrid(parent, users) {
+  var markup = "<div class=\"make-classroom-grid\">\n  <form action=\"#\" class=\"make-classroom__form\">\n      <label for=\"classroom-name\" class=\"make-classroom__label\">Enter Classroom name</label>\n      <input class=\"make-classroom__input\" type=\"text\" minlength=\"5\" maxlength=\"50\" id=\"classroom-name\" placeholder=\"Classroom Name\">\n  </form>\n\n  <div class=\"make-classroom__user-nav make-classroom__user-nav--all-users\">\n    <span class=\"make-classroom__name\">All Users</span>\n    <ul class=\"make-classroom__list make-classroom__list--all\">\n      \n    </ul>\n\n    <div class=\"make-classroom__paginate--all\">\n      \n    </div>\n  </div>\n\n  <div class=\"make-classroom__user-nav make-classroom__card-nav--curr-users\">\n    <span class=\"make-classroom__name\">Current Users</span>\n    <ul class=\"make-classroom__list make-classroom__list--curr\">\n      \n    </ul>\n    \n    <div class=\"make-classroom__paginate--curr\">\n      \n    </div>\n  </div>\n  \n  <div class=\"make-classroom__options\">\n    <div class=\"make-classroom__group make-classroom--right\">\n      <a href=\"#\" class=\"make-classroom__link\">\n        <svg class=\"icon icon--make-classroom icon--make-classroom-right icon--right\">\n          <use href=\"".concat(_check.default, "\"></use>\n        </svg>\n      </a>\n      <span class=\"make-classroom__span\">Create The Classroom</span>\n    </div>\n\n    <div class=\"make-classroom__group make-classroom--wrong\">\n      <a href=\"#\" class=\"make-classroom__link\">\n        <svg class=\"icon icon--make-classroom icon--make-classroom-left icon-left icon--wrong\">\n          <use href=\"").concat(_circleWithCross.default, "\"></use>\n        </svg>\n      </a>\n      <span class=\"make-classroom__span\">Let's Stop!</span>\n    </div>\n  </div>\n</div>");
   parent.insertAdjacentHTML('afterbegin', markup);
 };
 
 exports.renderMakeClassroomGrid = renderMakeClassroomGrid;
-},{}],"../node_modules/prettier/standalone.js":[function(require,module,exports) {
+},{"../../img/SVG/plus.svg":"img/SVG/plus.svg","../../img/SVG/minus.svg":"img/SVG/minus.svg","../../img/SVG/check.svg":"img/SVG/check.svg","../../img/SVG/circle-with-cross.svg":"img/SVG/circle-with-cross.svg","../../img/SVG/chevron-thin-right.svg":"img/SVG/chevron-thin-right.svg","../../img/SVG/chevron-thin-left.svg":"img/SVG/chevron-thin-left.svg","../controllers/overviewController":"js/controllers/overviewController.js"}],"../node_modules/prettier/standalone.js":[function(require,module,exports) {
 var define;
 var global = arguments[3];
 function _toArray(arr) { return _arrayWithHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableRest(); }
@@ -31616,7 +31726,7 @@ var addCardToDeckHandler = function addCardToDeckHandler(deckArray) {
 
     if (item) {
       // 2.1 Get the card Id from the item
-      var cardId = item.parentNode.parentNode.dataset.card; // 2.2 Store and get the card the card from state or local storage
+      var cardId = item.parentNode.parentNode.dataset.card; // 2.2 Store and get the card from state or local storage
 
       storeCard(cardId);
       var card = cardController.getCard(cardId); // 2.3 Add the card to the local deckArray reference
@@ -32008,9 +32118,111 @@ exports.getClassroomsFromAPI = getClassroomsFromAPI;
 
 var classroomRender = function classroomRender() {
   classroomView.renderClassroomGrid(_base.elements.overview, _overviewController.state.classroom.classrooms);
-};
+}; // Get one classroom from the array in local storage
+
 
 exports.classroomRender = classroomRender;
+
+var getClassroom = function getClassroom(classroomId) {
+  //1. Get the classrooms array
+  var classrooms = storage.getObj('classrooms') || _overviewController.state.classroom.classrooms; //2. Find the classroom in the classrooms array via id
+
+
+  return classrooms.filter(function (classroom) {
+    return classroom.id === classroomId;
+  })[0];
+};
+
+var addUserToClassroomHandler = function addUserToClassroomHandler(classroomArray) {
+  document.querySelector('.make-classroom__list--user').addEventListener('click', function (e) {
+    // 1. Get the item that was click
+    var item = e.target.closest('.icon'); // 2. Check if the click was a plus icon
+
+    if (item) {
+      // 2.1 Get the user Id from the item
+      var userId = item.parentNode.parentNode.dataset.user; // 2.2 Store and get the user from state or local storage
+
+      storeUser(userId);
+      var card = userController.getUser(userId); // 2.3 Add the user to the local deckArray reference
+
+      classroomArray.push(user); // 2.4 Store the classroomArray to local storage
+
+      _overviewController.state.classroom.classroomArray = classroomArray;
+      storage.storeObj('classrooms.classroomArray', _overviewController.state.classroom.classroomArray); // 2.5 Render the results to the current user section
+
+      classroomView.renderResultsAll(classroomArray); // 2.6 more than 4 classrooms, start adding in the paginating handler
+
+      if (classroomArray.length > 4) {
+        searchButtonHandler();
+      }
+    }
+  });
+};
+
+var getUserFromClassroomArray = function getUserFromClassroomArray(classroomArray, userId) {
+  classroomArray.ForEach(function (el, i) {
+    if (el.id === userId) {
+      return i;
+    }
+  });
+};
+
+var removeUserFromClassroom = function removeUserFromClassroom(classsroomArray) {
+  document.querySelector('.make-classroom__list--curr').addEventListener('click', function (e) {
+    // 1. Get the item that was clicked
+    var item = e.target.closest('.icon'); // 2. Check if the item was a user that was clicked
+
+    if (item) {
+      // 2.1 Get the user id
+      var userId = item.parentNode.parentNode.dataset.user; // 2.2 Get the index from the classroomArray
+
+      var index;
+      deckArray.forEach(function (el, i) {
+        if (el.id === userId) {
+          index = i;
+        }
+      }); // 2.3 Remove it from the Classroom array
+
+      classroomArray.splice(index, 1); // 2.4 Re-render the deck cards back to the screen
+
+      classroomView.renderResultsCurrent(classroomArray);
+    }
+  });
+}; // When the user presses next or prev
+
+
+var searchButtonHandler = function searchButtonHandler() {
+  document.querySelector('.make-deck__paginate--all').addEventListener('click', function (e) {
+    // 1. See if the button was clicked
+    var btn = e.target.closest('btn--inline');
+
+    if (btn) {
+      // 1.1 get the page number from the dataset
+      var goToPage = parseInt(btn.dataset.goto, 10);
+      var users = _overviewController.state.user.users || storage.getObj('users'); // 1.2 clear the user results and pagination
+
+      classroomView.clearAllUsersResults(); // 1.3 Render the new users and new buttons
+
+      classroomView.renderResultsAll(users, goToPage);
+      window.scroll(0, 0);
+    }
+  });
+  document.querySelector('.make-classroom__paginate--curr').addEventListener('click', function (e) {
+    // 1. See if the button was clicked
+    var btn = e.target.closest('btn--inline');
+
+    if (btn) {
+      // 1.1 get the page number from the dataset
+      var goToPage = parseInt(btn.dataset.goto, 10);
+      var users = _overviewController.state.user.users || storage.getObj('users'); // 1.2 clear the user results and pagination
+
+      classroomView.clearAllUsersResults(); // 1.3 Render the new users and new buttons
+
+      classroomView.renderResultsAll(users, goToPage);
+      window.scroll(0, 0);
+    }
+  });
+};
 
 var classroomLoader = function classroomLoader(e) {
   var click = e.target.closest('.classroom');
@@ -32064,6 +32276,17 @@ var classroomMakerLoader = function classroomMakerLoader(e) {
 };
 
 exports.classroomMakerLoader = classroomMakerLoader;
+
+var classroomHandler = function classroomHandler(click) {
+  try {
+    var classroomId = click.dataset.classroom;
+    var classroomData = getClassroom(classroomId);
+    var classroomUsers = classroomData.users;
+    userController.classroomUserRender(classroomUsers);
+  } catch (err) {
+    (0, _alert.showAlert)('error', err.message);
+  }
+};
 },{"../views/base":"js/views/base.js","../views/classroomView":"js/views/classroomView.js","../utils/localStorage":"js/utils/localStorage.js","../utils/alert":"js/utils/alert.js","../models/classroomModel":"js/models/classroomModel.js","./overviewController":"js/controllers/overviewController.js"}],"js/controllers/sidebarController.js":[function(require,module,exports) {
 "use strict";
 
@@ -32552,7 +32775,11 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
+<<<<<<< HEAD
   var ws = new WebSocket(protocol + '://' + hostname + ':' + "56440" + '/');
+=======
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "60360" + '/');
+>>>>>>> ae7c785c98b15b39956de8533e57ef573a7d8633
 
   ws.onmessage = function (event) {
     checkedAssets = {};
