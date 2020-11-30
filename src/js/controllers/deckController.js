@@ -19,9 +19,9 @@ export const deckRender = () => {
   const decks = state.deck.decks || storage.getObj('decks');
 
   // 2. Check if they are empty, if so render and exit function
-  // if (decks.length === 0) {
-  //   return cardView.renderEmptyCardGrid(elements.overview);
-  // }
+  if (decks.length === 0) {
+    return deckView.renderEmptyDeckGrid(elements.overview);
+  }
 
   // 3. Render the card grid and cards on the grid
   deckView.renderDeckGrid(elements.overview, decks);
@@ -377,6 +377,11 @@ export const deckMakerLoader = () => {
   if (cards.length !== 0) {
     deckView.renderResults(cards);
     searchButtonHandler();
+
+    deckView.removePaginationDeck();
+  } else {
+    deckView.removePaginationUser();
+    deckView.removePaginationUser();
   }
 
   // 4. Create the DeckArray reference
@@ -398,6 +403,10 @@ export const deckUpdateMaker = (deckId) => {
 
   // 2. Create the Deck array
   const deckArray = deckData.cards;
+
+  if (deckArray.length < 3) {
+    deckView.removePaginationDeck();
+  }
 
   // 3. clear Overview
   clearOverview();

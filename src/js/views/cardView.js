@@ -236,7 +236,7 @@ export const renderEmptyCardGrid = (parent) => {
 
 <div class="card-grid">
   <div class="no-item">
-      <svg class="icon icon--no-card">
+      <svg class="icon icon--no-item">
         <use href="${card}"></use>
       </svg>
       <span>make some cards to see them here!</span>

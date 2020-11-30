@@ -4,8 +4,8 @@ import tick from '../../img/SVG/check.svg';
 import cross from '../../img/SVG/circle-with-cross.svg';
 import next from '../../img/SVG/chevron-thin-right.svg';
 import prev from '../../img/SVG/chevron-thin-left.svg';
-
-import { state } from '../controllers/overviewController';
+import graduation from '../../img/SVG/graduation-cap.svg';
+import * as storage from '../utils/localStorage';
 
 export const renderClassroomGrid = (parent, classroomArray) => {
   let classrooms = '';
@@ -22,18 +22,36 @@ export const renderClassroomGrid = (parent, classroomArray) => {
 
   // checks if the user is a teacher and then allows them to create a new classroom if they are.
 
-  const markup = ``;
-  if (state.users.user.role === 'teacher' || Storage.getObj('role')) {
+  let markup = ``;
+  if (storage.getObj('user').role === 'teacher') {
     markup += `
     <div class="make-classroom">
         <a href="#" class="btn btn--ghost make-classroom">Make A New Classroom</a>
     </div>`;
+  } else {
+    markup += `<div class="make-classroom">
+    &nbsp; 
+</div>`;
   }
 
   markup += `
     <div class="classroom-grid">
         ${classrooms}
     </div>;`;
+
+  parent.insertAdjacentHTML('afterbegin', markup);
+};
+
+export const renderEmptyClassroomGrid = (parent) => {
+  const markup = `
+  <div class="classroom-grid">
+  <div class="no-item">
+      <svg class="icon icon--no-item">
+        <use href="${graduation}"></use>
+      </svg>
+      <span>make some decks to see them here!</span>
+  </div>
+  </div>`;
 
   parent.insertAdjacentHTML('afterbegin', markup);
 };
@@ -185,27 +203,6 @@ export const renderMakeClassroom = (HTMLCard, value) => {
 
   `;
 };
-// ----- wtf does this dooooo
-/*
-export const renderMakeCard = (HTMLCard, value) => {
-  const markup = `
-  <div class="card__options">
-  <a href="#" class="options options--add">
-    <svg class="icon icon--options icon--add">
-      <use xlink:href="${plus}"></use>
-    </svg>
-    <span class="show-hide card--edit">Add card</span>
-  </a>
-
-</div>
-
-<div class="card__details">
-  <span class="name">${value}</span>
-</div>`;
-
-  HTMLCard.innerHTML = markup;
-};
-*/
 
 // Renders the make class grid
 export const renderMakeClassroomGrid = (parent, users) => {

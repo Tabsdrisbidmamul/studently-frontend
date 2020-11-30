@@ -4,12 +4,16 @@ import { showAlert } from '../utils/alert';
 export default class Classroom {
   constructor() {}
 
-  async getTeacherClassrooms(token) {
+  async getClassroom(role, token) {
     try {
-      const res = await axios.get(
-        'https://polar-savannah-53668.herokuapp.com/api/v0/users/teacher-classrooms',
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      const path =
+        role === 'student' ? 'student-classrooms' : 'teacher-classrooms';
+
+      const url = `https://polar-savannah-53668.herokuapp.com/api/v0/users/${path}`;
+
+      const res = await axios.get(url, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
       return res.data.data.classroom;
     } catch (err) {
@@ -17,42 +21,4 @@ export default class Classroom {
       showAlert('error', message);
     }
   }
-
-  async getStudentClassrooms(token) {
-    try {
-      const res = await axios.get(
-        'https://polar-savannah-53668.herokuapp.com/api/v0/users/student-classrooms',
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-
-      return res.data.data.classroom;
-    } catch (err) {
-      const { message } = err.response.data;
-      showAlert('error', message);
-    }
-  }
-
-  async createClassroom(name, teacher, token) {
-    try {
-      const res = await axios.post(
-        'https://polar-savannah-53668.herokuapp.com/api/v0/classrooms/',
-        {
-          name,
-          teacher,
-          students
-        },
-        {
-          headers: { Authorization: `Bearer ${token}` }
-        }
-      );
-
-      if (res.data.status === 'success') {
-        showAlert('success', 'Classroom was created');
-      }
-    } catch (err) {
-      const { message } = err.response.data;
-      showAlert('error', message);
-    }
-  }
-  async;
 }

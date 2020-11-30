@@ -196,7 +196,7 @@
 
 .icon {
   transition: all 250ms; }
-  .icon--no-card {
+  .icon--no-item {
     fill: #333; }
   .icon--right {
     fill: #24a19c;
@@ -560,7 +560,8 @@
   background-color: #333;
   border-bottom-left-radius: 3px;
   border-bottom-right-radius: 3px;
-  backface-visibility: hidden; }
+  backface-visibility: hidden;
+  box-shadow: 0.3rem 0 1.5rem rgba(0, 0, 0, 0.2); }
 
 .make-deck__input {
   display: block;
@@ -634,7 +635,8 @@
   border-bottom: 1px solid black;
   font-size: 1.4rem;
   text-transform: uppercase;
-  background-color: #333; }
+  background-color: #333;
+  box-shadow: 0 0.3rem 1.5rem rgba(0, 0, 0, 0.2); }
 
 .make-deck__card-nav {
   background-color: #f7f7f7;
@@ -653,7 +655,8 @@
   grid-row: 2 / 3; }
 
 .make-deck__list {
-  list-style: none; }
+  list-style: none;
+  height: 70%; }
 
 .make-deck__item {
   padding-bottom: 2rem;
@@ -673,9 +676,9 @@
     transform: scale(1.03); }
 
 .classroom {
-  background-color: #a3d8f4;
+  background-color: #f7f7f7;
   margin: 2rem 4rem;
-  height: 20rem;
+  height: 35rem;
   border-radius: 3px;
   box-shadow: 0.5rem 0.8rem 1rem rgba(0, 0, 0, 0.2);
   transform: scale(1);
@@ -690,7 +693,7 @@
     text-align: center;
     text-transform: uppercase;
     padding: 0 2rem;
-    color: #333; }
+    color: #999; }
   .classroom__name {
     display: inline-block;
     width: 100%;

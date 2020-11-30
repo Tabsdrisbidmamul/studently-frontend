@@ -6,6 +6,14 @@ import next from '../../img/SVG/chevron-thin-right.svg';
 import prev from '../../img/SVG/chevron-thin-left.svg';
 import edit from '../../img/SVG/edit.svg';
 import bin from '../../img/SVG/trash.svg';
+import deck from '../../img/SVG/drive.svg';
+import { doc } from 'prettier';
+
+const limitCharacters = (word) => {
+  const newWord = word.split(' ').splice(0, 3);
+  newWord.push('...');
+  return newWord.join(' ');
+};
 
 export const renderDeckGrid = (parent, deckArray) => {
   let decks = '';
@@ -56,8 +64,12 @@ export const renderUserCards = (card) => {
         <use href="${plus}"></use>
       </svg>
       <div class="make-deck__card-details">
-        <span class="make-deck__span make-deck-span--question">${card.question}</span>
-      <span class="make-deck__span make-deck-span--answer">${card.answer}</span>
+        <span class="make-deck__span make-deck-span--question">${limitCharacters(
+          card.question
+        )}</span>
+      <span class="make-deck__span make-deck-span--answer">${limitCharacters(
+        card.answer
+      )}</span>
       </div>
     </a>
   </li>`;
@@ -80,8 +92,12 @@ export const renderDeckCards = (card) => {
         <use href="${minus}"></use>
       </svg>
       <div class="make-deck__card-details">
-        <span class="make-deck__span make-deck-span--question">${card.question}</span>
-      <span class="make-deck__span make-deck-span--answer">${card.answer}</span>
+        <span class="make-deck__span make-deck-span--question">${limitCharacters(
+          card.question
+        )}</span>
+      <span class="make-deck__span make-deck-span--answer">${limitCharacters(
+        card.answer
+      )}</span>
       </div>
     </a>
   </li>`;
@@ -131,10 +147,23 @@ const renderButtonsUser = (page, numResults, resPerPage) => {
     btn = createButton(page, 'prev');
   }
 
-  if (btn)
+  if (btn) {
+    addPaginationUser();
+
     document
       .querySelector('.make-deck__paginate--user')
       .insertAdjacentHTML('afterbegin', btn);
+  } else {
+    removePaginationUser();
+  }
+};
+
+const addPaginationUser = () => {
+  document.querySelector('.make-deck__paginate--user').style.display = 'flex';
+};
+
+export const removePaginationUser = () => {
+  document.querySelector('.make-deck__paginate--user').style.display = 'none';
 };
 
 const renderButtonsDeck = (page, numResults, resPerPage) => {
@@ -155,10 +184,23 @@ const renderButtonsDeck = (page, numResults, resPerPage) => {
     btn = createButton(page, 'prev');
   }
 
-  if (btn)
+  if (btn) {
+    addPaginationDeck();
+
     document
       .querySelector('.make-deck__paginate--deck')
       .insertAdjacentHTML('afterbegin', btn);
+  } else {
+    removePaginationDeck();
+  }
+};
+
+const addPaginationDeck = () => {
+  document.querySelector('.make-deck__paginate--deck').style.display = 'flex';
+};
+
+export const removePaginationDeck = () => {
+  document.querySelector('.make-deck__paginate--deck').style.display = 'none';
 };
 
 export const renderResultsDeck = (array, page = 1, resPerPage = 4) => {
@@ -229,7 +271,7 @@ export const renderMakeDeckGrid = (parent) => {
     </ul>
 
     <div class="make-deck__paginate make-deck__paginate--deck">
-      
+    
     </div>
   </div>
 
@@ -304,7 +346,7 @@ export const renderUpdateDeckGrid = (parent, deck) => {
     </ul>
 
     <div class="make-deck__paginate make-deck__paginate--deck">
-      
+
     </div>
   </div>
 
@@ -348,6 +390,23 @@ export const renderUpdateDeckGrid = (parent, deck) => {
       </a>
       <span class="make-deck__span">Let's Stop!</span>
     </div>
+  </div>
+</div>`;
+
+  parent.insertAdjacentHTML('afterbegin', markup);
+};
+
+export const renderEmptyDeckGrid = (parent) => {
+  const markup = `<div class="make-deck">
+  <a href="#" class="btn btn--ghost">Make A New Deck</a>
+</div>
+
+<div class="deck-grid">
+  <div class="no-item">
+      <svg class="icon icon--no-item">
+        <use href="${deck}"></use>
+      </svg>
+      <span>make some decks to see them here!</span>
   </div>
 </div>`;
 

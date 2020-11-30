@@ -17,27 +17,23 @@ export const getClassroomsFromAPI = async () => {
     return new Error('You are not logged in');
   }
 
-  // TODO: verify the user role
-  if (storage.getObj('user').role === 'teacher') {
-    state.classroom.classrooms = await state.classroom.getTeacherClassrooms(
-      token
-    );
-  } else {
-    state.classroom.classrooms = await state.classroom.getStudentClassrooms(
-      token
-    );
-  }
-
-  console.log(state.classroom.classrooms);
+  state.classroom.classrooms = await state.classroom.getClassroom(
+    `${storage.getObj('user').role}`,
+    token
+  );
 
   storage.storeObj('classrooms', state.classroom.classrooms);
 };
 
 export const classroomRender = () => {
-  classroomView.renderClassroomGrid(
-    elements.overview,
-    state.classroom.classrooms
-  );
+  // 1. Get the classrooms
+  const classrooms = state.classroom.classrooms || storage.getObj('classrooms');
+
+  if (classrooms.length === 0) {
+    return classroomView.renderEmptyClassroomGrid(elements.overview);
+  }
+
+  classroomView.renderClassroomGrid(elements.overview, classrooms);
 };
 
 // Get one classroom from the array in local storage
@@ -49,123 +45,6 @@ const getClassroom = (classroomId) => {
   return classrooms.filter((classroom) => {
     return classroom.id === classroomId;
   })[0];
-};
-
-const addUserToClassroomHandler = (classroomArray) => {
-  document
-    .querySelector('.make-classroom__list--user')
-    .addEventListener('click', (e) => {
-      // 1. Get the item that was click
-      const item = e.target.closest('.icon');
-
-      // 2. Check if the click was a plus icon
-      if (item) {
-        // 2.1 Get the user Id from the item
-        const userId = item.parentNode.parentNode.dataset.user;
-
-        // 2.2 Store and get the user from state or local storage
-        storeUser(userId);
-        const card = userController.getUser(userId);
-
-        // 2.3 Add the user to the local deckArray reference
-        classroomArray.push(user);
-
-        // 2.4 Store the classroomArray to local storage
-        state.classroom.classroomArray = classroomArray;
-        storage.storeObj(
-          'classrooms.classroomArray',
-          state.classroom.classroomArray
-        );
-
-        // 2.5 Render the results to the current user section
-        classroomView.renderResultsAll(classroomArray);
-
-        // 2.6 more than 4 classrooms, start adding in the paginating handler
-        if (classroomArray.length > 4) {
-          searchButtonHandler();
-        }
-      }
-    });
-};
-
-const getUserFromClassroomArray = (classroomArray, userId) => {
-  classroomArray.ForEach((el, i) => {
-    if (el.id === userId) {
-      return i;
-    }
-  });
-};
-
-const removeUserFromClassroom = (classsroomArray) => {
-  document
-    .querySelector('.make-classroom__list--curr')
-    .addEventListener('click', (e) => {
-      // 1. Get the item that was clicked
-      const item = e.target.closest('.icon');
-
-      // 2. Check if the item was a user that was clicked
-      if (item) {
-        // 2.1 Get the user id
-        const userId = item.parentNode.parentNode.dataset.user;
-
-        // 2.2 Get the index from the classroomArray
-        let index;
-        deckArray.forEach((el, i) => {
-          if (el.id === userId) {
-            index = i;
-          }
-        });
-
-        // 2.3 Remove it from the Classroom array
-        classroomArray.splice(index, 1);
-
-        // 2.4 Re-render the deck cards back to the screen
-        classroomView.renderResultsCurrent(classroomArray);
-      }
-    });
-};
-
-// When the user presses next or prev
-const searchButtonHandler = () => {
-  document
-    .querySelector('.make-deck__paginate--all')
-    .addEventListener('click', (e) => {
-      // 1. See if the button was clicked
-      const btn = e.target.closest('btn--inline');
-      if (btn) {
-        // 1.1 get the page number from the dataset
-        const goToPage = parseInt(btn.dataset.goto, 10);
-        // FIXME
-        const users = state.user.users || storage.getObj('users');
-
-        // 1.2 clear the user results and pagination
-        classroomView.clearAllUsersResults();
-
-        // 1.3 Render the new users and new buttons
-        classroomView.renderResultsAll(users, goToPage);
-        window.scroll(0, 0);
-      }
-    });
-
-  document
-    .querySelector('.make-classroom__paginate--curr')
-    .addEventListener('click', (e) => {
-      // 1. See if the button was clicked
-      const btn = e.target.closest('btn--inline');
-      if (btn) {
-        // 1.1 get the page number from the dataset
-        const goToPage = parseInt(btn.dataset.goto, 10);
-        // FIXME
-        const users = state.user.users || storage.getObj('users');
-
-        // 1.2 clear the user results and pagination
-        classroomView.clearAllUsersResults();
-
-        // 1.3 Render the new users and new buttons
-        classroomView.renderResultsAll(users, goToPage);
-        window.scroll(0, 0);
-      }
-    });
 };
 
 export const classroomLoader = (e) => {
