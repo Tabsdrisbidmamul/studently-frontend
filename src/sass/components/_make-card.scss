@@ -38,12 +38,17 @@
       outline: none;
 
       box-shadow: 0 1rem 2rem rgba(#000, 0.1);
+      // border-bottom: 5px solid $color-green-right;
+    }
+
+    &:focus:valid {
+      outline: none;
       border-bottom: 5px solid $color-green-right;
     }
 
     &:focus:invalid {
       outline: none;
-      border-bottom: 5px solid $color-secondary-dark;
+      border-bottom: 5px solid $color-tertiary-2;
     }
 
     &::placeholder {
@@ -54,7 +59,7 @@
 
   &__label {
     font-size: 1.6rem;
-    font-weight: 300;
+    font-weight: 400;
     margin-bottom: 1rem;
     text-transform: uppercase;
     letter-spacing: 0.05rem;
@@ -85,6 +90,6 @@
     text-transform: uppercase;
     font-size: 1.6rem;
     letter-spacing: 0.1rem;
-    font-weight: 300;
+    font-weight: 400;
   }
 }

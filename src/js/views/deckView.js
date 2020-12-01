@@ -7,13 +7,7 @@ import prev from '../../img/SVG/chevron-thin-left.svg';
 import edit from '../../img/SVG/edit.svg';
 import bin from '../../img/SVG/trash.svg';
 import deck from '../../img/SVG/drive.svg';
-import { doc } from 'prettier';
-
-const limitCharacters = (word) => {
-  const newWord = word.split(' ').splice(0, 3);
-  newWord.push('...');
-  return newWord.join(' ');
-};
+import { limitCharacters } from './base';
 
 export const renderDeckGrid = (parent, deckArray) => {
   let decks = '';

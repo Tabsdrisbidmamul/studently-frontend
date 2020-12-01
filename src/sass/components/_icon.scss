@@ -83,7 +83,8 @@
   }
 
   &__make-deck,
-  &__view-classroom {
+  &__view-classroom,
+  &__make-classroom {
     &--card,
     &--user {
       width: 3rem;
@@ -97,6 +98,15 @@
     width: 4rem;
     height: 4rem;
     transform: scale(1);
+
+    &:hover {
+      transform: scale(1.2);
+    }
+  }
+
+  &--make-classroom {
+    width: 4rem;
+    height: 4rem;
 
     &:hover {
       transform: scale(1.2);

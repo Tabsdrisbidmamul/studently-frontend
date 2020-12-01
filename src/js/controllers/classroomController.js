@@ -50,6 +50,14 @@ const getClassroom = (classroomId) => {
   })[0];
 };
 
+const getStudent = (studentId) => {
+  const students = storage.getObj('student') || state.classroom.studentArray;
+
+  return students.filter((student) => {
+    return student.id === studentId;
+  })[0];
+};
+
 export const classroomLoader = (e) => {
   const click = e.target.closest('.classroom');
   if (e.target.matches('.classroom, .classroom *')) {
@@ -98,39 +106,123 @@ const classroomViewHandler = async (classroom) => {
 
     // 5.1 Render students
     if (classroomStudents.length !== 0) {
-      classroomView.renderStudents(classroomStudents);
-      searchButtonStudent();
+      classroomView.renderResults(
+        classroomStudents,
+        'student',
+        'all-students',
+        'view'
+      );
+      searchButton('all-students', 'view');
     } else {
-      classroomView.removePaginationStudent();
+      classroomView.hidePagination('all-students', 'view');
     }
 
     // 6. Add event handlers
     viewDeckFromClassroom(deckId);
   } catch (err) {
     showAlert('error', err.message);
+    console.log(err.stack);
   }
 };
 
-const searchButtonStudent = () => {
-  document
-    .querySelector('.view-classroom__paginate')
-    .addEventListener('click', (e) => {
-      // 1. See if the button was clicked
-      const btn = e.target.closest('.btn--inline');
-      if (btn) {
-        // 1.1. get the page number from the dataset
-        const goToPage = parseInt(btn.dataset.goto, 10);
-        const students =
-          state.classroom.studentArray || storage.getObj('students');
+export const classroomMakerLoader = async () => {
+  // 1. Get the token
+  const token = state.token || storage.getObj('token');
 
-        // 1.2. clear the card results and pagination
-        classroomView.clearAllStudents();
+  // 2. Get the students
+  const students = await state.classroom.getStudents(token);
+  state.classroom.studentArray = students;
+  storage.storeObj('studentArray', students);
 
-        // 1.3. Render the new cards and new buttons
-        classroomView.renderStudents(students, goToPage);
-        window.scroll(0, 0);
-      }
-    });
+  // 3. Get the decks
+  const decks = await state.deck.getDecks(token);
+  state.classroom.deckArray = decks;
+  storage.storeObj('classroom.deckArray', decks);
+
+  // 4. Render the classroom maker grid to the homepage
+  classroomMaker(students, decks);
+};
+
+const classroomMaker = (students, decks) => {
+  // 1. Render the make classroom grid
+  clearOverview();
+  classroomView.renderMakeClassroom(elements.overview);
+
+  // 2. Render students
+  if (students.length !== 0) {
+    classroomView.renderResults(students, 'plus', 'all-students', 'make');
+    searchButton('all-students', 'make');
+  } else {
+    classroomView.hidePagination('all-students', 'make');
+  }
+
+  // 3. Render the decks
+  if (decks.length !== 0) {
+    classroomView.renderResults(decks, 'plus', 'my-decks', 'make');
+    searchButton('my-decks', 'make');
+  } else {
+    classroomView.hidePagination('my-decks', 'make');
+  }
+
+  // 4. create local arrays for students
+  const studentArray = [];
+
+  // 5. Add handlers
+  addItemHandler(studentArray, 'make', 'all-students', 'my-deck');
+};
+
+const addItemHandler = (studentArray, flag, ...type) => {
+  const studentNav = classroomView.getType(type[0], flag)[0];
+  const deckNav = classroomView.getType(type[1], flag)[0];
+
+  document.querySelector(studentNav).addEventListener('click', (e) => {
+    // 1. Get the item that was clicked
+    const item = e.target.closest('.icon');
+    console.log(item);
+
+    // 2. check if the click was a plus icon
+    if (item) {
+      // 2.1 Get the student Id and get the student
+      const studentId = item.parentNode.parentNode.dataset.item;
+      const student = getStudent(studentId);
+
+      // 2.2 Append the student to local studentArray
+      studentArray.push(student);
+
+      // 2.3 Store the studentArray in local storage
+      storage.storeObj('classroomStudentArray', studentArray);
+
+      // 2.4 render the students to the classroom student nav
+      classroomView.renderResults(
+        studentArray,
+        'minus',
+        'classroom-students',
+        'make'
+      );
+    }
+  });
+};
+
+const searchButton = (type, flag) => {
+  const element = classroomView.getType(type, flag)[1];
+
+  document.querySelector(element).addEventListener('click', (e) => {
+    // 1. See if the button was clicked
+    const btn = e.target.closest('.btn--inline');
+    if (btn) {
+      // 1.1. get the page number from the dataset
+      const goToPage = parseInt(btn.dataset.goto, 10);
+      const students =
+        state.classroom.studentArray || storage.getObj('students');
+
+      // 1.2. clear the card results and pagination
+      classroomView.clearAllStudents();
+
+      // 1.3. Render the new cards and new buttons
+      classroomView.renderStudents(students, goToPage);
+      window.scroll(0, 0);
+    }
+  });
 };
 
 const viewDeckFromClassroom = () => {

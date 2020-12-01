@@ -240,7 +240,7 @@
       fill: #d11937; }
     .icon--make-card:hover {
       transform: scale(1.3); }
-  .icon__make-deck--card, .icon__make-deck--user, .icon__view-classroom--card, .icon__view-classroom--user {
+  .icon__make-deck--card, .icon__make-deck--user, .icon__view-classroom--card, .icon__view-classroom--user, .icon__make-classroom--card, .icon__make-classroom--user {
     width: 3rem;
     height: 3rem;
     margin: 0 2rem;
@@ -250,6 +250,11 @@
     height: 4rem;
     transform: scale(1); }
     .icon--make-deck:hover {
+      transform: scale(1.2); }
+  .icon--make-classroom {
+    width: 4rem;
+    height: 4rem; }
+    .icon--make-classroom:hover {
       transform: scale(1.2); }
 
 .options {
@@ -451,17 +456,19 @@
   transition: all 200ms; }
   .make-card__textarea:focus {
     outline: none;
-    box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.1); }
+  .make-card__textarea:focus:valid {
+    outline: none;
     border-bottom: 5px solid #24a19c; }
   .make-card__textarea:focus:invalid {
     outline: none;
-    border-bottom: 5px solid #d11937; }
+    border-bottom: 5px solid #ff6a88; }
   .make-card__textarea::placeholder {
     color: #777; }
 
 .make-card__label {
   font-size: 1.6rem;
-  font-weight: 300;
+  font-weight: 400;
   margin-bottom: 1rem;
   text-transform: uppercase;
   letter-spacing: 0.05rem; }
@@ -485,7 +492,7 @@
   text-transform: uppercase;
   font-size: 1.6rem;
   letter-spacing: 0.1rem;
-  font-weight: 300; }
+  font-weight: 400; }
 
 .deck {
   background-color: #f7f7f7;
@@ -741,11 +748,12 @@
   display: flex;
   justify-content: space-around;
   width: 100%;
-  padding: 2rem 0;
+  padding: 1rem 0;
   background-color: #333;
   border-bottom-left-radius: 3px;
   border-bottom-right-radius: 3px;
-  backface-visibility: hidden; }
+  backface-visibility: hidden;
+  box-shadow: 0.3rem 0 1.5rem rgba(0, 0, 0, 0.2); }
 
 .make-classroom__input {
   display: block;
@@ -783,6 +791,12 @@
   text-align: center;
   margin-bottom: 1rem; }
 
+.make-classroom__create-box {
+  grid-column: 3 / 4;
+  grid-row: 1 / 2;
+  display: flex;
+  text-align: center; }
+
 .make-classroom--switch, .make-classroom--right, .make-classroom--wrong {
   display: flex;
   flex-direction: column;
@@ -795,7 +809,7 @@
   align-items: center;
   color: #333; }
 
-.make-classroom__user-details {
+.make-classroom__card-details {
   display: flex;
   flex-flow: column;
   width: 100%;
@@ -819,23 +833,28 @@
   border-bottom: 1px solid black;
   font-size: 1.4rem;
   text-transform: uppercase;
-  background-color: #333; }
+  background-color: #333;
+  box-shadow: 0 0.3rem 1.5rem rgba(0, 0, 0, 0.2); }
 
-.make-classroom__user-nav {
+.make-classroom__student-nav, .make-classroom__deck-nav {
   background-color: #f7f7f7;
   border-radius: 3px;
-  height: 50rem;
   text-align: center;
   width: 80%;
-  box-shadow: 0 2rem 3rem rgba(0, 0, 0, 0.2); }
-  .make-classroom__user-nav--curr-users {
-    grid-column: 3 / -1;
-    margin: 0 auto; }
-  .make-classroom__user-nav--all-users {
-    margin: 0 auto; }
+  box-shadow: 0 2rem 3rem rgba(0, 0, 0, 0.2);
+  margin: 0 auto;
+  height: min-content; }
+  .make-classroom__student-nav--deck-curr, .make-classroom__deck-nav--deck-curr {
+    grid-column: 2 / 3;
+    grid-row: 3 / -1; }
+
+.make-classroom__card-switch {
+  grid-column: 2 / 3;
+  grid-row: 2 / 3; }
 
 .make-classroom__list {
-  list-style: none; }
+  list-style: none;
+  height: 70%; }
 
 .make-classroom__item {
   padding-bottom: 2rem;
@@ -844,6 +863,10 @@
   transition: all 200ms; }
   .make-classroom__item:not(:last-child) {
     border-bottom: 1px solid #333; }
+  .make-classroom__item:not(:first-child) {
+    padding-top: 2rem; }
+  .make-classroom__item:first-child {
+    padding-top: 1em; }
 
 .make-classroom__item:hover {
   background-color: #e94560; }
@@ -1121,7 +1144,8 @@ body {
 .make-classroom-grid {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  grid-template-rows: repeat(2, min-content); }
+  grid-template-rows: repeat(2, min-content);
+  grid-row-gap: 2.5rem; }
 
 .view-classroom-grid {
   margin-top: 2rem; }

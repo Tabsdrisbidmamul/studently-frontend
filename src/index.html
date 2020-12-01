@@ -7,8 +7,14 @@
       href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@100;200;300;400&family=Lato:wght@100;300;400;700&display=swap"
       rel="stylesheet"
     />
-    <!-- change href to style.css at the end -->
-    <!-- <link href="css/main.css" type="text/css" rel="stylesheet" /> -->
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="theme-color" content="#ffffff">
+
     <title>Studently Webapp</title>
   </head>
   <body>
@@ -667,74 +673,254 @@
           </div> -->
 
             <!-- MAKE CLASSROOM -->
-            <!-- <div class="make-classroom-grid">
+            <div class="make-classroom-grid">
 
               <form action="#" class="make-classroom__form">
-                  <label for="deck-name" class="make-classroom__label">Enter Classroom name</label>
-                  <textarea id="deck-name" class="make-classroom__textarea  textarea-q" wrap="off" minlength="5" maxlength="250" placeholder="Enter your classroom name" required="true" spellcheck="true"></textarea>
+                  <label for="classroom-name" class="make-classroom__label">Enter Classroom name</label>
+                  <input class="make-deck__input" type="text" minlength="5" maxlength="50" id="classroom-name" placeholder="Classroom Name">
               </form>
 
-              <div class="make-classroom__table">
-                <div class="make-classroom__table-scroll" style="float:left;">
-                <label class="make-classroom__label">Add Students</label>
-                <table>
-                  <thead>
-                    <tr>
-                      <th>Name</th>
-                      <th>Email</th>
-                    </tr>
-                  </thead>
-                  <tbody class="classroom-table-add__body">
-                    <tr>
-                      <th>Tom Horne</th>
-                      <th>madamot@gmail.com</th>
-                      <th><input type="button" value="Add" href="#"></input></th>
-                    </tr>
-                    <tr>
-                      <th>Tom Horne</th>
-                      <th>madamot@gmail.com</th>
-                      <th><input type="button" value="Add" href="#"></input></th>
-                    </tr>
-                    <tr>
-                      <th>Tom Horne</th>
-                      <th>madamot@gmail.com</th>
-                      <th><input type="button" value="Add" href="#"></input></th>
-                    </tr>
-                  </tbody>
-                </table>
-                </div>
+              <div class="make-classroom__student-nav make-classroom__student-nav--users-student">
 
-                <div class="make-classroom__table-scroll" style="float:right;">
-                <label class="make-classroom__label">Current Students</label>
-                <table>
-                  <thead>
-                    <tr>
-                      <th>Name</th>
-                      <th>Email</th>
-                    </tr>
-                  </thead>
-                  <tbody class="classroom-table-add__body">
-                    <tr>
-                      <th>Tom Horne</th>
-                      <th>madamot@gmail.com</th>
-                      <th><input type="button" value="Remove" href="#"></input></th>
-                    </tr>
-                    <tr>
-                      <th>Tom Horne</th>
-                      <th>madamot@gmail.com</th>
-                      <th><input type="button" value="Remove" href="#"></input></th>
-                    </tr>
-                    <tr>
-                      <th>Tom Horne</th>
-                      <th>madamot@gmail.com</th>
-                      <th><input type="button" value="Remove" href="#"></input></th>
-                    </tr>
-                  </tbody>
-                </table>
-                </div>
-              </div> -->
+              <span class="make-classroom__name">All Students</span>
+              <ul class="make-classroom__list make-classroom__list--students">
+                <li class="make-classroom__item">
+                  <a href="#" class="make-classroom__link">
+                    <svg class="icon icon__make-classroom--user">
+                      <use href="img/SVG/plus.svg"></use>
+                    </svg>
+                    <div class="make-classroom__card-details">
+                      <span
+                        class="make-classroom__span make-classroom-span--question"
+                        >Student 1</span
+                      >
+                      <span
+                        class="make-classroom__span make-classroom-span--answer"
+                        >Jennete Margarita</span
+                      >
+                    </div>
+                  </a>
+                </li>
+
+                <li class="make-deck__item">
+                  <a href="#" class="make-deck__link">
+                    <svg class="icon icon__make-deck--card">
+                      <use href="img/SVG/plus.svg"></use>
+                    </svg>
+                    <div class="make-deck__card-details">
+                      <span class="make-deck__span make-deck-span--question"
+                        >Student 2</span
+                      >
+                      <span class="make-deck__span make-deck-span--answer"
+                        >Athanasia de Alger Obelia</span
+                      >
+                    </div>
+                  </a>
+                </li>
+
+                <li class="make-deck__item">
+                  <a href="#" class="make-deck__link">
+                    <svg class="icon icon__make-deck--card">
+                      <use href="img/SVG/plus.svg"></use>
+                    </svg>
+                    <div class="make-deck__card-details">
+                      <span class="make-deck__span make-deck-span--question"
+                        >Student 3</span
+                      >
+                      <span class="make-deck__span make-deck-span--answer"
+                        >Ijekiel Alpheus</span
+                      >
+                    </div>
+                  </a>
+                </li>
+              </ul>
+
+              <div class="make-classroom__paginate make-classroom__paginate--students">
+                <button
+                  class="btn--inline btn__search btn__search--next"
+                  data-goto="1"
+                >
+                  <span>Page 1</span>
+                  <svg class="icon icon__search icon__search--next">
+                    <use href="img/SVG/chevron-thin-left.svg"></use>
+                  </svg>
+                </button>
+
+                <button
+                  class="btn--inline btn__search btn__search--prev"
+                  data-goto="4"
+                >
+                  <span>Page 4</span>
+                  <svg class="icon icon__search icon__search--prev">
+                    <use href="img/SVG/chevron-thin-right.svg"></use>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="make-classroom__deck-nav make-classroom__deck-nav--deck">
+              <span class="make-classroom__name">My Decks</span>
+              <ul class="make-classroom__list make-classroom__list--decks">
+                <li class="make-classroom__item make-classroom__item--deck">
+                  <a href="#" class="make-classroom__link">
+                    <svg class="icon icon__make-classroom--card">
+                      <use href="img/SVG/plus.svg"></use>
+                    </svg>
+                    <div class="make-classroom__card-details">
+                      <span
+                        class="make-classroom__span make-classroom-span--question"
+                        >Teacher's Deck 1</span
+                      >
+                    </div>
+                  </a>
+                </li>
+
+                <li class="make-classroom__item make-classroom__item--deck">
+                  <a href="#" class="make-classroom__link">
+                    <svg class="icon icon__make-classroom--card">
+                      <use href="img/SVG/plus.svg"></use>
+                    </svg>
+                    <div class="make-classroom__card-details">
+                      <span
+                        class="make-classroom__span make-classroom-span--question"
+                        >Teacher's Deck 2</span
+                      >
+                    </div>
+                  </a>
+                </li>
+
+                <li class="make-classroom__item make-classroom__item--deck">
+                  <a href="#" class="make-classroom__link">
+                    <svg class="icon icon__make-classroom--card">
+                      <use href="img/SVG/plus.svg"></use>
+                    </svg>
+                    <div class="make-classroom__card-details">
+                      <span
+                        class="make-classroom__span make-classroom-span--question"
+                        >Teacher's Deck 3</span
+                      >
+                    </div>
+                  </a>
+                </li>
+              </ul>
+
+              <div class="make-classroom__paginate make-classroom__paginate--decks">
+                <button class="btn--inline btn__search btn__search--next"
+                  data-goto="1" >
+                  <span>Page 1</span>
+                  <svg class="icon icon__search icon__search--next">
+                    <use href="img/SVG/chevron-thin-left.svg"></use>
+                  </svg>
+                </button>
+
+                <button class="btn--inline btn__search btn__search--prev" data-goto="4">
+                  <span>Page 4</span>
+                  <svg class="icon icon__search icon__search--prev">
+                    <use href="img/SVG/chevron-thin-right.svg"></use>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="make-classroom__deck-nav make-classroom__deck-nav--deck-curr">
+              <span class="make-classroom__name">Classroom deck</span>
+              <ul class="make-classroom__list make-classroom__list--classroom-deck">
+                <li class="make-classroom__item make-classroom__item--decks">
+                  <a href="#" class="make-classroom__link">
+                    <svg class="icon icon__make-classroom--card">
+                      <use href="img/SVG/minus.svg"></use>
+                    </svg>
+                    <div class="make-classroom__card-details">
+                      <span
+                        class="make-classroom__span make-classroom-span--question"
+                        >Teacher's Deck 1</span
+                      >
+                    </div>
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            <div class="make-classroom__student-nav make-classroom__student-nav--users-student-curr">
+
+              <span class="make-classroom__name">Classroom Students</span>
+              <ul class="make-classroom__list make-classroom__list--classroom-students">
+                <li class="make-classroom__item">
+                  <a href="#" class="make-classroom__link">
+                    <svg class="icon icon__make-classroom--user">
+                      <use href="img/SVG/minus.svg"></use>
+                    </svg>
+                    <div class="make-classroom__card-details">
+                      <span
+                        class="make-classroom__span make-classroom-span--question"
+                        >Student 1</span
+                      >
+                      <span
+                        class="make-classroom__span make-classroom-span--answer"
+                        >Jennete Margarita</span
+                      >
+                    </div>
+                  </a>
+                </li>
+
+                <li class="make-deck__item">
+                  <a href="#" class="make-deck__link">
+                    <svg class="icon icon__make-deck--card">
+                      <use href="img/SVG/minus.svg"></use>
+                    </svg>
+                    <div class="make-deck__card-details">
+                      <span class="make-deck__span make-deck-span--question"
+                        >Student 2</span
+                      >
+                      <span class="make-deck__span make-deck-span--answer"
+                        >Athanasia de Alger Obelia</span
+                      >
+                    </div>
+                  </a>
+                </li>
+
+                <li class="make-deck__item">
+                  <a href="#" class="make-deck__link">
+                    <svg class="icon icon__make-deck--card">
+                      <use href="img/SVG/minus.svg"></use>
+                    </svg>
+                    <div class="make-deck__card-details">
+                      <span class="make-deck__span make-deck-span--question"
+                        >Student 3</span
+                      >
+                      <span class="make-deck__span make-deck-span--answer"
+                        >Ijekiel Alpheus</span
+                      >
+                    </div>
+                  </a>
+                </li>
+              </ul>
+
+              <div class="make-classroom__paginate make-classroom__paginate--classroom-students">
+                <button
+                  class="btn--inline btn__search btn__search--next"
+                  data-goto="1"
+                >
+                  <span>Page 1</span>
+                  <svg class="icon icon__search icon__search--next">
+                    <use href="img/SVG/chevron-thin-left.svg"></use>
+                  </svg>
+                </button>
+
+                <button
+                  class="btn--inline btn__search btn__search--prev"
+                  data-goto="4"
+                >
+                  <span>Page 4</span>
+                  <svg class="icon icon__search icon__search--prev">
+                    <use href="img/SVG/chevron-thin-right.svg"></use>
+                  </svg>
+                </button>
+              </div>
+            </div>
               
-              <!-- <div class="make-classroom__group make-classroom--right">
+            <div class="make-classroom__create-box">
+              <div class="make-classroom__group make-classroom--right">
                 <a href="#" class="make-classroom__link">
                   <svg class="icon icon--make-classroom icon--make-classroom-right icon--right">
                     <use href="img/SVG/check.svg"></use>
@@ -751,7 +937,10 @@
                 </a>
                 <span class="make-classroom__span">Let's Stop!</span>
               </div>
-            </div> -->
+              </div>
+
+            </div>
+              
 
             <!-- END OF OVERVIEW -->
           </div>

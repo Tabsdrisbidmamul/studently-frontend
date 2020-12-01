@@ -10,7 +10,7 @@ import * as cardView from '../views/cardView';
 import * as deckView from '../views/deckView';
 import { renderMakeClassroomGrid } from '../views/classroomView';
 import { deckLoader, deckMakerLoader } from './deckController';
-import { classroomLoader } from './classroomController';
+import { classroomLoader, classroomMakerLoader } from './classroomController';
 
 export const state = {};
 
@@ -46,5 +46,7 @@ elements.overview.addEventListener('click', async (e) => {
     // User clicks a classroom in the homepage
   } else if (e.target.closest('.classroom')) {
     classroomLoader(e);
+  } else if (e.target.closest('.make-classroom')) {
+    classroomMakerLoader();
   }
 });

@@ -17,3 +17,9 @@ export const clearOverview = () => {
     overview.innerHTML = '';
   }
 };
+
+export const limitCharacters = (word) => {
+  const newWord = word.split(' ').splice(0, 3);
+  newWord.push('...');
+  return newWord.join(' ');
+};
