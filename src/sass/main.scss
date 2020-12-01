@@ -20,6 +20,7 @@
 @import './components/make-deck';
 @import './components/classroom';
 @import './components/make-classroom';
+@import './components/view-classroom';
 
 @import './base/base';
 @import './base/typography';
@@ -35,5 +36,6 @@
 @import './layout/make-deck-grid';
 @import './layout/classroom-grid';
 @import './layout/make-classroom-grid';
+@import './layout/view-classroom-grid';
 
 @import './pages/home';

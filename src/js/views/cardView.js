@@ -4,7 +4,7 @@ import edit from '../../img/SVG/edit.svg';
 import bin from '../../img/SVG/trash.svg';
 import card from '../../img/SVG/documents.svg';
 
-export const renderCardGrid = (parent, cardArray) => {
+export const renderCardGrid = (parent, cardArray, type) => {
   let cards = '';
   cardArray.forEach((card) => {
     const cardMarkup = `
@@ -32,13 +32,15 @@ export const renderCardGrid = (parent, cardArray) => {
     `;
     cards += cardMarkup;
   });
-
-  const markup = `
+  let markup = ``;
+  if (type !== 'teacher-deck') {
+    markup += `
   <div class="make-card">
     <a href="#" class="btn btn--ghost">Make A New Card</a>
-  </div>
+  </div>`;
+  }
 
-  <div class="card-grid">
+  markup += `<div class="card-grid">
       ${cards}
   </div>`;
 

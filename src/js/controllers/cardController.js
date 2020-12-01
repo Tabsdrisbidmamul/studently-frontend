@@ -39,12 +39,12 @@ export const cardRender = () => {
 };
 
 // Render the cards that belong to the deck that the User clicked on
-export const deckCardRender = (deckCards) => {
+export const deckCardRender = (deckArray) => {
   // 1. Clear the overview
   clearOverview();
 
   // 2. Render the card grid and cards from the deck on the grid
-  cardView.renderCardGrid(elements.overview, deckCards);
+  cardView.renderCardGrid(elements.overview, deckArray);
 };
 
 // Load the card if they have click the entire card or the edit/ delete options

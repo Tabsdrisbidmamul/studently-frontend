@@ -82,8 +82,10 @@
     }
   }
 
-  &__make-deck {
-    &--card {
+  &__make-deck,
+  &__view-classroom {
+    &--card,
+    &--user {
       width: 3rem;
       height: 3rem;
       margin: 0 2rem;

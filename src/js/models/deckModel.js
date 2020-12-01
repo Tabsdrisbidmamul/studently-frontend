@@ -5,6 +5,19 @@ import * as windowView from '../views/windowView';
 export default class Deck {
   constructor() {}
 
+  async getDeck(deckId, token) {
+    try {
+      const res = await axios.get(
+        `https://polar-savannah-53668.herokuapp.com/api/v0/decks/${deckId}`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      return res.data.data.deck;
+    } catch (err) {
+      const { message } = err.response.data;
+      showAlert('error', message);
+    }
+  }
+
   async getDecks(token) {
     try {
       const res = await axios.get(

@@ -1,10 +1,12 @@
-import plus from '../../img/SVG/plus.svg';
 import minus from '../../img/SVG/minus.svg';
 import tick from '../../img/SVG/check.svg';
 import cross from '../../img/SVG/circle-with-cross.svg';
 import next from '../../img/SVG/chevron-thin-right.svg';
 import prev from '../../img/SVG/chevron-thin-left.svg';
 import graduation from '../../img/SVG/graduation-cap.svg';
+import deck from '../../img/SVG/drive.svg';
+import user from '../../img/SVG/user.svg';
+import user2 from '../../img/SVG/user.svg';
 import * as storage from '../utils/localStorage';
 
 export const renderClassroomGrid = (parent, classroomArray) => {
@@ -21,7 +23,6 @@ export const renderClassroomGrid = (parent, classroomArray) => {
   });
 
   // checks if the user is a teacher and then allows them to create a new classroom if they are.
-
   let markup = ``;
   if (storage.getObj('user').role === 'teacher') {
     markup += `
@@ -57,59 +58,35 @@ export const renderEmptyClassroomGrid = (parent) => {
 };
 
 // Renders all the users in the 'All Users' list
-export const renderAllUsers = (user) => {
+export const renderAllStudents = (user, index) => {
   const markup = `
-    <li class="make-deck__item" data-card="${user.id}">
-    <a href="#" class="make-classroom__link">
-      <svg class="icon icon__make-classroom--user">
-        <use href="${plus}"></use>
+  <li class="view-classroom__item">
+    <a href="#" class="view-classroom__link">
+        <svg class="icon icon__view-classroom--card">
+        <use href="${user2}"></use>
       </svg>
-      <div class="make-classroom__user-details">
-        <span class="make-classroom__span make-deck-span--name">${user.name}</span>
+      <div class="view-classroom__card-details">
+        <span
+          class="view-classroom__span view-classroom-span--question"
+          >Student ${index}</span
+        >
+        <span
+          class="view-classroom__span make-classroom-span--answer"
+          >${user.name}</span
+        >
       </div>
     </a>
   </li>`;
 
   document
-    .querySelector('.make-classroom__list--user')
+    .querySelector('.view-classroom__list')
     .insertAdjacentHTML('beforeend', markup);
 };
 
 // Clears the users from the 'All Users' list
-export const clearAllUsersResults = () => {
-  document.querySelector('.make-classroom__list--user').innerHTML = '';
-  document.querySelector('.make-classroom__paginate--user').innerHTML = '';
-};
-
-// Renders all the users in the 'Current Users' list
-export const renderCurrentUsers = (user) => {
-  const markup = `
-    <li class="make-deck__item" data-card="${user.id}">
-        <a href="#" class="make-classroom__link">
-            <svg class="icon icon__make-classroom--user">
-                <use href="${minus}"></use>
-            </svg>
-            <div class="make-classroom__user-details">
-                <span class="make-classroom__span make-deck-span--name">${user.name}</span>
-            </div>
-        </a>
-    </li>`;
-
-  document
-    .querySelector('.make-classroom__list--user')
-    .insertAdjacentHTML('beforeend', markup);
-};
-
-// Clears the users from the 'Current Users' list
-export const clearCurrentUsersResults = () => {
-  document.querySelector('.make-classroom__list--user').innerHTML = '';
-  document.querySelector('.make-classroom__paginate--user').innerHTML = '';
-};
-
-// Deletes the user from the list
-export const deleteUser = (id) => {
-  const user = document.querySelector(`[data-user*="${id}"]`);
-  if (user) user.remove();
+export const clearAllStudents = () => {
+  document.querySelector('.view-classroom__list').innerHTML = '';
+  document.querySelector('.view-classroom__paginate').innerHTML = '';
 };
 
 const createButton = (page, type) => `
@@ -125,7 +102,7 @@ const createButton = (page, type) => `
 </button>`;
 
 // Pagination for the 'All Users' list
-const renderButtonAll = (page, numResults, resPerPage) => {
+const renderButtonStudents = (page, numResults, resPerPage) => {
   const pages = Math.ceil(numResults / resPerPage);
 
   let btn;
@@ -144,116 +121,100 @@ const renderButtonAll = (page, numResults, resPerPage) => {
   }
 
   if (btn) {
+    addPaginationStudent();
+
     document
-      .querySelector('.make-classroom__paginate--user')
+      .querySelector('.view-classroom__paginate')
       .insertAdjacentHTML('afterbegin', btn);
+  } else {
+    removePaginationStudent();
   }
 };
 
-// Pagination for the 'Current Users' list
-const renderButtonsCurrent = (page, numResults, resPerPage) => {
-  const pages = Math.ceil(numResults / resPerPage);
+const addPaginationStudent = () => {
+  document.querySelector('.view-classroom__paginate').style.display = 'flex';
+};
 
-  let btn;
-  if (page === 1 && pages > 1) {
-    // Only Button to go to the next page
-    btn = createButton(page, 'next');
-  } else if (page < pages) {
-    // Both Buttons
-    btn = `
-        ${createButton(page, 'prev')} 
-        ${createButton(page, 'next')}
-        `;
-  } else if (page === pages && pages > 1) {
-    // Only Button to go to the prev page
-    btn = createButton(page, 'prev');
-  }
-
-  if (btn)
-    document
-      .querySelector('.make-deck__paginate--curr')
-      .insertAdjacentHTML('afterbegin', btn);
+export const removePaginationStudent = () => {
+  document.querySelector('.view-classroom__paginate').style.display = 'none';
 };
 
 // Render the results and pagination for the 'All Users' list
-export const renderResultsAll = (array, page = 1, resPerPage = 4) => {
-  clearAllUsersResults();
+export const renderStudents = (array, page = 1, resPerPage = 4) => {
+  clearAllStudents();
 
   const start = (page - 1) * resPerPage;
   const end = page * resPerPage;
 
-  array.slice(start, end).forEach(renderAllUsers);
+  array.slice(start, end).forEach((el, i) => {
+    renderAllStudents(el, i);
+  });
 
-  renderButtonAll(page, array.length, resPerPage);
+  renderButtonStudents(page, array.length, resPerPage);
 };
 
-export const renderResultsCurrent = (array, page = 1, resPerPage = 4) => {
-  // render the results of the current page
-  const start = (page - 1) * resPerPage;
-  const end = page * resPerPage;
-
-  array.slice(start, end).forEach(renderCurrentUsers);
-
-  // render pagination button
-  renderButtonsCurrent(page, array.length, resPerPage);
-};
-
-export const renderMakeClassroom = (HTMLCard, value) => {
+export const renderViewClassroom = (parent, teacherName, deckName, deckId) => {
   const markup = `
+  <div class="view-classroom-grid make-classroom-grid">
+    <div
+      class="view-classroom__student-nav view-classroom__student-nav--users-student"
+    >
+      <span class="view-classroom__name">Classmates</span>
+      <ul class="view-classroom__list">
+        
+      </ul>
 
-  `;
-};
-
-// Renders the make class grid
-export const renderMakeClassroomGrid = (parent, users) => {
-  const markup = `<div class="make-classroom-grid">
-  <form action="#" class="make-classroom__form">
-      <label for="classroom-name" class="make-classroom__label">Enter Classroom name</label>
-      <input class="make-classroom__input" type="text" minlength="5" maxlength="50" id="classroom-name" placeholder="Classroom Name">
-  </form>
-
-  <div class="make-classroom__user-nav make-classroom__user-nav--all-users">
-    <span class="make-classroom__name">All Users</span>
-    <ul class="make-classroom__list make-classroom__list--all">
-      
-    </ul>
-
-    <div class="make-classroom__paginate--all">
-      
-    </div>
-  </div>
-
-  <div class="make-classroom__user-nav make-classroom__card-nav--curr-users">
-    <span class="make-classroom__name">Current Users</span>
-    <ul class="make-classroom__list make-classroom__list--curr">
-      
-    </ul>
-    
-    <div class="make-classroom__paginate--curr">
-      
-    </div>
-  </div>
-  
-  <div class="make-classroom__options">
-    <div class="make-classroom__group make-classroom--right">
-      <a href="#" class="make-classroom__link">
-        <svg class="icon icon--make-classroom icon--make-classroom-right icon--right">
-          <use href="${tick}"></use>
-        </svg>
-      </a>
-      <span class="make-classroom__span">Create The Classroom</span>
+      <div class="view-classroom__paginate">
+        
+      </div>
     </div>
 
-    <div class="make-classroom__group make-classroom--wrong">
-      <a href="#" class="make-classroom__link">
-        <svg class="icon icon--make-classroom icon--make-classroom-left icon-left icon--wrong">
-          <use href="${cross}"></use>
-        </svg>
-      </a>
-      <span class="make-classroom__span">Let's Stop!</span>
+    <div
+      class="view-classroom__deck-nav view-classroom__deck-nav--deck"
+    >
+      <span class="view-classroom__name">Deck</span>
+      <ul class="view-classroom__list">
+        <li class="view-classroom__item view-classroom__item--deck" data-deck=${deckId}>
+          <a href="#" class="view-classroom__link">
+            <svg class="icon icon__view-classroom--card">
+              <use href="${deck}"></use>
+            </svg>
+            <div class="view-classroom__card-details">
+              <span
+                class="view-classroom__span view-classroom-span--question"
+                >${deckName}</span
+              >
+            </div>
+          </a>
+        </li>
+      </ul>
     </div>
-  </div>
-</div>`;
+
+    <div
+      class="view-classroom__teacher-nav view-classroom__teacher-nav--users-teacher"
+    >
+      <span class="view-classroom__name">Teacher</span>
+      <ul class="view-classroom__list">
+        <li class="view-classroom__item view-classroom__item--techer">
+          <a href="#" class="view-classroom__link">
+            <svg class="icon icon__view-classroom--card">
+              <use href="${user}"></use>
+            </svg>
+            <div class="view-classroom__card-details">
+              <span
+                class="view-classroom__span view-classroom-span--question"
+                >Teacher</span
+              >
+              <span class="make-deck__span make-deck-span--answer"
+                >${teacherName}</span
+              >
+            </div>
+          </a>
+        </li>
+      </ul>
+    </div>
+
+  </div>`;
 
   parent.insertAdjacentHTML('afterbegin', markup);
 };

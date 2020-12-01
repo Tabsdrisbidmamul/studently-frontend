@@ -10,6 +10,7 @@ import * as cardView from '../views/cardView';
 import * as deckView from '../views/deckView';
 import { renderMakeClassroomGrid } from '../views/classroomView';
 import { deckLoader, deckMakerLoader } from './deckController';
+import { classroomLoader } from './classroomController';
 
 export const state = {};
 
@@ -26,22 +27,24 @@ elements.overview.addEventListener('click', async (e) => {
   if (e.target.matches('.btn--btn-login')) {
     loginHandler(e);
 
-    // User clicks a card in the card home page
+    // User clicks a card in the card homepage
   } else if (e.target.closest('.card')) {
     cardLoader(e);
 
     // User click 'make a new card' button in card homepage
   } else if (e.target.closest('.make-card')) {
-    cardMakerLoader();
+    cardMakerLoader(e);
 
-    // User clicks 'make a new classroom' button in the classroom homepage
-  } else if (e.target.closest('.make-classroom')) {
-    renderMakeClassroomGrid(elements.overview);
-
-    // User clicks a deck in the deck home page
+    // User clicks a deck in the homepage
   } else if (e.target.closest('.deck')) {
     deckLoader(e);
+
+    // User clicks 'make a deck' in the homepage
   } else if (e.target.closest('.make-deck')) {
     deckMakerLoader(e);
+
+    // User clicks a classroom in the homepage
+  } else if (e.target.closest('.classroom')) {
+    classroomLoader(e);
   }
 });

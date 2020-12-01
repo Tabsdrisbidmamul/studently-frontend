@@ -53,7 +53,7 @@ const optionsHandler = (click, deckId) => {
 };
 
 // Get one deck from the array in local storage
-const getDeck = (deckId) => {
+export const getDeck = (deckId) => {
   //1. Get the decks array
   const decks = storage.getObj('decks') || state.deck.decks;
 
@@ -293,18 +293,22 @@ const updateDeck = (deckId) => {
       const deck = state.deck.deckArray;
       const token = storage.getObj('token');
 
-      // 2. Check if they have a deck of cards or gave it a name
-      if (name && deck) {
-        // 2.1 Create the Deck and reload a new deckMaker Session
-        await state.deck.updateDeck(deckId, name, deck, token);
+      try {
+        // 2. Check if they have a deck of cards or gave it a name
+        if (name && deck) {
+          // 2.1 Create the Deck and reload a new deckMaker Session
+          await state.deck.updateDeck(deckId, name, deck, token);
 
-        // 2.2 Render the homepage to show the change
-        window.setTimeout(async () => {
-          clearOverview();
-          await deckLoaderAndRender();
-        }, 1500);
-      } else {
-        showAlert('error', 'Please provide a name and cards');
+          // 2.2 Render the homepage to show the change
+          window.setTimeout(async () => {
+            clearOverview();
+            await deckLoaderAndRender();
+          }, 1500);
+        } else {
+          showAlert('error', 'Please provide a name and cards');
+        }
+      } catch (err) {
+        showAlert('error', err.message);
       }
     });
 };

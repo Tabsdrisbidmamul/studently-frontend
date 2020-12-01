@@ -150,10 +150,12 @@
     &--deck-cards {
       grid-column: 3 / -1;
       margin: 0 auto;
+      height: min-content;
     }
 
     &--user-cards {
       margin: 0 auto;
+      height: min-content;
     }
   }
 

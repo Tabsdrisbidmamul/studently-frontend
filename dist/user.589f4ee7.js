@@ -117,8 +117,8 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"img/SVG/graduation-cap.svg":[function(require,module,exports) {
-module.exports = '#6ee829994d94ef5fb09c27197dc2a11f';
+})({"img/SVG/user.svg":[function(require,module,exports) {
+module.exports = '#0cb49ca546fb58356376f1c47a03e649';
 },{}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
@@ -324,4 +324,4 @@ function hmrAcceptRun(bundle, id) {
   }
 }
 },{}]},{},["../node_modules/parcel-bundler/src/builtins/hmr-runtime.js"], null)
-//# sourceMappingURL=/graduation-cap.2958b3a7.js.map
+//# sourceMappingURL=/user.589f4ee7.js.map
