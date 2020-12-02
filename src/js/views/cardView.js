@@ -4,7 +4,7 @@ import edit from '../../img/SVG/edit.svg';
 import bin from '../../img/SVG/trash.svg';
 import card from '../../img/SVG/documents.svg';
 
-export const renderCardGrid = (parent, cardArray, type) => {
+export const renderCardGrid = (parent, cardArray) => {
   let cards = '';
   cardArray.forEach((card) => {
     const cardMarkup = `
@@ -32,14 +32,34 @@ export const renderCardGrid = (parent, cardArray, type) => {
     `;
     cards += cardMarkup;
   });
-  let markup = ``;
-  if (type !== 'teacher-deck') {
-    markup += `
+
+  let markup = '';
+  markup += `
   <div class="make-card">
     <a href="#" class="btn btn--ghost">Make A New Card</a>
   </div>`;
-  }
 
+  markup += `<div class="card-grid">
+      ${cards}
+  </div>`;
+
+  parent.insertAdjacentHTML('afterbegin', markup);
+};
+
+export const renderCardNoOptGrid = (parent, cardArray) => {
+  let cards = '';
+  cardArray.forEach((card) => {
+    const cardMarkup = `
+    <div class="card card-${card.id}" data-card=${card.id}>
+      <div class="card__details">
+        <div class="name">${card.question}</div>
+      </div>
+    </div>
+    `;
+    cards += cardMarkup;
+  });
+
+  let markup = '';
   markup += `<div class="card-grid">
       ${cards}
   </div>`;

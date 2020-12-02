@@ -1,7 +1,7 @@
 import { elements, clearOverview } from '../views/base';
-import { getCardsFromAPI, cardRender } from './cardController';
-import { getDecksFromAPI, deckRender } from './deckController';
-import { getClassroomsFromAPI, classroomRender } from './classroomController';
+import { cardLoaderAndRender } from './cardController';
+import { deckLoaderAndRender } from './deckController';
+import { classroomLoaderAndRender } from './classroomController';
 import { state } from './overviewController';
 import { showAlert } from '../utils/alert';
 import * as storage from '../utils/localStorage';
@@ -28,8 +28,7 @@ elements.card.addEventListener('click', async (e) => {
     // 2. Check if the user is authenticated
     if (storage.getObj('token') || state.user) {
       // 3. Get and Load the cards
-      await getCardsFromAPI();
-      cardRender();
+      await cardLoaderAndRender();
 
       // 2.1 Tell them to login
     } else {
@@ -49,8 +48,7 @@ elements.deck.addEventListener('click', async (e) => {
     // 2. Check if the user is authenticated
     if (storage.getObj('token') || state.user) {
       // 3. Get and Load the decks
-      await getDecksFromAPI();
-      deckRender();
+      await deckLoaderAndRender();
 
       // 2.1 Tell them to login
     } else {
@@ -69,9 +67,8 @@ elements.classroom.addEventListener('click', async (e) => {
 
     // 2. Check if the user is authenticated
     if (storage.getObj('token') || state.user) {
-      // 3. Get and Load the decks
-      await getClassroomsFromAPI();
-      classroomRender();
+      // 3. Get and Load the type
+      await classroomLoaderAndRender();
 
       // 2.1 Tell them to login
     } else {

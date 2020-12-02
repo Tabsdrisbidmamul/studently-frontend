@@ -1,7 +1,5 @@
 import axios from 'axios';
-import { state } from '../controllers/overviewController';
 import { showAlert } from '../utils/alert';
-import * as storage from '../utils/localStorage';
 import * as windowView from '../views/windowView';
 
 export default class Card {

@@ -1,9 +1,12 @@
-import { elements, clearOverview } from '../views/base';
+import {
+  elements,
+  clearOverview,
+  optionsHandler,
+  cancelMaker,
+} from '../views/base';
 import * as cardView from '../views/cardView';
 import * as windowView from '../views/windowView';
-import Card from '../models/cardModel';
 import { state } from './overviewController';
-import * as windowController from './windowController';
 import * as storage from '../utils/localStorage';
 import { showAlert } from '../utils/alert';
 
@@ -38,39 +41,18 @@ export const cardRender = () => {
   cardView.renderCardGrid(elements.overview, cards);
 };
 
-// Render the cards that belong to the deck that the User clicked on
-export const deckCardRender = (deckArray) => {
-  // 1. Clear the overview
-  clearOverview();
-
-  // 2. Render the card grid and cards from the deck on the grid
-  cardView.renderCardGrid(elements.overview, deckArray);
-};
-
 // Load the card if they have click the entire card or the edit/ delete options
 export const cardLoader = (e) => {
   // check if the user clicked either edit or delete card
   if (e.target.matches('.options, .options *')) {
     const click = e.target.closest('.options');
     const cardId = e.target.parentNode.parentNode.parentNode.dataset.card;
-    optionsHandler(click, cardId);
+    optionsHandler(click, cardId, deleteCard, cardUpdaterMaker);
 
     // check if the user clicked the whole card
   } else if (e.target.matches('.card, .card *')) {
     const click = e.target.closest('.card');
     cardHandler(click);
-  }
-};
-
-// Handler for Edit and Delete a card
-const optionsHandler = (click, cardId) => {
-  // user clicked edit card
-  if (Array.from(click.classList).includes('options--edit')) {
-    cardUpdaterMaker(cardId);
-
-    // user clicked delete card
-  } else if (Array.from(click.classList).includes('options--delete')) {
-    windowController.windowDeletionHandlerCard(cardId);
   }
 };
 
@@ -85,7 +67,7 @@ const cardUpdaterMaker = (cardId) => {
   addQAtoTextBox(cardData.question, cardData.answer);
   QAValueChanger();
   swapCardFacing();
-  cancelCardMaker();
+  cancelMaker('card', state.card.cards, cardView.renderCardGrid);
 
   // 3. Call update Card handler
   updateCard(cardId);
@@ -124,9 +106,7 @@ const cardHandler = (click) => {
         cardData.question
       );
     }
-  } catch (err) {
-    // showAlert('error', err.message);
-  }
+  } catch (err) {}
 };
 
 // render text of card data from when they want to edit the card
@@ -278,21 +258,11 @@ export const deleteCard = async (e, cardId) => {
   }
 };
 
-const cancelCardMaker = () => {
-  // User clicks to cancel the card creation
-  document
-    .querySelector('.icon--make-card-left')
-    .addEventListener('click', (e) => {
-      clearOverview();
-      cardRender(elements.overview, state.card.cards);
-    });
-};
-
 export const cardMakerLoader = () => {
   clearOverview();
   cardView.renderMakeCardGrid(elements.overview);
   QAValueChanger();
   swapCardFacing();
   createCard();
-  cancelCardMaker();
+  cancelMaker('card', state.card.cards, cardView.renderCardGrid);
 };

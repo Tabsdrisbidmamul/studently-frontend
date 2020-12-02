@@ -6687,45 +6687,34 @@ var reloadCSS = require('_css_loader');
 
 module.hot.dispose(reloadCSS);
 module.hot.accept(reloadCSS);
-},{"_css_loader":"../node_modules/parcel-bundler/src/builtins/css-loader.js"}],"js/views/base.js":[function(require,module,exports) {
+},{"_css_loader":"../node_modules/parcel-bundler/src/builtins/css-loader.js"}],"js/utils/alert.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.limitCharacters = exports.clearOverview = exports.elements = void 0;
-var elements = {
-  headerLoginBtn: document.querySelector('.header__login'),
-  header: document.querySelector('header'),
-  body: document.querySelector('body'),
-  sidebar: document.querySelector('.sidebar'),
-  sidebarItem: document.querySelectorAll('.side-nav__item'),
-  overview: document.querySelector('.overview'),
-  card: document.querySelector('.side-nav-card'),
-  deck: document.querySelector('.side-nav-deck'),
-  classroom: document.querySelector('.side-nav-classroom'),
-  settings: document.querySelector('.side-nav-settings')
-};
-exports.elements = elements;
+exports.hideAlert = exports.showAlert = void 0;
 
-var clearOverview = function clearOverview() {
-  var overview = elements.overview;
+var _base = require("../views/base");
 
-  if (overview.hasChildNodes) {
-    overview.innerHTML = '';
-  }
+var showAlert = function showAlert(type, msg) {
+  hideAlert();
+  var alertMarkup = "<div class=\"alert alert-type--".concat(type, "\">").concat(msg, "<a href=\"#\" class=\"cross\">&Cross;</a></div> ");
+  document.querySelector('body').insertAdjacentHTML('afterbegin', alertMarkup);
+  window.setTimeout(function () {
+    return hideAlert;
+  }, 1000);
 };
 
-exports.clearOverview = clearOverview;
+exports.showAlert = showAlert;
 
-var limitCharacters = function limitCharacters(word) {
-  var newWord = word.split(' ').splice(0, 3);
-  newWord.push('...');
-  return newWord.join(' ');
+var hideAlert = function hideAlert() {
+  var alert = document.querySelector('.alert');
+  if (alert) alert.remove();
 };
 
-exports.limitCharacters = limitCharacters;
-},{}],"img/SVG/check.svg":[function(require,module,exports) {
+exports.hideAlert = hideAlert;
+},{"../views/base":"js/views/base.js"}],"img/SVG/check.svg":[function(require,module,exports) {
 module.exports = '#030794220a577069b4c9e37f7881512d';
 },{}],"img/SVG/circle-with-cross.svg":[function(require,module,exports) {
 module.exports = '#fcba2f951158d7741a6b4f3c6594ec67';
@@ -6741,7 +6730,7 @@ module.exports = '#95917fb7c3750e6d156bfd5bdffe39d2';
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.renderEmptyCardGrid = exports.renderMakeCardGrid = exports.renderUpdateCardGrid = exports.renderCardQuestion = exports.renderCardQuestionMake = exports.renderCardAnswerMake = exports.renderCardAnswer = exports.renderCardGrid = void 0;
+exports.renderEmptyCardGrid = exports.renderMakeCardGrid = exports.renderUpdateCardGrid = exports.renderCardQuestion = exports.renderCardQuestionMake = exports.renderCardAnswerMake = exports.renderCardAnswer = exports.renderCardNoOptGrid = exports.renderCardGrid = void 0;
 
 var _check = _interopRequireDefault(require("../../img/SVG/check.svg"));
 
@@ -6755,23 +6744,32 @@ var _documents = _interopRequireDefault(require("../../img/SVG/documents.svg"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var renderCardGrid = function renderCardGrid(parent, cardArray, type) {
+var renderCardGrid = function renderCardGrid(parent, cardArray) {
   var cards = '';
   cardArray.forEach(function (card) {
     var cardMarkup = "\n    <div class=\"card card-".concat(card.id, "\" data-card=").concat(card.id, ">\n      <div class=\"card__options\">\n      <a href=\"#\" class=\"options options--edit\">\n        <svg class=\"icon icon--options icon--edit\">\n          <use xlink:href=\"").concat(_edit.default, "\"></use>\n        </svg>\n        <span class=\"show-hide card--edit\">Edit</span>\n      </a>\n\n      <a href=\"#\" class=\"options options--delete\">\n        <svg class=\"icon icon--options icon--delete\">\n          <use xlink:href=\"").concat(_trash.default, "\"></use>\n        </svg>\n        <span class=\"show-hide card--delete\">Delete</span>\n      </a>\n      </div>\n\n      <div class=\"card__details\">\n        <div class=\"name\">").concat(card.question, "</div>\n      </div>\n    </div>\n    ");
     cards += cardMarkup;
   });
-  var markup = "";
-
-  if (type !== 'teacher-deck') {
-    markup += "\n  <div class=\"make-card\">\n    <a href=\"#\" class=\"btn btn--ghost\">Make A New Card</a>\n  </div>";
-  }
-
+  var markup = '';
+  markup += "\n  <div class=\"make-card\">\n    <a href=\"#\" class=\"btn btn--ghost\">Make A New Card</a>\n  </div>";
   markup += "<div class=\"card-grid\">\n      ".concat(cards, "\n  </div>");
   parent.insertAdjacentHTML('afterbegin', markup);
 };
 
 exports.renderCardGrid = renderCardGrid;
+
+var renderCardNoOptGrid = function renderCardNoOptGrid(parent, cardArray) {
+  var cards = '';
+  cardArray.forEach(function (card) {
+    var cardMarkup = "\n    <div class=\"card card-".concat(card.id, "\" data-card=").concat(card.id, ">\n      <div class=\"card__details\">\n        <div class=\"name\">").concat(card.question, "</div>\n      </div>\n    </div>\n    ");
+    cards += cardMarkup;
+  });
+  var markup = '';
+  markup += "<div class=\"card-grid\">\n      ".concat(cards, "\n  </div>");
+  parent.insertAdjacentHTML('afterbegin', markup);
+};
+
+exports.renderCardNoOptGrid = renderCardNoOptGrid;
 
 var renderCardAnswer = function renderCardAnswer(HTMLCard, answer) {
   var markup = "\n  <div class=\"card__options\">\n      <a href=\"#\" class=\"options options--edit\">\n        <svg class=\"icon icon--options icon--edit\">\n          <use class=\"card--edit\" xlink:href=\"".concat(_edit.default, "\"></use>\n        </svg>\n        <span class=\"show-hide card--edit\">Edit</span>\n      </a>\n\n      <a href=\"#\" class=\"options options--delete\">\n        <svg class=\"icon icon--options icon--delete\">\n          <use class=\"card--delete\" xlink:href=\"").concat(_trash.default, "\"></use>\n        </svg>\n        <span class=\"show-hide card--delete\">Delete</span>\n      </a>\n      </div>\n\n  <div class=\"card__details\">\n    <div class=\"card__name\">").concat(answer, "</div>\n  </div>\n\n  <div class=\"answer-form\">\n    <a href=\"#\" class=\"answer-form__link\">\n      <svg class=\"icon icon--card icon--card-right icon--right\">\n        <use xlink:href=\"").concat(_check.default, "\"></use>\n      </svg>\n    </a>\n\n    <a href=\"#\" class=\"answer-form__link\">\n      <svg class=\"icon icon--card icon--card-left icon--wrong\">\n        <use xlink:href=\"").concat(_circleWithCross.default, "\"></use>\n      </svg>\n    </a>\n  ");
@@ -6842,7 +6840,2655 @@ var clearWindow = function clearWindow() {
 };
 
 exports.clearWindow = clearWindow;
-},{}],"../node_modules/axios/lib/helpers/bind.js":[function(require,module,exports) {
+},{}],"js/utils/localStorage.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.removeObj = exports.getObj = exports.storeObj = void 0;
+
+var storeObj = function storeObj(key, value) {
+  window.localStorage.setItem("".concat(key), JSON.stringify(value));
+};
+
+exports.storeObj = storeObj;
+
+var getObj = function getObj(key) {
+  return JSON.parse(window.localStorage.getItem("".concat(key)));
+};
+
+exports.getObj = getObj;
+
+var removeObj = function removeObj(key) {
+  return window.localStorage.removeItem("".concat(key));
+};
+
+exports.removeObj = removeObj;
+},{}],"js/controllers/cardController.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.cardMakerLoader = exports.deleteCard = exports.swapCardFacing = exports.getCard = exports.cardLoader = exports.cardRender = exports.getCardsFromAPI = exports.cardLoaderAndRender = void 0;
+
+var _base = require("../views/base");
+
+var cardView = _interopRequireWildcard(require("../views/cardView"));
+
+var windowView = _interopRequireWildcard(require("../views/windowView"));
+
+var _overviewController = require("./overviewController");
+
+var storage = _interopRequireWildcard(require("../utils/localStorage"));
+
+var _alert = require("../utils/alert");
+
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+var cardLoaderAndRender = /*#__PURE__*/function () {
+  var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+    return regeneratorRuntime.wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            _context.next = 2;
+            return getCardsFromAPI();
+
+          case 2:
+            cardRender();
+
+          case 3:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee);
+  }));
+
+  return function cardLoaderAndRender() {
+    return _ref.apply(this, arguments);
+  };
+}();
+
+exports.cardLoaderAndRender = cardLoaderAndRender;
+
+var getCardsFromAPI = /*#__PURE__*/function () {
+  var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
+    var token;
+    return regeneratorRuntime.wrap(function _callee2$(_context2) {
+      while (1) {
+        switch (_context2.prev = _context2.next) {
+          case 0:
+            // 1. Get the TOKEN
+            token = storage.getObj('token') || _overviewController.state.user.token;
+
+            if (token) {
+              _context2.next = 3;
+              break;
+            }
+
+            return _context2.abrupt("return", new Error('You are not logged in'));
+
+          case 3:
+            _context2.next = 5;
+            return _overviewController.state.card.getCards(token);
+
+          case 5:
+            _overviewController.state.card.cards = _context2.sent;
+            storage.storeObj('cards', _overviewController.state.card.cards);
+
+          case 7:
+          case "end":
+            return _context2.stop();
+        }
+      }
+    }, _callee2);
+  }));
+
+  return function getCardsFromAPI() {
+    return _ref2.apply(this, arguments);
+  };
+}();
+
+exports.getCardsFromAPI = getCardsFromAPI;
+
+var cardRender = function cardRender() {
+  // 1. Get the cards
+  var cards = _overviewController.state.card.cards || storage.getObj('cards'); // 2. Check if they are empty, if so render and exit function
+
+  if (cards.length === 0) {
+    return cardView.renderEmptyCardGrid(_base.elements.overview);
+  } // 3. Render the card grid and cards on the grid
+
+
+  cardView.renderCardGrid(_base.elements.overview, cards);
+}; // Load the card if they have click the entire card or the edit/ delete options
+
+
+exports.cardRender = cardRender;
+
+var cardLoader = function cardLoader(e) {
+  // check if the user clicked either edit or delete card
+  if (e.target.matches('.options, .options *')) {
+    var click = e.target.closest('.options');
+    var cardId = e.target.parentNode.parentNode.parentNode.dataset.card;
+    (0, _base.optionsHandler)(click, cardId, deleteCard, cardUpdaterMaker); // check if the user clicked the whole card
+  } else if (e.target.matches('.card, .card *')) {
+    var _click = e.target.closest('.card');
+
+    cardHandler(_click);
+  }
+};
+
+exports.cardLoader = cardLoader;
+
+var cardUpdaterMaker = function cardUpdaterMaker(cardId) {
+  var cardData = getCard(cardId); // 1. Clear overview
+
+  (0, _base.clearOverview)(); // 2. Render the update card and handlers
+
+  cardView.renderUpdateCardGrid(_base.elements.overview, cardData.question);
+  addQAtoTextBox(cardData.question, cardData.answer);
+  QAValueChanger();
+  swapCardFacing();
+  (0, _base.cancelMaker)('card', _overviewController.state.card.cards, cardView.renderCardGrid); // 3. Call update Card handler
+
+  updateCard(cardId);
+};
+
+var getCard = function getCard(cardId) {
+  //1. Get the cards array
+  var cards = storage.getObj('cards') || _overviewController.state.card.cards; //2. Find the card in the cards array via id
+
+
+  return cards.filter(function (card) {
+    return card.id === cardId;
+  })[0];
+}; // When the user interacts with cards in the overview
+
+
+exports.getCard = getCard;
+
+var cardHandler = function cardHandler(click) {
+  try {
+    // 1. Get the Card Id
+    var cardId = click.dataset.card; // 2. Get the card from the cards array
+
+    var cardData = getCard(cardId); // 3. check if the card is a question card or an answer card
+    // clicked the question facing side, turn it over to the answer facing side
+
+    if (click.children.length === 2) {
+      cardView.renderCardAnswer(document.querySelector(".card-".concat(cardId)), cardData.answer); // clicked the answer facing side, turn it over to the question facing side
+    } else if (click.children.length === 3) {
+      cardView.renderCardQuestion(document.querySelector(".card-".concat(cardId)), cardData.question);
+    }
+  } catch (err) {}
+}; // render text of card data from when they want to edit the card
+
+
+var addQAtoTextBox = function addQAtoTextBox(question, answer) {
+  document.querySelector('.textarea-q').value = question;
+  document.querySelector('.textarea-a').value = answer;
+}; // render text from input boxes to the card in 'make a card'
+
+
+var QAValueChanger = function QAValueChanger() {
+  // 1. question box update the value in real time to the card
+  document.querySelector('.textarea-q').addEventListener('input', function (e) {
+    cardView.renderCardQuestionMake(document.querySelector('.card--make'), document.querySelector('.textarea-q').value);
+  }); // 2. answer box update the value in real time to the card
+
+  document.querySelector('.textarea-a').addEventListener('input', function (e) {
+    cardView.renderCardQuestionMake(document.querySelector('.card--make'), document.querySelector('.textarea-a').value);
+  });
+}; // Handler when the card is to be swapped to question or answer side
+
+
+var swapCardFacing = function swapCardFacing() {
+  // 1. set the boolean for card facing
+  var cardFacing = 'question'; // 2. swap card facing side
+
+  document.querySelector('.btn--switch').addEventListener('click', function (e) {
+    var textareaBox = '.textarea-q'; // card to be swapped over to answer side
+
+    if (cardFacing === 'question') {
+      textareaBox = '.textarea-q';
+      cardFacing = 'answer'; // card to be swapped over to question side
+    } else {
+      textareaBox = '.textarea-a';
+      cardFacing = 'question';
+    } // Reuse render question as we are just rendering text to the card not the forms attached with answer card
+
+
+    cardView.renderCardQuestionMake(document.querySelector('.card--make'), document.querySelector(textareaBox).value);
+  });
+};
+
+exports.swapCardFacing = swapCardFacing;
+
+var createCard = function createCard() {
+  // User clicks to create the card
+  document.querySelector('.icon--make-card-right').addEventListener('click', /*#__PURE__*/function () {
+    var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(e) {
+      var question, answer, user;
+      return regeneratorRuntime.wrap(function _callee3$(_context3) {
+        while (1) {
+          switch (_context3.prev = _context3.next) {
+            case 0:
+              // 1. Get the question, answer and user
+              question = document.querySelector('.textarea-q').value;
+              answer = document.querySelector('.textarea-a').value;
+              user = storage.getObj('user') || _overviewController.state.user.userData.id; // 2. Check if they have written something to the text-boxes
+
+              if (!(question && answer && user)) {
+                _context3.next = 9;
+                break;
+              }
+
+              _context3.next = 6;
+              return _overviewController.state.card.createCard(question, answer, user, storage.getObj('token'));
+
+            case 6:
+              // 2.2 Clear Overview and reset the grid so they can make more cards
+              cardMakerLoader(); // 3 User has not entered all the text-boxes, send an alert to tell them to write fill it in
+
+              _context3.next = 10;
+              break;
+
+            case 9:
+              (0, _alert.showAlert)('error', 'Please enter a question and an answer');
+
+            case 10:
+            case "end":
+              return _context3.stop();
+          }
+        }
+      }, _callee3);
+    }));
+
+    return function (_x) {
+      return _ref3.apply(this, arguments);
+    };
+  }());
+};
+
+var updateCard = function updateCard(cardId) {
+  // User clicks to update the card
+  document.querySelector('.icon--make-card-right').addEventListener('click', /*#__PURE__*/function () {
+    var _ref4 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5(e) {
+      var question, answer;
+      return regeneratorRuntime.wrap(function _callee5$(_context5) {
+        while (1) {
+          switch (_context5.prev = _context5.next) {
+            case 0:
+              // 1. Get the question, answer and user
+              question = document.querySelector('.textarea-q').value;
+              answer = document.querySelector('.textarea-a').value; // 2. Check if they have written something to the text-boxes
+
+              if (!(question && answer)) {
+                _context5.next = 8;
+                break;
+              }
+
+              _context5.next = 5;
+              return _overviewController.state.card.updateCard(cardId, question, answer, storage.getObj('token'));
+
+            case 5:
+              // 2.2 Render the homepage to show the change
+              window.setTimeout( /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4() {
+                return regeneratorRuntime.wrap(function _callee4$(_context4) {
+                  while (1) {
+                    switch (_context4.prev = _context4.next) {
+                      case 0:
+                        (0, _base.clearOverview)();
+                        _context4.next = 3;
+                        return cardLoaderAndRender();
+
+                      case 3:
+                      case "end":
+                        return _context4.stop();
+                    }
+                  }
+                }, _callee4);
+              })), 1500); // 3 User has not entered all the text-boxes, send an alert to tell them to write fill it in
+
+              _context5.next = 9;
+              break;
+
+            case 8:
+              (0, _alert.showAlert)('error', 'Please enter a question and an answer');
+
+            case 9:
+            case "end":
+              return _context5.stop();
+          }
+        }
+      }, _callee5);
+    }));
+
+    return function (_x2) {
+      return _ref4.apply(this, arguments);
+    };
+  }());
+};
+
+var deleteCard = /*#__PURE__*/function () {
+  var _ref6 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee7(e, cardId) {
+    var click, token;
+    return regeneratorRuntime.wrap(function _callee7$(_context7) {
+      while (1) {
+        switch (_context7.prev = _context7.next) {
+          case 0:
+            click = e.target.closest('.window__content');
+            _context7.prev = 1;
+
+            if (!click) {
+              _context7.next = 13;
+              break;
+            }
+
+            if (!e.target.matches('.window__ok')) {
+              _context7.next = 12;
+              break;
+            }
+
+            // 3.1 get the token
+            token = storage.getObj('token') || _overviewController.state.user.token; // 3.2 Check to see if they are logged in
+
+            if (token) {
+              _context7.next = 7;
+              break;
+            }
+
+            return _context7.abrupt("return", new Error('You are not logged in!'));
+
+          case 7:
+            _context7.next = 9;
+            return _overviewController.state.card.deleteCard(cardId, token);
+
+          case 9:
+            // Render the homepage to show the change
+            window.setTimeout( /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
+              return regeneratorRuntime.wrap(function _callee6$(_context6) {
+                while (1) {
+                  switch (_context6.prev = _context6.next) {
+                    case 0:
+                      (0, _base.clearOverview)();
+                      _context6.next = 3;
+                      return cardLoaderAndRender();
+
+                    case 3:
+                    case "end":
+                      return _context6.stop();
+                  }
+                }
+              }, _callee6);
+            })), 1500); // they clicked no to delete the card
+
+            _context7.next = 13;
+            break;
+
+          case 12:
+            windowView.clearWindow();
+
+          case 13:
+            _context7.next = 18;
+            break;
+
+          case 15:
+            _context7.prev = 15;
+            _context7.t0 = _context7["catch"](1);
+            (0, _alert.showAlert)('error', _context7.t0.message);
+
+          case 18:
+          case "end":
+            return _context7.stop();
+        }
+      }
+    }, _callee7, null, [[1, 15]]);
+  }));
+
+  return function deleteCard(_x3, _x4) {
+    return _ref6.apply(this, arguments);
+  };
+}();
+
+exports.deleteCard = deleteCard;
+
+var cardMakerLoader = function cardMakerLoader() {
+  (0, _base.clearOverview)();
+  cardView.renderMakeCardGrid(_base.elements.overview);
+  QAValueChanger();
+  swapCardFacing();
+  createCard();
+  (0, _base.cancelMaker)('card', _overviewController.state.card.cards, cardView.renderCardGrid);
+};
+
+exports.cardMakerLoader = cardMakerLoader;
+},{"../views/base":"js/views/base.js","../views/cardView":"js/views/cardView.js","../views/windowView":"js/views/windowView.js","./overviewController":"js/controllers/overviewController.js","../utils/localStorage":"js/utils/localStorage.js","../utils/alert":"js/utils/alert.js"}],"img/SVG/plus.svg":[function(require,module,exports) {
+module.exports = '#42274f9c0f0bc0524f4b86d684834329';
+},{}],"img/SVG/minus.svg":[function(require,module,exports) {
+module.exports = '#687401b9368affa5df8150e820f8ce5c';
+},{}],"img/SVG/chevron-thin-right.svg":[function(require,module,exports) {
+module.exports = '#0670a98b8aa1a7eb0a0c37f3cdfba06b';
+},{}],"img/SVG/chevron-thin-left.svg":[function(require,module,exports) {
+module.exports = '#c5773b9a7bce81278c6aba3cd721ec79';
+},{}],"img/SVG/drive.svg":[function(require,module,exports) {
+module.exports = '#4fb5be48250a6c477ecf48c803563a79';
+},{}],"js/views/deckView.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.renderEmptyDeckGrid = exports.renderUpdateDeckGrid = exports.renderMakeDeckGrid = exports.renderMakeCard = exports.renderResults = exports.renderResultsDeck = exports.removePaginationDeck = exports.removePaginationUser = exports.deleteCard = exports.clearDeckCardsResults = exports.renderDeckCards = exports.clearUserCardsResults = exports.renderUserCards = exports.renderDeckGrid = void 0;
+
+var _plus = _interopRequireDefault(require("../../img/SVG/plus.svg"));
+
+var _minus = _interopRequireDefault(require("../../img/SVG/minus.svg"));
+
+var _check = _interopRequireDefault(require("../../img/SVG/check.svg"));
+
+var _circleWithCross = _interopRequireDefault(require("../../img/SVG/circle-with-cross.svg"));
+
+var _chevronThinRight = _interopRequireDefault(require("../../img/SVG/chevron-thin-right.svg"));
+
+var _chevronThinLeft = _interopRequireDefault(require("../../img/SVG/chevron-thin-left.svg"));
+
+var _edit = _interopRequireDefault(require("../../img/SVG/edit.svg"));
+
+var _trash = _interopRequireDefault(require("../../img/SVG/trash.svg"));
+
+var _drive = _interopRequireDefault(require("../../img/SVG/drive.svg"));
+
+var _base = require("./base");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var renderDeckGrid = function renderDeckGrid(parent, deckArray) {
+  var decks = '';
+  deckArray.forEach(function (deck) {
+    var deckMarkup = "\n        <div class=\"deck deck-".concat(deck.id, "\" data-deck=").concat(deck.id, ">\n          <div class=\"deck__options\">\n            <a href=\"#\" class=\"options options--edit\">\n              <svg class=\"icon icon--options icon--edit\">\n                <use xlink:href=\"").concat(_edit.default, "\"></use>\n              </svg>\n              <span class=\"show-hide card--edit\">Edit</span>\n            </a>\n\n            <a href=\"#\" class=\"options options--delete\">\n              <svg class=\"icon icon--options icon--delete\">\n                <use xlink:href=\"").concat(_trash.default, "\"></use>\n              </svg>\n              <span class=\"show-hide card--delete\">Delete</span>\n            </a>\n          </div>\n\n            <div class=\"deck__details\">\n                <div class=\"name\">").concat(deck.name, "</div>\n            </div>\n        </div> \n        ");
+    decks += deckMarkup;
+  });
+  var markup = "\n    <div class=\"make-deck\">\n        <a href=\"#\" class=\"btn btn--ghost\">Make A New Deck</a>\n    </div>\n\n    <div class=\"deck-grid\">\n        ".concat(decks, "\n    </div>;");
+  parent.insertAdjacentHTML('afterbegin', markup);
+};
+
+exports.renderDeckGrid = renderDeckGrid;
+
+var renderUserCards = function renderUserCards(card) {
+  var markup = "\n    <li class=\"make-deck__item\" data-card=\"".concat(card.id, "\">\n    <a href=\"#\" class=\"make-deck__link\">\n      <svg class=\"icon icon__make-deck--card\">\n        <use href=\"").concat(_plus.default, "\"></use>\n      </svg>\n      <div class=\"make-deck__card-details\">\n        <span class=\"make-deck__span make-deck-span--question\">").concat((0, _base.limitCharacters)(card.question), "</span>\n      <span class=\"make-deck__span make-deck-span--answer\">").concat((0, _base.limitCharacters)(card.answer), "</span>\n      </div>\n    </a>\n  </li>");
+  document.querySelector('.make-deck__list--user').insertAdjacentHTML('beforeend', markup);
+};
+
+exports.renderUserCards = renderUserCards;
+
+var clearUserCardsResults = function clearUserCardsResults() {
+  document.querySelector('.make-deck__list--user').innerHTML = '';
+  document.querySelector('.make-deck__paginate--user').innerHTML = '';
+};
+
+exports.clearUserCardsResults = clearUserCardsResults;
+
+var renderDeckCards = function renderDeckCards(card) {
+  var markup = "\n    <li class=\"make-deck__item\" data-card=\"".concat(card.id, "\">\n    <a href=\"#\" class=\"make-deck__link\">\n      <svg class=\"icon icon__make-deck--card\">\n        <use href=\"").concat(_minus.default, "\"></use>\n      </svg>\n      <div class=\"make-deck__card-details\">\n        <span class=\"make-deck__span make-deck-span--question\">").concat((0, _base.limitCharacters)(card.question), "</span>\n      <span class=\"make-deck__span make-deck-span--answer\">").concat((0, _base.limitCharacters)(card.answer), "</span>\n      </div>\n    </a>\n  </li>");
+  document.querySelector('.make-deck__list--deck').insertAdjacentHTML('beforeend', markup);
+};
+
+exports.renderDeckCards = renderDeckCards;
+
+var clearDeckCardsResults = function clearDeckCardsResults() {
+  document.querySelector('.make-deck__list--deck').innerHTML = '';
+  document.querySelector('.make-deck__paginate--deck').innerHTML = '';
+};
+
+exports.clearDeckCardsResults = clearDeckCardsResults;
+
+var deleteCard = function deleteCard(id) {
+  var card = document.querySelector("[data-card*=\"".concat(id, "\"]"));
+  if (card) card.remove();
+};
+
+exports.deleteCard = deleteCard;
+
+var createButton = function createButton(page, type) {
+  return "\n<button class=\"btn--inline btn__search btn__search--".concat(type, "\" data-goto=").concat(type === 'prev' ? page - 1 : page + 1, ">\n<span>Page ").concat(type === 'prev' ? page - 1 : page + 1, "</span>  \n<svg class=\"icon icon__search icon__search--").concat(type === 'prev' ? 'prev' : 'next', "\">\n    <use href=\"").concat(type === 'prev' ? _chevronThinLeft.default : _chevronThinRight.default, "\"></use>\n  </svg>\n</button>");
+};
+
+var renderButtonsUser = function renderButtonsUser(page, numResults, resPerPage) {
+  var pages = Math.ceil(numResults / resPerPage);
+  var btn;
+
+  if (page === 1 && pages > 1) {
+    // Only Button to go to the next page
+    btn = createButton(page, 'next');
+  } else if (page < pages) {
+    // Both Buttons
+    btn = "\n        ".concat(createButton(page, 'prev'), " \n        ").concat(createButton(page, 'next'), "\n        ");
+  } else if (page === pages && pages > 1) {
+    // Only Button to go to the prev page
+    btn = createButton(page, 'prev');
+  }
+
+  if (btn) {
+    addPaginationUser();
+    document.querySelector('.make-deck__paginate--user').insertAdjacentHTML('afterbegin', btn);
+  } else {
+    removePaginationUser();
+  }
+};
+
+var addPaginationUser = function addPaginationUser() {
+  document.querySelector('.make-deck__paginate--user').style.display = 'flex';
+};
+
+var removePaginationUser = function removePaginationUser() {
+  document.querySelector('.make-deck__paginate--user').style.display = 'none';
+};
+
+exports.removePaginationUser = removePaginationUser;
+
+var renderButtonsDeck = function renderButtonsDeck(page, numResults, resPerPage) {
+  var pages = Math.ceil(numResults / resPerPage);
+  var btn;
+
+  if (page === 1 && pages > 1) {
+    // Only Button to go to the next page
+    btn = createButton(page, 'next');
+  } else if (page < pages) {
+    // Both Buttons
+    btn = "\n        ".concat(createButton(page, 'prev'), " \n        ").concat(createButton(page, 'next'), "\n        ");
+  } else if (page === pages && pages > 1) {
+    // Only Button to go to the prev page
+    btn = createButton(page, 'prev');
+  }
+
+  if (btn) {
+    addPaginationDeck();
+    document.querySelector('.make-deck__paginate--deck').insertAdjacentHTML('afterbegin', btn);
+  } else {
+    removePaginationDeck();
+  }
+};
+
+var addPaginationDeck = function addPaginationDeck() {
+  document.querySelector('.make-deck__paginate--deck').style.display = 'flex';
+};
+
+var removePaginationDeck = function removePaginationDeck() {
+  document.querySelector('.make-deck__paginate--deck').style.display = 'none';
+};
+
+exports.removePaginationDeck = removePaginationDeck;
+
+var renderResultsDeck = function renderResultsDeck(array) {
+  var page = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
+  var resPerPage = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 4;
+  clearDeckCardsResults(); // render the results of the current page
+
+  var start = (page - 1) * resPerPage;
+  var end = page * resPerPage;
+  array.slice(start, end).forEach(renderDeckCards); // render pagination button
+
+  renderButtonsDeck(page, array.length, resPerPage);
+};
+
+exports.renderResultsDeck = renderResultsDeck;
+
+var renderResults = function renderResults(array) {
+  var page = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
+  var resPerPage = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 4;
+  // render the results of the current page
+  var start = (page - 1) * resPerPage;
+  var end = page * resPerPage;
+  array.slice(start, end).forEach(renderUserCards); // render pagination button
+
+  renderButtonsUser(page, array.length, resPerPage);
+};
+
+exports.renderResults = renderResults;
+
+var renderMakeCard = function renderMakeCard(HTMLCard, value) {
+  var markup = "\n  <div class=\"card__options\">\n  <a href=\"#\" class=\"options options--add\">\n    <svg class=\"icon icon--options icon--add\">\n      <use xlink:href=\"".concat(_plus.default, "\"></use>\n    </svg>\n    <span class=\"show-hide card--edit\">Add card</span>\n  </a>\n\n</div>\n\n<div class=\"card__details\">\n  <span class=\"name\">").concat(value, "</span>\n</div>");
+  HTMLCard.innerHTML = markup;
+};
+
+exports.renderMakeCard = renderMakeCard;
+
+var renderMakeDeckGrid = function renderMakeDeckGrid(parent) {
+  var markup = "<div class=\"make-deck-grid\">\n  <form action=\"#\" class=\"make-deck__form\">\n      <label for=\"deck-name\" class=\"make-deck__label\">Enter Deck name</label>\n      <input class=\"make-deck__input\" type=\"text\" minlength=\"5\" maxlength=\"50\" id=\"deck-name\" placeholder=\"Deck Name\">\n  </form>\n\n  <div class=\"make-deck__card-nav make-deck__card-nav--user-cards\">\n    <span class=\"make-deck__name\">My Cards</span>\n    <ul class=\"make-deck__list make-deck__list--user\">\n      \n    </ul>\n\n    <div class=\"make-deck__paginate make-deck__paginate--user\">\n      \n    </div>\n  </div>\n\n  <div class=\"make-deck__card-nav make-deck__card-nav--deck-cards\">\n    <span class=\"make-deck__name\">Deck Cards</span>\n    <ul class=\"make-deck__list make-deck__list--deck\">\n      \n    </ul>\n\n    <div class=\"make-deck__paginate make-deck__paginate--deck\">\n    \n    </div>\n  </div>\n\n  <div class=\"make-deck__card-switch\">\n    <div class=\"card card--make make-deck__card\">\n    <div class=\"card__options\">\n      <a href=\"#\" class=\"options options--add\">\n        <svg class=\"icon icon--options icon--add\">\n          <use xlink:href=\"".concat(_plus.default, "\"></use>\n        </svg>\n        <span class=\"show-hide card--edit\">Add card</span>\n      </a>\n\n    </div>\n\n    <div class=\"card__details\">\n      <span class=\"name\">What is a Question?</span>\n    </div>\n    </div>\n\n    <div class=\"make-deck__group make-deck--switch\">\n      <a href=\"#\" class=\"make-deck__switch btn btn--switch\">Turn Over</a>\n    </div>\n  </div>\n  \n  <div class=\"make-deck__options\">\n    <div class=\"make-deck__group make-deck--right\">\n      <a href=\"#\" class=\"make-deck__link\">\n        <svg class=\"icon icon--make-deck icon--make-deck-right icon--right\">\n          <use href=\"").concat(_check.default, "\"></use>\n        </svg>\n      </a>\n      <span class=\"make-deck__span\">Create The Deck</span>\n    </div>\n\n    <div class=\"make-deck__group make-deck--wrong\">\n      <a href=\"#\" class=\"make-deck__link\">\n        <svg class=\"icon icon--make-deck icon--make-deck-left icon-left icon--wrong\">\n          <use href=\"").concat(_circleWithCross.default, "\"></use>\n        </svg>\n      </a>\n      <span class=\"make-deck__span\">Let's Stop!</span>\n    </div>\n  </div>\n</div>");
+  parent.insertAdjacentHTML('afterbegin', markup);
+};
+
+exports.renderMakeDeckGrid = renderMakeDeckGrid;
+
+var renderUpdateDeckGrid = function renderUpdateDeckGrid(parent, deck) {
+  var markup = "<div class=\"make-deck-grid\">\n  <form action=\"#\" class=\"make-deck__form\">\n      <label for=\"deck-name\" class=\"make-deck__label\">Enter Deck name</label>\n      <input class=\"make-deck__input\" type=\"text\" minlength=\"5\" maxlength=\"50\" id=\"deck-name\" placeholder=\"Deck Name\" value=\"".concat(deck.name, "\">\n  </form>\n\n  <div class=\"make-deck__card-nav make-deck__card-nav--user-cards\">\n    <span class=\"make-deck__name\">My Cards</span>\n    <ul class=\"make-deck__list make-deck__list--user\">\n      \n    </ul>\n\n    <div class=\"make-deck__paginate make-deck__paginate--user\">\n      \n    </div>\n  </div>\n\n  <div class=\"make-deck__card-nav make-deck__card-nav--deck-cards\">\n    <span class=\"make-deck__name\">Deck Cards</span>\n    <ul class=\"make-deck__list make-deck__list--deck\">\n      \n    </ul>\n\n    <div class=\"make-deck__paginate make-deck__paginate--deck\">\n\n    </div>\n  </div>\n\n  <div class=\"make-deck__card-switch\">\n    <div class=\"card card--make make-deck__card\">\n    <div class=\"card__options\">\n      <a href=\"#\" class=\"options options--add\">\n        <svg class=\"icon icon--options icon--add\">\n          <use xlink:href=\"").concat(_plus.default, "\"></use>\n        </svg>\n        <span class=\"show-hide card--edit\">Add card</span>\n      </a>\n\n    </div>\n\n    <div class=\"card__details\">\n      <span class=\"name\">What is a Question?</span>\n    </div>\n    </div>\n\n    <div class=\"make-deck__group make-deck--switch\">\n      <a href=\"#\" class=\"make-deck__switch btn btn--switch\">Turn Over</a>\n    </div>\n  </div>\n  \n  <div class=\"make-deck__options\">\n    <div class=\"make-deck__group make-deck--right\">\n      <a href=\"#\" class=\"make-deck__link\">\n        <svg class=\"icon icon--make-deck icon--make-deck-right icon--right\">\n          <use href=\"").concat(_check.default, "\"></use>\n        </svg>\n      </a>\n      <span class=\"make-deck__span\">Create The Deck</span>\n    </div>\n\n    <div class=\"make-deck__group make-deck--wrong\">\n      <a href=\"#\" class=\"make-deck__link\">\n        <svg class=\"icon icon--make-deck icon--make-deck-left icon-left icon--wrong\">\n          <use href=\"").concat(_circleWithCross.default, "\"></use>\n        </svg>\n      </a>\n      <span class=\"make-deck__span\">Let's Stop!</span>\n    </div>\n  </div>\n</div>");
+  parent.insertAdjacentHTML('afterbegin', markup);
+};
+
+exports.renderUpdateDeckGrid = renderUpdateDeckGrid;
+
+var renderEmptyDeckGrid = function renderEmptyDeckGrid(parent) {
+  var markup = "<div class=\"make-deck\">\n  <a href=\"#\" class=\"btn btn--ghost\">Make A New Deck</a>\n</div>\n\n<div class=\"deck-grid\">\n  <div class=\"no-item\">\n      <svg class=\"icon icon--no-item\">\n        <use href=\"".concat(_drive.default, "\"></use>\n      </svg>\n      <span>make some decks to see them here!</span>\n  </div>\n</div>");
+  parent.insertAdjacentHTML('afterbegin', markup);
+};
+
+exports.renderEmptyDeckGrid = renderEmptyDeckGrid;
+},{"../../img/SVG/plus.svg":"img/SVG/plus.svg","../../img/SVG/minus.svg":"img/SVG/minus.svg","../../img/SVG/check.svg":"img/SVG/check.svg","../../img/SVG/circle-with-cross.svg":"img/SVG/circle-with-cross.svg","../../img/SVG/chevron-thin-right.svg":"img/SVG/chevron-thin-right.svg","../../img/SVG/chevron-thin-left.svg":"img/SVG/chevron-thin-left.svg","../../img/SVG/edit.svg":"img/SVG/edit.svg","../../img/SVG/trash.svg":"img/SVG/trash.svg","../../img/SVG/drive.svg":"img/SVG/drive.svg","./base":"js/views/base.js"}],"js/controllers/deckController.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.deckUpdateMaker = exports.deckMakerLoader = exports.deleteDeck = exports.getDecksFromAPI = exports.getDeck = exports.deckLoader = exports.deckRender = exports.deckLoaderAndRender = void 0;
+
+var _base = require("../views/base");
+
+var deckView = _interopRequireWildcard(require("../views/deckView"));
+
+var windowView = _interopRequireWildcard(require("../views/windowView"));
+
+var _cardView = require("../views/cardView");
+
+var cardController = _interopRequireWildcard(require("../controllers/cardController"));
+
+var storage = _interopRequireWildcard(require("../utils/localStorage"));
+
+var _alert = require("../utils/alert");
+
+var _overviewController = require("./overviewController");
+
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+var deckLoaderAndRender = /*#__PURE__*/function () {
+  var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+    return regeneratorRuntime.wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            _context.next = 2;
+            return getDecksFromAPI();
+
+          case 2:
+            deckRender();
+
+          case 3:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee);
+  }));
+
+  return function deckLoaderAndRender() {
+    return _ref.apply(this, arguments);
+  };
+}();
+
+exports.deckLoaderAndRender = deckLoaderAndRender;
+
+var deckRender = function deckRender() {
+  // 1. Get the cards
+  var decks = _overviewController.state.deck.decks || storage.getObj('decks'); // 2. Check if they are empty, if so render and exit function
+
+  if (decks.length === 0) {
+    return deckView.renderEmptyDeckGrid(_base.elements.overview);
+  } // 3. Render the card grid and cards on the grid
+
+
+  deckView.renderDeckGrid(_base.elements.overview, decks);
+};
+
+exports.deckRender = deckRender;
+
+var deckLoader = function deckLoader(e) {
+  // User has clicked an option
+  if (e.target.matches('.options, .options *')) {
+    var click = e.target.closest('.options');
+    var deckId = e.target.parentNode.parentNode.parentNode.dataset.deck;
+    (0, _base.optionsHandler)(click, deckId, deleteDeck, deckUpdateMaker); // User has clicked the deck itself
+  } else if (e.target.matches('.deck, .deck *')) {
+    var _click = e.target.closest('.deck');
+
+    deckHandler(_click);
+  }
+}; // Get one deck from the array in local storage
+
+
+exports.deckLoader = deckLoader;
+
+var getDeck = function getDeck(deckId, deckArray) {
+  var decks = deckArray; //1. Get the decks array if not given
+
+  if (deckArray === undefined) {
+    decks = storage.getObj('decks') || _overviewController.state.deck.decks;
+  } //2. Find the deck in the decks array via id
+
+
+  return decks.filter(function (deck) {
+    return deck.id === deckId;
+  })[0];
+};
+
+exports.getDeck = getDeck;
+
+var addCardToDeckHandler = function addCardToDeckHandler(deckArray) {
+  document.querySelector('.make-deck__list--user').addEventListener('click', function (e) {
+    // 1. Get the item that was click
+    var item = e.target.closest('.icon'); // 2. Check if the click was a plus icon
+
+    if (item) {
+      // 2.1 Get the card Id from the item
+      var cardId = item.parentNode.parentNode.dataset.card; // 2.2 Store and get the card from state or local storage
+
+      storeCard(cardId);
+      var card = cardController.getCard(cardId); // 2.3 Add the card to the local deckArray reference
+
+      deckArray.push(card); // 2.4 Store the deckArray to local storage
+
+      _overviewController.state.deck.deckArray = deckArray;
+      storage.storeObj('decks.deckArray', _overviewController.state.deck.deckArray); // 2.5 Render the results to the deck card section
+
+      deckView.renderResultsDeck(deckArray); // 2.6 more than 4 cards, start adding in the paginating handler
+
+      if (deckArray.length > 4) {
+        searchButtonHandler();
+      }
+    }
+  });
+};
+
+var removeCardFromDeck = function removeCardFromDeck(deckArray) {
+  document.querySelector('.make-deck__list--deck').addEventListener('click', function (e) {
+    // 1. Get the item was clicked
+    var item = e.target.closest('.icon'); // 2. Check if the item was a card that was click
+
+    if (item) {
+      // 2.1 Get the card id
+      var cardId = item.parentNode.parentNode.dataset.card; // 2.2 Get the index from the deckArray
+
+      var index;
+      deckArray.forEach(function (el, i) {
+        if (el.id === cardId) {
+          index = i;
+        }
+      }); // 2.3 Remove it from the Deck array
+
+      deckArray.splice(index, 1); // 2.4 Re-render the deck cards back to the screen
+
+      deckView.renderResultsDeck(deckArray);
+    }
+  });
+}; // When the user presses next or prev
+
+
+var searchButtonHandler = function searchButtonHandler() {
+  searchButtonUser();
+  searchButtonDeck();
+};
+
+var searchButtonUser = function searchButtonUser() {
+  document.querySelector('.make-deck__paginate--user').addEventListener('click', function (e) {
+    // 1. See if the button was clicked
+    var btn = e.target.closest('.btn--inline');
+
+    if (btn) {
+      // 1.1. get the page number from the dataset
+      var goToPage = parseInt(btn.dataset.goto, 10);
+
+      var _cards = _overviewController.state.card.cards || storage.getObj('cards'); // 1.2. clear the card results and pagination
+
+
+      deckView.clearUserCardsResults(); // 1.3. Render the new cards and new buttons
+
+      deckView.renderResults(_cards, goToPage);
+      window.scroll(0, 0);
+    }
+  });
+};
+
+var searchButtonDeck = function searchButtonDeck() {
+  document.querySelector('.make-deck__paginate--deck').addEventListener('click', function (e) {
+    // 1. See if the button was clicked
+    var btn = e.target.closest('.btn--inline');
+
+    if (btn) {
+      // 1.1. get the page number from the dataset
+      var goToPage = parseInt(btn.dataset.goto, 10);
+      var deckArray = _overviewController.state.deck.deckArray || storage.getObj('decks.deckArray'); // 1.2. clear the card results and pagination
+
+      deckView.clearDeckCardsResults(); // 1.3. Render the new cards and new buttons
+
+      deckView.renderResultsDeck(deckArray, goToPage);
+      window.scroll(0, 0);
+    }
+  });
+};
+
+var renderCardValue = function renderCardValue(value) {
+  deckView.renderMakeCard(document.querySelector('.card--make'), value);
+};
+
+var storeCard = function storeCard(cardId) {
+  _overviewController.state.deck.card = cardId;
+  storage.storeObj('decks.card', cardId);
+};
+
+var getCardItem = function getCardItem() {
+  document.querySelector('.make-deck__list--user').addEventListener('click', getCardItemHandler);
+  document.querySelector('.make-deck__list--deck').addEventListener('click', getCardItemHandler);
+};
+
+var getCardItemHandler = function getCardItemHandler(e) {
+  {
+    // 1. Get the card that was clicked
+    var item = e.target.closest('.make-deck__item');
+
+    if (item) {
+      // 2. Store a reference of the card that was clicked
+      var cardId = item.dataset.card;
+      storeCard(cardId); // 3. Render the question to the card
+
+      var card = cardController.getCard(cardId);
+      renderCardValue(card.question);
+    }
+  }
+};
+
+var swapCardFacing = function swapCardFacing() {
+  var value = '';
+  var cardFacing = 'question';
+  document.querySelector('.btn--switch').addEventListener('click', function (e) {
+    // card to be swapped over to answer side
+    if (cardFacing === 'question') {
+      value = cardController.getCard(_overviewController.state.deck.card || storage.getObj('decks.card')).question;
+      cardFacing = 'answer'; // card to be swapped over to question side
+    } else {
+      value = cardController.getCard(_overviewController.state.deck.card || storage.getObj('decks.card')).answer;
+      cardFacing = 'question';
+    }
+
+    renderCardValue(value);
+  });
+};
+
+var getDecksFromAPI = /*#__PURE__*/function () {
+  var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
+    var token;
+    return regeneratorRuntime.wrap(function _callee2$(_context2) {
+      while (1) {
+        switch (_context2.prev = _context2.next) {
+          case 0:
+            token = storage.getObj('token') || _overviewController.state.user.token;
+
+            if (token) {
+              _context2.next = 3;
+              break;
+            }
+
+            return _context2.abrupt("return", new Error('You are not logged in'));
+
+          case 3:
+            _context2.next = 5;
+            return _overviewController.state.deck.getDecks(token);
+
+          case 5:
+            _overviewController.state.deck.decks = _context2.sent;
+            storage.storeObj('decks', _overviewController.state.deck.decks);
+
+          case 7:
+          case "end":
+            return _context2.stop();
+        }
+      }
+    }, _callee2);
+  }));
+
+  return function getDecksFromAPI() {
+    return _ref2.apply(this, arguments);
+  };
+}();
+
+exports.getDecksFromAPI = getDecksFromAPI;
+
+var createDeck = function createDeck() {
+  // User clicks to create the deck
+  document.querySelector('.icon--make-deck-right').addEventListener('click', /*#__PURE__*/function () {
+    var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(e) {
+      var name, user, cards, token, distinctCards;
+      return regeneratorRuntime.wrap(function _callee3$(_context3) {
+        while (1) {
+          switch (_context3.prev = _context3.next) {
+            case 0:
+              // 1. Get all the input from user
+              name = document.querySelector('.make-deck__input').value;
+              user = storage.getObj('user') || _overviewController.state.user.userData.id;
+              cards = _overviewController.state.deck.deckArray;
+              token = storage.getObj('token'); // 2. Check if they have a deck of cards or gave it a name
+
+              if (!(name && cards)) {
+                _context3.next = 11;
+                break;
+              }
+
+              // 2.1 Create a card array with only distinct values
+              distinctCards = _toConsumableArray(new Set(cards.map(function (card) {
+                return card.id;
+              }))); // 2.2 Create the Deck and reload a new deckMaker Session
+
+              _context3.next = 8;
+              return _overviewController.state.deck.createDeck(name, user, distinctCards, token);
+
+            case 8:
+              deckMakerLoader();
+              _context3.next = 12;
+              break;
+
+            case 11:
+              (0, _alert.showAlert)('error', 'Please provide a name and cards');
+
+            case 12:
+            case "end":
+              return _context3.stop();
+          }
+        }
+      }, _callee3);
+    }));
+
+    return function (_x) {
+      return _ref3.apply(this, arguments);
+    };
+  }());
+};
+
+var updateDeck = function updateDeck(deckId) {
+  // User clicks to create the deck
+  document.querySelector('.icon--make-deck-right').addEventListener('click', /*#__PURE__*/function () {
+    var _ref4 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5(e) {
+      var name, deck, token, distinctCards;
+      return regeneratorRuntime.wrap(function _callee5$(_context5) {
+        while (1) {
+          switch (_context5.prev = _context5.next) {
+            case 0:
+              // 1. Get all the input from user
+              name = document.querySelector('.make-deck__input').value;
+              deck = _overviewController.state.deck.deckArray;
+              token = storage.getObj('token');
+              _context5.prev = 3;
+
+              if (!(name && deck)) {
+                _context5.next = 11;
+                break;
+              }
+
+              // 2.1 Create a card array with only distinct values
+              distinctCards = _toConsumableArray(new Set(cards.map(function (card) {
+                return card.id;
+              }))); // 2.2 Create the Deck and reload a new deckMaker Session
+
+              _context5.next = 8;
+              return _overviewController.state.deck.updateDeck(deckId, name, distinctCards, token);
+
+            case 8:
+              // 2.3 Render the homepage to show the change
+              window.setTimeout( /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4() {
+                return regeneratorRuntime.wrap(function _callee4$(_context4) {
+                  while (1) {
+                    switch (_context4.prev = _context4.next) {
+                      case 0:
+                        (0, _base.clearOverview)();
+                        _context4.next = 3;
+                        return deckLoaderAndRender();
+
+                      case 3:
+                      case "end":
+                        return _context4.stop();
+                    }
+                  }
+                }, _callee4);
+              })), 1500);
+              _context5.next = 12;
+              break;
+
+            case 11:
+              (0, _alert.showAlert)('error', 'Please provide a name and cards');
+
+            case 12:
+              _context5.next = 17;
+              break;
+
+            case 14:
+              _context5.prev = 14;
+              _context5.t0 = _context5["catch"](3);
+              (0, _alert.showAlert)('error', _context5.t0.message);
+
+            case 17:
+            case "end":
+              return _context5.stop();
+          }
+        }
+      }, _callee5, null, [[3, 14]]);
+    }));
+
+    return function (_x2) {
+      return _ref4.apply(this, arguments);
+    };
+  }());
+};
+
+var deleteDeck = /*#__PURE__*/function () {
+  var _ref6 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee7(e, deckId) {
+    var click, token;
+    return regeneratorRuntime.wrap(function _callee7$(_context7) {
+      while (1) {
+        switch (_context7.prev = _context7.next) {
+          case 0:
+            click = e.target.closest('.window__content');
+            _context7.prev = 1;
+
+            if (!click) {
+              _context7.next = 13;
+              break;
+            }
+
+            if (!e.target.matches('.window__ok')) {
+              _context7.next = 12;
+              break;
+            }
+
+            // 3.1 get the token
+            token = storage.getObj('token') || _overviewController.state.user.token; // 3.2 Check to see if they are logged in
+
+            if (token) {
+              _context7.next = 7;
+              break;
+            }
+
+            return _context7.abrupt("return", new Error('You are not logged in!'));
+
+          case 7:
+            _context7.next = 9;
+            return _overviewController.state.deck.deleteDeck(deckId, token);
+
+          case 9:
+            // Render the homepage to show the change
+            window.setTimeout( /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
+              return regeneratorRuntime.wrap(function _callee6$(_context6) {
+                while (1) {
+                  switch (_context6.prev = _context6.next) {
+                    case 0:
+                      (0, _base.clearOverview)();
+                      _context6.next = 3;
+                      return deckLoaderAndRender();
+
+                    case 3:
+                    case "end":
+                      return _context6.stop();
+                  }
+                }
+              }, _callee6);
+            })), 1500); // they clicked no to delete the card
+
+            _context7.next = 13;
+            break;
+
+          case 12:
+            windowView.clearWindow();
+
+          case 13:
+            _context7.next = 18;
+            break;
+
+          case 15:
+            _context7.prev = 15;
+            _context7.t0 = _context7["catch"](1);
+            (0, _alert.showAlert)('error', _context7.t0.message);
+
+          case 18:
+          case "end":
+            return _context7.stop();
+        }
+      }
+    }, _callee7, null, [[1, 15]]);
+  }));
+
+  return function deleteDeck(_x3, _x4) {
+    return _ref6.apply(this, arguments);
+  };
+}(); // When the user interacts with the decks in the overview
+
+
+exports.deleteDeck = deleteDeck;
+
+var deckHandler = function deckHandler(click) {
+  try {
+    // 1. Get the Deck Id
+    var deckId = click.dataset.deck; //2. Get the deck data from the Id
+
+    var deckData = getDeck(deckId); //3. Get the cards associated with the deck
+
+    var deckCards = deckData.cards; //4. Render the deck cards
+
+    (0, _base.clearOverview)();
+    (0, _cardView.renderCardGrid)(_base.elements.overview, deckCards);
+  } catch (err) {
+    (0, _alert.showAlert)('error', err.message);
+  }
+}; // When the user selects to make a deck
+
+
+var deckMakerLoader = function deckMakerLoader() {
+  // 1. Clear the overview
+  (0, _base.clearOverview)(); // 2. Render the make a deck grid layout
+
+  deckView.renderMakeDeckGrid(_base.elements.overview); // 3. Get the user cards
+
+  var cards = _overviewController.state.card.cards || storage.getObj('cards'); // 3.1 If they have cards, render them to the page
+
+  if (cards.length !== 0) {
+    deckView.renderResults(cards);
+    searchButtonHandler();
+    deckView.removePaginationDeck();
+  } else {
+    deckView.removePaginationUser();
+    deckView.removePaginationUser();
+  } // 4. Create the DeckArray reference
+
+
+  var deckArray = []; // 5. Add the event handlers
+
+  getCardItem();
+  swapCardFacing();
+  addCardToDeckHandler(deckArray);
+  removeCardFromDeck(deckArray);
+  (0, _base.cancelMaker)('deck', _overviewController.state.deck.decks, deckView.renderDeckGrid);
+  createDeck();
+};
+
+exports.deckMakerLoader = deckMakerLoader;
+
+var deckUpdateMaker = function deckUpdateMaker(deckId) {
+  // 1. Get the deck and user cards
+  var deckData = getDeck(deckId);
+  var cards = _overviewController.state.card.cards || storage.getObj('cards'); // 2. Create the Deck array
+
+  var deckArray = deckData.cards;
+  (0, _base.clearOverview)();
+  deckView.renderUpdateDeckGrid(_base.elements.overview, deckData);
+
+  if (deckArray.length < 3) {
+    deckView.removePaginationDeck();
+  } // 4. Render the update deck and handlers
+
+
+  deckView.renderResults(cards);
+  deckView.renderResultsDeck(deckArray);
+  searchButtonHandler();
+  swapCardFacing();
+  getCardItem();
+  addCardToDeckHandler(deckArray);
+  removeCardFromDeck(deckArray);
+  (0, _base.cancelMaker)('deck', _overviewController.state.deck.decks, deckView.renderDeckGrid); // 5. Call the update deck handler
+
+  updateDeck(deckId);
+};
+
+exports.deckUpdateMaker = deckUpdateMaker;
+},{"../views/base":"js/views/base.js","../views/deckView":"js/views/deckView.js","../views/windowView":"js/views/windowView.js","../views/cardView":"js/views/cardView.js","../controllers/cardController":"js/controllers/cardController.js","../utils/localStorage":"js/utils/localStorage.js","../utils/alert":"js/utils/alert.js","./overviewController":"js/controllers/overviewController.js"}],"js/controllers/windowController.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.windowDeletionHandler = void 0;
+
+var _base = require("../views/base");
+
+var _alert = require("../utils/alert");
+
+var _cardController = require("./cardController");
+
+var _deckController = require("./deckController");
+
+var windowView = _interopRequireWildcard(require("../views/windowView"));
+
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+var windowDeletionHandler = function windowDeletionHandler(itemId, deleteHandler) {
+  // 1. Hide any remaining alerts at the top of body
+  (0, _alert.hideAlert)(); // 2. display the yes or no box to the user
+
+  windowView.renderWindow(_base.elements.body); // 3. Add event handler to when a card is deleted
+
+  document.querySelector('body').addEventListener('click', /*#__PURE__*/function () {
+    var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(e) {
+      return regeneratorRuntime.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              _context.next = 2;
+              return deleteHandler(e, itemId);
+
+            case 2:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, _callee);
+    }));
+
+    return function (_x) {
+      return _ref.apply(this, arguments);
+    };
+  }());
+};
+
+exports.windowDeletionHandler = windowDeletionHandler;
+},{"../views/base":"js/views/base.js","../utils/alert":"js/utils/alert.js","./cardController":"js/controllers/cardController.js","./deckController":"js/controllers/deckController.js","../views/windowView":"js/views/windowView.js"}],"js/views/base.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.optionsHandler = exports.cancelMaker = exports.limitCharacters = exports.clearOverview = exports.elements = void 0;
+
+var _windowController = require("../controllers/windowController");
+
+var elements = {
+  headerLoginBtn: document.querySelector('.header__login'),
+  header: document.querySelector('header'),
+  body: document.querySelector('body'),
+  sidebar: document.querySelector('.sidebar'),
+  sidebarItem: document.querySelectorAll('.side-nav__item'),
+  overview: document.querySelector('.overview'),
+  card: document.querySelector('.side-nav-card'),
+  deck: document.querySelector('.side-nav-deck'),
+  classroom: document.querySelector('.side-nav-classroom'),
+  settings: document.querySelector('.side-nav-settings')
+};
+exports.elements = elements;
+
+var clearOverview = function clearOverview() {
+  var overview = elements.overview;
+
+  if (overview.hasChildNodes) {
+    overview.innerHTML = '';
+  }
+};
+
+exports.clearOverview = clearOverview;
+
+var limitCharacters = function limitCharacters(word) {
+  var newWord = word.split(' ').splice(0, 3);
+  newWord.push('...');
+  return newWord.join(' ');
+};
+
+exports.limitCharacters = limitCharacters;
+
+var cancelMaker = function cancelMaker(type, typeArray, typeRender) {
+  // User clicks to cancel the type creation
+  document.querySelector(".icon--make-".concat(type, "-left")).addEventListener('click', function (e) {
+    // 1. Clear the Overview
+    clearOverview(); // 2. Bring the user back to the type homepage
+    // deckRender(elements.overview, state.deck.decks);
+
+    typeRender(elements.overview, typeArray);
+  });
+}; // Handler for Edit and Delete an item
+
+
+exports.cancelMaker = cancelMaker;
+
+var optionsHandler = function optionsHandler(click, itemId, deleteHandler, editHandler) {
+  // user clicked edit card
+  if (Array.from(click.classList).includes('options--edit')) {
+    editHandler(itemId); // user clicked delete card
+  } else if (Array.from(click.classList).includes('options--delete')) {
+    (0, _windowController.windowDeletionHandler)(itemId, deleteHandler);
+  }
+};
+
+exports.optionsHandler = optionsHandler;
+},{"../controllers/windowController":"js/controllers/windowController.js"}],"img/default.png":[function(require,module,exports) {
+module.exports = "/default.6c87049f.png";
+},{}],"js/views/headerView.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.renderHeaderDefault = exports.renderHeaderLogin = void 0;
+
+var _base = require("./base");
+
+var _default = _interopRequireDefault(require("../../img/default.png"));
+
+var storage = _interopRequireWildcard(require("../utils/localStorage"));
+
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+// TODO: Add user data as args into this func
+var renderHeaderLogin = function renderHeaderLogin(user) {
+  // FIXME: User value comes up undefined when they login due to promise
+  if (!user) {
+    user = storage.getObj('user');
+  }
+
+  var markup = "\n  &nbsp;\n  <nav class=\"user-nav\">\n    <div class=\"header__login\">\n      <a href=\"#\" class=\"btn btn--logout\">Logout</a>\n    </div>\n\n    <div class=\"user-nav__user\">\n      <img\n        src=\"https://polar-savannah-53668.herokuapp.com/img/users/".concat(user.photo, "\"\n        alt=\"").concat(user.name, " Photo\"\n        class=\"user-nav__user-photo\"\n      />\n      <span class=\"user-nav__user-name\">").concat(user.name, "</span>\n    </div>\n</nav>");
+  _base.elements.header.innerHTML = markup;
+};
+
+exports.renderHeaderLogin = renderHeaderLogin;
+
+var renderHeaderDefault = function renderHeaderDefault() {
+  var markup = "\n  &nbsp;\n  <div class=\"header__login\">\n    <a href=\"#\" class=\"btn btn--login\">Login</a>\n    <a href=\"#\" type=\"submit\" class=\"btn btn--ghost\">Sign up</a>\n  </div>";
+  _base.elements.header.innerHTML = markup;
+};
+
+exports.renderHeaderDefault = renderHeaderDefault;
+},{"./base":"js/views/base.js","../../img/default.png":"img/default.png","../utils/localStorage":"js/utils/localStorage.js"}],"img/SVG/graduation-cap.svg":[function(require,module,exports) {
+module.exports = '#6ee829994d94ef5fb09c27197dc2a11f';
+},{}],"img/SVG/user.svg":[function(require,module,exports) {
+module.exports = '#0cb49ca546fb58356376f1c47a03e649';
+},{}],"js/views/classroomView.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.renderMakeClassroom = exports.renderViewClassroom = exports.renderResults = exports.getType = exports.hidePagination = exports.clearResults = exports.renderItemResults = exports.renderEmptyClassroomGrid = exports.renderClassroomGrid = void 0;
+
+var _edit = _interopRequireDefault(require("../../img/SVG/edit.svg"));
+
+var _trash = _interopRequireDefault(require("../../img/SVG/trash.svg"));
+
+var _minus = _interopRequireDefault(require("../../img/SVG/minus.svg"));
+
+var _plus = _interopRequireDefault(require("../../img/SVG/plus.svg"));
+
+var _check = _interopRequireDefault(require("../../img/SVG/check.svg"));
+
+var _circleWithCross = _interopRequireDefault(require("../../img/SVG/circle-with-cross.svg"));
+
+var _chevronThinRight = _interopRequireDefault(require("../../img/SVG/chevron-thin-right.svg"));
+
+var _chevronThinLeft = _interopRequireDefault(require("../../img/SVG/chevron-thin-left.svg"));
+
+var _graduationCap = _interopRequireDefault(require("../../img/SVG/graduation-cap.svg"));
+
+var _drive = _interopRequireDefault(require("../../img/SVG/drive.svg"));
+
+var _user = _interopRequireDefault(require("../../img/SVG/user.svg"));
+
+var _base = require("./base");
+
+var storage = _interopRequireWildcard(require("../utils/localStorage"));
+
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var renderClassroomGrid = function renderClassroomGrid(parent, classroomArray) {
+  var classrooms = '';
+  classroomArray.forEach(function (classroom) {
+    var classroomMarkup = "\n      <div class=\"classroom classroom-".concat(classroom.id, "\" data-classroom=").concat(classroom.id, ">\n      <div class=\"classroom__options\">\n            <a href=\"#\" class=\"options options--edit\">\n              <svg class=\"icon icon--options icon--edit\">\n                <use xlink:href=\"").concat(_edit.default, "\"></use>\n              </svg>\n              <span class=\"show-hide card--edit\">Edit</span>\n            </a>\n\n            <a href=\"#\" class=\"options options--delete\">\n              <svg class=\"icon icon--options icon--delete\">\n                <use xlink:href=\"").concat(_trash.default, "\"></use>\n              </svg>\n              <span class=\"show-hide card--delete\">Delete</span>\n            </a>\n          </div>\n\n        <div class=\"classroom__details\">\n          <div class=\"name\">").concat(classroom.name, "</div>\n        </div>\n      </div> \n    ");
+    classrooms += classroomMarkup;
+  }); // checks if the user is a teacher and then allows them to create a new classroom if they are.
+
+  var markup = '';
+  markup += isTeacher();
+  markup += "\n    <div class=\"classroom-grid\">\n        ".concat(classrooms, "\n    </div>;");
+  parent.insertAdjacentHTML('afterbegin', markup);
+};
+
+exports.renderClassroomGrid = renderClassroomGrid;
+
+var renderEmptyClassroomGrid = function renderEmptyClassroomGrid(parent) {
+  var markup = isTeacher();
+  markup += "<div class=\"classroom-grid\">\n  <div class=\"no-item\">\n      <svg class=\"icon icon--no-item\">\n        <use href=\"".concat(_graduationCap.default, "\"></use>\n      </svg>\n      <span>There are no classrooms here!</span>\n  </div>\n  </div>");
+  parent.insertAdjacentHTML('afterbegin', markup);
+};
+
+exports.renderEmptyClassroomGrid = renderEmptyClassroomGrid;
+
+var isTeacher = function isTeacher() {
+  var markup = '';
+
+  if (storage.getObj('user').role === 'teacher') {
+    markup += "\n    <div class=\"make-classroom\">\n        <a href=\"#\" class=\"btn btn--ghost make-classroom\">Make A New Classroom</a>\n    </div>";
+  } else {
+    markup += "<div class=\"make-classroom\">\n    &nbsp; \n      </div>";
+  }
+
+  return markup;
+}; // Renders all the users in the 'All Users' list
+
+
+var renderItemResults = function renderItemResults(user, iconType, type, flag) {
+  var icon;
+
+  switch (iconType) {
+    case 'student':
+      icon = _user.default;
+      break;
+
+    case 'plus':
+      icon = _plus.default;
+      break;
+
+    case 'minus':
+      icon = _minus.default;
+      break;
+
+    default:
+      icon = user;
+  }
+
+  var markup = "\n  <li class=\"make-classroom__item\" data-item=\"".concat(user.id, "\">\n    <a href=\"#\" class=\"make-classroom__link\">\n        <svg class=\"icon icon__make-classroom--card\">\n        <use href=\"").concat(icon, "\"></use>\n      </svg>\n      <div class=\"make-classroom__card-details\">\n        \n        <span\n          class=\"make-classroom__span make-classroom-span--answer\"\n          >").concat((0, _base.limitCharacters)(user.name), "</span\n        >\n      </div>\n    </a>\n  </li>");
+  var element = getType("".concat(type), flag);
+  document.querySelector(element).insertAdjacentHTML('beforeend', markup);
+};
+
+exports.renderItemResults = renderItemResults;
+
+var clearResults = function clearResults(type, flag) {
+  var elements = getType(type, flag);
+  var elementList = elements[0];
+  var elementPaginate = elements[1];
+
+  if (elementList) {
+    document.querySelector("".concat(elementList)).innerHTML = '';
+  }
+
+  if (elementPaginate) {
+    document.querySelector("".concat(elementPaginate)).innerHTML = '';
+  }
+};
+
+exports.clearResults = clearResults;
+
+var createButton = function createButton(page, type) {
+  return "\n<button class=\"btn--inline btn__search btn__search--".concat(type, "\" data-goto=").concat(type === 'prev' ? page - 1 : page + 1, ">\n<span>Page ").concat(type === 'prev' ? page - 1 : page + 1, "</span>  \n<svg class=\"icon icon__search icon__search--").concat(type === 'prev' ? 'prev' : 'next', "\">\n    <use href=\"").concat(type === 'prev' ? _chevronThinLeft.default : _chevronThinRight.default, "\"></use>\n  </svg>\n</button>");
+}; // Pagination for the 'All Users' list
+
+
+var renderButton = function renderButton(page, numResults, resPerPage, type, flag) {
+  var element = getType(type, flag)[1];
+  var pages = Math.ceil(numResults / resPerPage);
+  var btn;
+
+  if (page === 1 && pages > 1) {
+    // Only Button to go to the next page
+    btn = createButton(page, 'next');
+  } else if (page < pages) {
+    // Both Buttons
+    btn = "\n      ".concat(createButton(page, 'prev'), "\n      ").concat(createButton(page, 'next'), "\n    ");
+  } else if (page === pages && pages > 1) {
+    // Only Button to go to the prev page
+    btn = createButton(page, 'prev');
+  }
+
+  if (btn) {
+    showPagination(type, flag);
+    document.querySelector(element).insertAdjacentHTML('afterbegin', btn);
+  } else {
+    hidePagination(type, flag);
+  }
+};
+
+var hidePagination = function hidePagination(type, flag) {
+  var element = getType(type, flag)[1];
+
+  if (element) {
+    document.querySelector(element).style.display = 'none';
+  }
+};
+
+exports.hidePagination = hidePagination;
+
+var showPagination = function showPagination(type, flag) {
+  var element = getType(type, flag)[1];
+
+  if (element) {
+    document.querySelector(element).style.display = 'flex';
+  }
+};
+/**
+ *
+ * @param {Refers to class for the element} type
+ * @param {Either being in the view render portion or the make render portion} flag
+ */
+
+
+var getType = function getType(type, flag) {
+  var insert = '';
+
+  if (flag === 'make') {
+    switch (type) {
+      case 'all-students':
+        insert += '.make-classroom__list--students .make-classroom__paginate--students';
+        break;
+
+      case 'my-decks':
+        insert += '.make-classroom__list--decks .make-classroom__paginate--decks';
+        break;
+
+      case 'classroom-students':
+        insert += '.make-classroom__list--classroom-students .make-classroom__paginate--classroom-students';
+        break;
+
+      case 'classroom-deck':
+        insert += '.make-classroom__list--classroom-deck';
+        break;
+
+      default:
+        break;
+    }
+  } else if (flag === 'view') {
+    switch (type) {
+      case 'all-students':
+        insert = '.view-classroom__list--students .view-classroom__paginate--students';
+        break;
+
+      case 'my-decks':
+        insert = '.view-classroom__list--decks .view-classroom__paginate--decks';
+        break;
+
+      case 'classroom-students':
+        insert = '.view-classroom__list--classroom-students  .view-classroom__paginate--classroom-students';
+        break;
+
+      case 'classroom-deck':
+        insert = '.view-classroom__list--classroom-deck';
+        break;
+
+      default:
+        break;
+    }
+  }
+
+  return insert.split(' ');
+};
+/**
+ *
+ * @param {Being an array of students, decks or cards} array
+ * @param {Identifier to determine what icon it should be} icon
+ * @param {Identifier to determine what element it should retrieve} type
+ * @param {Being either make or view render} flag
+ * @param {The page number to pass for pagination} page
+ * @param {The number of results per page} resPerPage
+ */
+
+
+exports.getType = getType;
+
+var renderResults = function renderResults(array, icon, type, flag) {
+  var page = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 1;
+  var resPerPage = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : 3;
+  clearResults(type, flag);
+  var start = (page - 1) * resPerPage;
+  var end = page * resPerPage;
+  array.slice(start, end).forEach(function (el) {
+    renderItemResults(el, icon, type, flag);
+  });
+  renderButton(page, array.length, resPerPage, type, flag);
+};
+
+exports.renderResults = renderResults;
+
+var renderViewClassroom = function renderViewClassroom(parent, teacherName, deckName, deckId) {
+  var markup = "\n  <div class=\"view-classroom-grid make-classroom-grid\">\n    <div\n      class=\"view-classroom__student-nav view-classroom__student-nav--users-student\"\n    >\n      <span class=\"view-classroom__name\">Classmates</span>\n      <ul class=\"view-classroom__list view-classroom__list--students\">\n        \n      </ul>\n\n      <div class=\"view-classroom__paginate--students\">\n        \n      </div>\n    </div>\n\n    <div\n      class=\"view-classroom__deck-nav view-classroom__deck-nav--deck\"\n    >\n      <span class=\"view-classroom__name\">Deck</span>\n      <ul class=\"view-classroom__list view-classroom__list--decks\">\n        <li class=\"view-classroom__item view-classroom__item--deck\" data-deck=".concat(deckId, ">\n          <a href=\"#\" class=\"view-classroom__link\">\n            <svg class=\"icon icon__view-classroom--card\">\n              <use href=\"").concat(_drive.default, "\"></use>\n            </svg>\n            <div class=\"view-classroom__card-details\">\n              <span\n                class=\"view-classroom__span view-classroom-span--question\"\n                >").concat(deckName, "</span\n              >\n            </div>\n          </a>\n        </li>\n      </ul>\n    </div>\n\n    <div\n      class=\"view-classroom__teacher-nav view-classroom__teacher-nav--users-teacher\"\n    >\n      <span class=\"view-classroom__name\">Teacher</span>\n      <ul class=\"view-classroom__list view-classroom__list\">\n        <li class=\"view-classroom__item view-classroom__list--teacher\">\n          <a href=\"#\" class=\"view-classroom__link\">\n            <svg class=\"icon icon__view-classroom--card\">\n              <use href=\"").concat(_user.default, "\"></use>\n            </svg>\n            <div class=\"view-classroom__card-details\">\n              <span\n                class=\"view-classroom__span view-classroom-span--question\"\n                >Teacher</span\n              >\n              <span class=\"make-deck__span make-deck-span--answer\"\n                >").concat(teacherName, "</span\n              >\n            </div>\n          </a>\n        </li>\n      </ul>\n    </div>\n\n  </div>");
+  parent.insertAdjacentHTML('afterbegin', markup);
+};
+
+exports.renderViewClassroom = renderViewClassroom;
+
+var renderMakeClassroom = function renderMakeClassroom(parent, classroomData) {
+  var markup = "<div class=\"make-classroom-grid\">\n\n  <form action=\"#\" class=\"make-classroom__form\">\n      <label for=\"classroom-name\" class=\"make-classroom__label\">Enter Classroom name</label>\n      <input class=\"make-classroom__input\" type=\"text\" minlength=\"5\" maxlength=\"50\" id=\"classroom-name\" placeholder=\"Classroom Name\" value=\"".concat(classroomData === undefined ? '' : classroomData.name, "\">\n  </form>\n\n  <div class=\"make-classroom__student-nav make-classroom__student-nav--users-student\">\n\n  <span class=\"make-classroom__name\">All Students</span>\n  <ul class=\"make-classroom__list make-classroom__list--students\">\n    \n  </ul>\n\n  <div class=\"make-classroom__paginate make-classroom__paginate--students\">\n    \n  </div>\n</div>\n\n<div class=\"make-classroom__deck-nav make-classroom__deck-nav--deck\">\n  <span class=\"make-classroom__name\">My Decks</span>\n  <ul class=\"make-classroom__list make-classroom__list--decks\">\n   \n  </ul>\n\n  <div class=\"make-classroom__paginate make-classroom__paginate--decks\">\n    \n  </div>\n</div>\n\n<div class=\"make-classroom__deck-nav make-classroom__deck-nav--deck-curr\">\n  <span class=\"make-classroom__name\">Classroom deck</span>\n  <ul class=\"make-classroom__list make-classroom__list--classroom-deck\">\n    \n  </ul>\n</div>\n\n<div class=\"make-classroom__student-nav make-classroom__student-nav--users-student-curr\">\n\n  <span class=\"make-classroom__name\">Classroom Students</span>\n  <ul class=\"make-classroom__list make-classroom__list--classroom-students\">\n    \n  </ul>\n\n  <div class=\"make-classroom__paginate make-classroom__paginate--classroom-students\">\n    \n  </div>\n</div>\n  \n<div class=\"make-classroom__create-box\">\n  <div class=\"make-classroom__group make-classroom--right\">\n    <a href=\"#\" class=\"make-classroom__link\">\n      <svg class=\"icon icon--make-classroom icon--make-classroom-right icon--right\">\n        <use href=\"").concat(_check.default, "\"></use>\n      </svg>\n    </a>\n    <span class=\"make-classroom__span\">Create The Classroom</span>\n  </div>\n\n  <div class=\"make-classroom__group make-classroom--wrong\">\n    <a href=\"#\" class=\"make-classroom__link\">\n      <svg class=\"icon icon--make-classroom icon--make-classroom-left icon-left icon--wrong\">\n        <use href=\"").concat(_circleWithCross.default, "\"></use>\n      </svg>\n    </a>\n    <span class=\"make-classroom__span\">Let's Stop!</span>\n  </div>\n  </div>\n\n</div>");
+  parent.insertAdjacentHTML('afterbegin', markup);
+};
+
+exports.renderMakeClassroom = renderMakeClassroom;
+},{"../../img/SVG/edit.svg":"img/SVG/edit.svg","../../img/SVG/trash.svg":"img/SVG/trash.svg","../../img/SVG/minus.svg":"img/SVG/minus.svg","../../img/SVG/plus.svg":"img/SVG/plus.svg","../../img/SVG/check.svg":"img/SVG/check.svg","../../img/SVG/circle-with-cross.svg":"img/SVG/circle-with-cross.svg","../../img/SVG/chevron-thin-right.svg":"img/SVG/chevron-thin-right.svg","../../img/SVG/chevron-thin-left.svg":"img/SVG/chevron-thin-left.svg","../../img/SVG/graduation-cap.svg":"img/SVG/graduation-cap.svg","../../img/SVG/drive.svg":"img/SVG/drive.svg","../../img/SVG/user.svg":"img/SVG/user.svg","./base":"js/views/base.js","../utils/localStorage":"js/utils/localStorage.js"}],"js/controllers/classroomController.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.classroomMakerLoader = exports.classroomLoader = exports.classroomRender = exports.getClassroomsFromAPI = exports.classroomLoaderAndRender = void 0;
+
+var _base = require("../views/base");
+
+var classroomView = _interopRequireWildcard(require("../views/classroomView"));
+
+var windowView = _interopRequireWildcard(require("../views/windowView"));
+
+var storage = _interopRequireWildcard(require("../utils/localStorage"));
+
+var _alert = require("../utils/alert");
+
+var _overviewController = require("./overviewController");
+
+var _deckController = require("./deckController");
+
+var _cardView = require("../views/cardView");
+
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+var classroomLoaderAndRender = /*#__PURE__*/function () {
+  var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+    return regeneratorRuntime.wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            _context.next = 2;
+            return getClassroomsFromAPI();
+
+          case 2:
+            classroomRender();
+
+          case 3:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee);
+  }));
+
+  return function classroomLoaderAndRender() {
+    return _ref.apply(this, arguments);
+  };
+}();
+
+exports.classroomLoaderAndRender = classroomLoaderAndRender;
+
+var getClassroomsFromAPI = /*#__PURE__*/function () {
+  var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
+    var token;
+    return regeneratorRuntime.wrap(function _callee2$(_context2) {
+      while (1) {
+        switch (_context2.prev = _context2.next) {
+          case 0:
+            token = storage.getObj('token') || _overviewController.state.user.token;
+
+            if (token) {
+              _context2.next = 3;
+              break;
+            }
+
+            return _context2.abrupt("return", new Error('You are not logged in'));
+
+          case 3:
+            _context2.next = 5;
+            return _overviewController.state.classroom.getClassroom("".concat(storage.getObj('user').role), token);
+
+          case 5:
+            _overviewController.state.classroom.classrooms = _context2.sent;
+            storage.storeObj('classrooms', _overviewController.state.classroom.classrooms);
+
+          case 7:
+          case "end":
+            return _context2.stop();
+        }
+      }
+    }, _callee2);
+  }));
+
+  return function getClassroomsFromAPI() {
+    return _ref2.apply(this, arguments);
+  };
+}();
+
+exports.getClassroomsFromAPI = getClassroomsFromAPI;
+
+var classroomRender = function classroomRender() {
+  // 1. Get the classrooms
+  var classrooms = _overviewController.state.classroom.classrooms || storage.getObj('classrooms'); // 2. No classrooms, render the empty grid version
+
+  if (classrooms.length === 0) {
+    return classroomView.renderEmptyClassroomGrid(_base.elements.overview);
+  } // 3. Render the classrooms
+
+
+  classroomView.renderClassroomGrid(_base.elements.overview, classrooms);
+}; // Get one classroom from the array in local storage
+
+
+exports.classroomRender = classroomRender;
+
+var getClassroom = function getClassroom(classroomId) {
+  //1. Get the classrooms array
+  var classrooms = storage.getObj('classrooms') || _overviewController.state.classroom.classrooms; //2. Find the classroom in the classrooms array via id
+
+
+  return classrooms.filter(function (classroom) {
+    return classroom.id === classroomId;
+  })[0];
+};
+
+var getStudent = function getStudent(studentId) {
+  var students = storage.getObj('studentArray') || _overviewController.state.classroom.studentArray;
+
+  return students.filter(function (student) {
+    return student.id === studentId;
+  })[0];
+};
+
+var classroomLoader = function classroomLoader(e) {
+  if (e.target.matches('.options, .options *')) {
+    var click = e.target.closest('.options');
+    var classroomId = e.target.parentNode.parentNode.parentNode.dataset.classroom;
+    (0, _base.optionsHandler)(click, classroomId, deleteClassroom, classroomUpdateMaker);
+  } else if (e.target.matches('.classroom, .classroom *')) {
+    var _click = e.target.closest('.classroom');
+
+    try {
+      // 1. Get the Classroom Id
+      var _classroomId = _click.dataset.classroom; // 2. Get the classroom
+
+      var classroom = getClassroom(_classroomId);
+      console.log(classroom.deck); // 3. Render view classroom
+
+      classroomViewHandler(classroom);
+    } catch (err) {}
+  }
+};
+
+exports.classroomLoader = classroomLoader;
+
+var classroomViewHandler = /*#__PURE__*/function () {
+  var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(classroom) {
+    var classroomStudents, classroomTeacher, deckId, token, classroomDeck;
+    return regeneratorRuntime.wrap(function _callee3$(_context3) {
+      while (1) {
+        switch (_context3.prev = _context3.next) {
+          case 0:
+            _context3.prev = 0;
+            // 1. Get students and teacher from classroom
+            classroomStudents = classroom.students;
+            classroomTeacher = classroom.teacher; // 2. Store the students to state
+
+            _overviewController.state.classroom.studentArray = classroomStudents;
+            storage.storeObj('studentArray', classroomStudents); // 3. Get the deck for that classroom
+
+            deckId = classroom.deck;
+            token = _overviewController.state.token || storage.getObj('token');
+            _context3.next = 9;
+            return _overviewController.state.deck.getDeck(deckId, token);
+
+          case 9:
+            classroomDeck = _context3.sent;
+            // 4. Store the teacher's deck array to state
+            _overviewController.state.classroom.deckArray = classroomDeck;
+            storage.storeObj('classroom.deck', classroomDeck); // 5. Render classroom
+
+            (0, _base.clearOverview)();
+            classroomView.renderViewClassroom(_base.elements.overview, classroomTeacher.name, classroomDeck.name, deckId); // 5.1 Render students
+
+            if (classroomStudents.length !== 0) {
+              classroomView.renderResults(classroomStudents, 'student', 'all-students', 'view');
+              searchButton('all-students', 'view', 'student', 'studentArray');
+            } else {
+              classroomView.hidePagination('all-students', 'view');
+            } // 6. Add event handlers
+
+
+            viewDeckFromClassroom(classroomDeck);
+            _context3.next = 22;
+            break;
+
+          case 18:
+            _context3.prev = 18;
+            _context3.t0 = _context3["catch"](0);
+            (0, _alert.showAlert)('error', _context3.t0.message);
+            console.log(_context3.t0.stack);
+
+          case 22:
+          case "end":
+            return _context3.stop();
+        }
+      }
+    }, _callee3, null, [[0, 18]]);
+  }));
+
+  return function classroomViewHandler(_x) {
+    return _ref3.apply(this, arguments);
+  };
+}();
+
+var classroomMakerLoader = /*#__PURE__*/function () {
+  var _ref4 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4() {
+    var token, students, decks;
+    return regeneratorRuntime.wrap(function _callee4$(_context4) {
+      while (1) {
+        switch (_context4.prev = _context4.next) {
+          case 0:
+            // 1. Get the token
+            token = _overviewController.state.token || storage.getObj('token'); // 2. Get the students
+
+            _context4.next = 3;
+            return _overviewController.state.classroom.getStudents(token);
+
+          case 3:
+            students = _context4.sent;
+            _overviewController.state.classroom.studentArray = students;
+            storage.storeObj('studentArray', students); // 3. Get the decks
+
+            _context4.next = 8;
+            return _overviewController.state.deck.getDecks(token);
+
+          case 8:
+            decks = _context4.sent;
+            _overviewController.state.classroom.deckArray = decks;
+            storage.storeObj('classroom.deckArray', decks); // 4. Render the classroom maker grid to the homepage
+
+            classroomMaker(students, decks);
+
+          case 12:
+          case "end":
+            return _context4.stop();
+        }
+      }
+    }, _callee4);
+  }));
+
+  return function classroomMakerLoader() {
+    return _ref4.apply(this, arguments);
+  };
+}();
+
+exports.classroomMakerLoader = classroomMakerLoader;
+
+var classroomMaker = function classroomMaker(students, decks) {
+  // 1. Render the make classroom grid
+  (0, _base.clearOverview)();
+  classroomView.renderMakeClassroom(_base.elements.overview); // 2. Render students
+
+  if (students.length !== 0) {
+    classroomView.renderResults(students, 'plus', 'all-students', 'make');
+    searchButton('all-students', 'make', 'plus', 'studentArray');
+  } else {
+    classroomView.hidePagination('all-students', 'make');
+  } // 3. Render the decks
+
+
+  if (decks.length !== 0) {
+    classroomView.renderResults(decks, 'plus', 'my-decks', 'make');
+    searchButton('my-decks', 'make', 'plus', 'classroom.deckArray');
+  } else {
+    classroomView.hidePagination('my-decks', 'make');
+  } // 4. create local arrays for students
+
+
+  var studentArray = []; // 5. Add handlers
+
+  addItemHandler(studentArray, 'make', 'all-students', 'my-decks');
+  removeItemHandler(studentArray, 'make', 'classroom-students', 'classroom-deck');
+  searchButton('classroom-students', 'make', 'minus', 'classroomStudentArray');
+  (0, _base.cancelMaker)('classroom', _overviewController.state.classroom.classrooms, classroomView.renderClassroomGrid);
+  createClassroom();
+};
+
+var classroomUpdateMaker = /*#__PURE__*/function () {
+  var _ref5 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5(classroomId) {
+    var token, classroomData, students, decks, classroomDeckId, classroomStudents, classroomDeck;
+    return regeneratorRuntime.wrap(function _callee5$(_context5) {
+      while (1) {
+        switch (_context5.prev = _context5.next) {
+          case 0:
+            token = _overviewController.state.token || storage.getObj('token'); // 1. Get the classroomData
+
+            classroomData = getClassroom(classroomId);
+            _context5.next = 4;
+            return _overviewController.state.classroom.getStudents(token);
+
+          case 4:
+            students = _context5.sent;
+            _context5.next = 7;
+            return _overviewController.state.deck.getDecks(token);
+
+          case 7:
+            decks = _context5.sent;
+            classroomDeckId = classroomData.deck;
+            classroomStudents = classroomData.students; // 1.1 Get the classroom Deck
+
+            classroomDeck = [(0, _deckController.getDeck)(classroomDeckId, decks)]; // 1.3 add the students and decks to the local storage
+
+            _overviewController.state.classroom.studentArray = students;
+            storage.storeObj('studentArray', students);
+            _overviewController.state.classroom.deckArray = decks;
+            storage.storeObj('classroom.deckArray', decks); // 2. render the maker grid
+
+            (0, _base.clearOverview)();
+            classroomView.renderMakeClassroom(_base.elements.overview, classroomData); // 3. Render students
+
+            if (students.length !== 0) {
+              classroomView.renderResults(students, 'plus', 'all-students', 'make');
+              searchButton('all-students', 'make', 'plus', 'studentArray');
+            } else {
+              classroomView.hidePagination('all-students', 'make');
+            } // 4. Render the decks
+
+
+            if (decks.length !== 0) {
+              classroomView.renderResults(decks, 'plus', 'my-decks', 'make');
+              searchButton('my-decks', 'make', 'plus', 'classroom.deckArray');
+            } else {
+              classroomView.hidePagination('my-decks', 'make');
+            } // 5. Render the classroom students
+
+
+            if (classroomStudents.length !== 0) {
+              classroomView.renderResults(classroomStudents, 'minus', 'classroom-students', 'make');
+              searchButton('classroom-students', 'make', 'minus', 'classroomStudentArray');
+            } else {
+              classroomView.hidePagination('classroom-students', 'make');
+            } // 6. Render the classroom students
+
+
+            if (classroomDeck.length !== 0) {
+              classroomView.renderResults(classroomDeck, 'minus', 'classroom-deck', 'make');
+            } // 7. Event handlers for students and decks
+
+
+            addItemHandler(classroomStudents, 'make', 'all-students', 'my-decks');
+            removeItemHandler(classroomStudents, 'make', 'classroom-students', 'classroom-deck');
+            (0, _base.cancelMaker)('classroom', _overviewController.state.classroom.classrooms, classroomView.renderClassroomGrid); // 5. Call the update deck handler
+
+            updateClassroom(classroomId);
+
+          case 25:
+          case "end":
+            return _context5.stop();
+        }
+      }
+    }, _callee5);
+  }));
+
+  return function classroomUpdateMaker(_x2) {
+    return _ref5.apply(this, arguments);
+  };
+}();
+
+var createClassroom = /*#__PURE__*/function () {
+  var _ref6 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee7() {
+    return regeneratorRuntime.wrap(function _callee7$(_context7) {
+      while (1) {
+        switch (_context7.prev = _context7.next) {
+          case 0:
+            // User clicks to create the deck
+            document.querySelector('.icon--make-classroom-right').addEventListener('click', /*#__PURE__*/function () {
+              var _ref7 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6(e) {
+                var name, user, deckId, students, token, distinctStudents;
+                return regeneratorRuntime.wrap(function _callee6$(_context6) {
+                  while (1) {
+                    switch (_context6.prev = _context6.next) {
+                      case 0:
+                        // 1. Get all the input from user
+                        name = document.querySelector('.make-classroom__input').value;
+                        user = storage.getObj('user').id || _overviewController.state.user.userData.id;
+                        deckId = storage.getObj('classroomDeck')[0].id;
+                        students = storage.getObj('classroomStudentArray');
+                        token = storage.getObj('token'); // 2. Check if they have given a name, students and a deck
+
+                        if (!(name && deckId && students)) {
+                          _context6.next = 13;
+                          break;
+                        }
+
+                        // 2.1 Create a class of only distinct values
+                        distinctStudents = _toConsumableArray(new Set(students.map(function (student) {
+                          return student.id;
+                        }))); // 2.1 Create the classroom
+
+                        _context6.next = 9;
+                        return _overviewController.state.classroom.createClassroom(name, distinctStudents, deckId, user, token);
+
+                      case 9:
+                        _context6.next = 11;
+                        return classroomMakerLoader();
+
+                      case 11:
+                        _context6.next = 14;
+                        break;
+
+                      case 13:
+                        (0, _alert.showAlert)('error', 'Please provide a name, students and a deck');
+
+                      case 14:
+                      case "end":
+                        return _context6.stop();
+                    }
+                  }
+                }, _callee6);
+              }));
+
+              return function (_x3) {
+                return _ref7.apply(this, arguments);
+              };
+            }());
+
+          case 1:
+          case "end":
+            return _context7.stop();
+        }
+      }
+    }, _callee7);
+  }));
+
+  return function createClassroom() {
+    return _ref6.apply(this, arguments);
+  };
+}();
+
+var updateClassroom = function updateClassroom(classroomId) {
+  // User clicks to update the deck
+  document.querySelector('.icon--make-classroom-right').addEventListener('click', /*#__PURE__*/function () {
+    var _ref8 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee9(e) {
+      var name, user, deckId, students, token, distinctStudents;
+      return regeneratorRuntime.wrap(function _callee9$(_context9) {
+        while (1) {
+          switch (_context9.prev = _context9.next) {
+            case 0:
+              // 1. Get all the input from user
+              name = document.querySelector('.make-classroom__input').value;
+              user = storage.getObj('user').id || _overviewController.state.user.userData.id;
+              deckId = storage.getObj('classroomDeck')[0].id;
+              students = storage.getObj('classroomStudentArray');
+              token = storage.getObj('token');
+              _context9.prev = 5;
+
+              if (!(name && deckId && students)) {
+                _context9.next = 15;
+                break;
+              }
+
+              // 2.1 Create a class of only distinct values
+              distinctStudents = _toConsumableArray(new Set(students.map(function (student) {
+                return student.id;
+              }))); // 2.1 Create the classroom
+
+              _context9.next = 10;
+              return _overviewController.state.classroom.updateClassroom(classroomId, name, distinctStudents, deckId, token);
+
+            case 10:
+              _context9.next = 12;
+              return classroomMakerLoader();
+
+            case 12:
+              window.setTimeout( /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee8() {
+                return regeneratorRuntime.wrap(function _callee8$(_context8) {
+                  while (1) {
+                    switch (_context8.prev = _context8.next) {
+                      case 0:
+                        (0, _base.clearOverview)();
+                        _context8.next = 3;
+                        return classroomLoaderAndRender();
+
+                      case 3:
+                      case "end":
+                        return _context8.stop();
+                    }
+                  }
+                }, _callee8);
+              })), 1500);
+              _context9.next = 16;
+              break;
+
+            case 15:
+              (0, _alert.showAlert)('error', 'Please provide a name, students and a deck');
+
+            case 16:
+              _context9.next = 21;
+              break;
+
+            case 18:
+              _context9.prev = 18;
+              _context9.t0 = _context9["catch"](5);
+              (0, _alert.showAlert)('error', _context9.t0.message);
+
+            case 21:
+            case "end":
+              return _context9.stop();
+          }
+        }
+      }, _callee9, null, [[5, 18]]);
+    }));
+
+    return function (_x4) {
+      return _ref8.apply(this, arguments);
+    };
+  }());
+};
+
+var deleteClassroom = /*#__PURE__*/function () {
+  var _ref10 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee11(e, classroomId) {
+    var click, token;
+    return regeneratorRuntime.wrap(function _callee11$(_context11) {
+      while (1) {
+        switch (_context11.prev = _context11.next) {
+          case 0:
+            click = e.target.closest('.window__content');
+            _context11.prev = 1;
+
+            if (!click) {
+              _context11.next = 13;
+              break;
+            }
+
+            if (!e.target.matches('.window__ok')) {
+              _context11.next = 12;
+              break;
+            }
+
+            // 3.1 get the token
+            token = storage.getObj('token') || _overviewController.state.user.token; // 3.2 Check to see if they are logged in
+
+            if (token) {
+              _context11.next = 7;
+              break;
+            }
+
+            return _context11.abrupt("return", new Error('You are not logged in!'));
+
+          case 7:
+            _context11.next = 9;
+            return _overviewController.state.classroom.deleteClassroom(classroomId, token);
+
+          case 9:
+            // Render the homepage to show the change
+            window.setTimeout( /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee10() {
+              return regeneratorRuntime.wrap(function _callee10$(_context10) {
+                while (1) {
+                  switch (_context10.prev = _context10.next) {
+                    case 0:
+                      (0, _base.clearOverview)();
+                      _context10.next = 3;
+                      return classroomLoaderAndRender();
+
+                    case 3:
+                    case "end":
+                      return _context10.stop();
+                  }
+                }
+              }, _callee10);
+            })), 1500); // they clicked no to delete the card
+
+            _context11.next = 13;
+            break;
+
+          case 12:
+            windowView.clearWindow();
+
+          case 13:
+            _context11.next = 18;
+            break;
+
+          case 15:
+            _context11.prev = 15;
+            _context11.t0 = _context11["catch"](1);
+            (0, _alert.showAlert)('error', _context11.t0.message);
+
+          case 18:
+          case "end":
+            return _context11.stop();
+        }
+      }
+    }, _callee11, null, [[1, 15]]);
+  }));
+
+  return function deleteClassroom(_x5, _x6) {
+    return _ref10.apply(this, arguments);
+  };
+}();
+
+var addItemHandler = function addItemHandler(studentArray, flag) {
+  var studentNav = classroomView.getType(arguments.length <= 2 ? undefined : arguments[2], flag)[0];
+  var deckNav = classroomView.getType(arguments.length <= 3 ? undefined : arguments[3], flag)[0];
+  document.querySelector(studentNav).addEventListener('click', function (e) {
+    // 1. Get the item that was clicked
+    var item = e.target.closest('.icon'); // 2. check if the click was a plus icon
+
+    if (item) {
+      // 2.1 Get the student Id and get the student
+      var studentId = item.parentNode.parentNode.dataset.item;
+      var student = getStudent(studentId);
+      console.log(student); // 2.2 Append the student to local studentArray
+
+      studentArray.push(student); // 2.3 Store the studentArray in local storage
+
+      storage.storeObj('classroomStudentArray', studentArray); // 2.4 render the students to the classroom student nav
+
+      classroomView.renderResults(studentArray, 'minus', 'classroom-students', 'make');
+    }
+  });
+  document.querySelector(deckNav).addEventListener('click', function (e) {
+    // 1. Get the item that was clicked
+    var item = e.target.closest('.icon'); // 2. check if the click was a plus icon
+
+    if (item) {
+      // 2.1 Get the deck Id and get the deck
+      var deckId = item.parentNode.parentNode.dataset.item;
+      var deckArray = [(0, _deckController.getDeck)(deckId, storage.getObj('classroom.deckArray'))]; // 2.3 Store the studentArray in local storage
+
+      storage.storeObj('classroomDeck', deckArray); // 2.4 render the students to the classroom student nav
+
+      classroomView.renderResults(deckArray, 'minus', 'classroom-deck', 'make');
+    }
+  });
+};
+
+var removeItemHandler = function removeItemHandler(studentArray, flag) {
+  var studentNav = classroomView.getType(arguments.length <= 2 ? undefined : arguments[2], flag)[0];
+  var deckNav = classroomView.getType(arguments.length <= 3 ? undefined : arguments[3], flag)[0];
+  document.querySelector(studentNav).addEventListener('click', function (e) {
+    // 1. Get the item that was clicked
+    var item = e.target.closest('.icon'); // 2. check if the click was a plus icon
+
+    if (item) {
+      // 2.1 Get the student Id and get the student
+      var studentId = item.parentNode.parentNode.dataset.item; // 2.2 Find the index for the student id
+
+      var index;
+      studentArray.forEach(function (student, i) {
+        if (studentId === student.id) {
+          index = i;
+        }
+      });
+      studentArray.splice(index, 1); // 2.3 Store the studentArray in local storage
+
+      storage.storeObj('classroomStudentArray', studentArray); // 2.4 render the students to the classroom student nav
+
+      classroomView.renderResults(studentArray, 'minus', 'classroom-students', 'make');
+    }
+  });
+  document.querySelector(deckNav).addEventListener('click', function (e) {
+    // 1. Get the item that was clicked
+    var item = e.target.closest('.icon'); // 2. check if the click was a plus icon
+
+    if (item) {
+      var deckArray = []; // 2.3 Store the studentArray in local storage
+
+      storage.storeObj('classroomDeck', deckArray); // 2.4 render the students to the classroom student nav
+
+      classroomView.renderResults(deckArray, 'minus', 'classroom-deck', 'make');
+    }
+  });
+};
+
+var searchButton = function searchButton(type, flag, icon, arrayType) {
+  var elements = classroomView.getType(type, flag);
+  var elementPaginate = elements[1];
+  document.querySelector(elementPaginate).addEventListener('click', function (e) {
+    // 1. See if the button was clicked
+    var btn = e.target.closest('.btn--inline');
+
+    if (btn) {
+      // 1.1. get the page number from the dataset
+      var goToPage = parseInt(btn.dataset.goto, 10);
+      var array = getArrayType(arrayType); // 1.2. clear the card results and pagination
+
+      classroomView.clearResults(type, 'make'); // 1.3. Render the new cards and new buttons
+
+      classroomView.renderResults(array, icon, type, 'make', goToPage);
+      window.scroll(0, 0);
+    }
+  });
+};
+
+var getArrayType = function getArrayType(arrayType) {
+  var array = [];
+
+  switch (arrayType) {
+    case 'studentArray':
+      array = _overviewController.state.classroom.studentArray || storage.getObj('studentArray');
+      break;
+
+    case 'classroom.deckArray':
+      array = _overviewController.state.classroom.deckArray || storage.getObj('classroom.deckArray');
+      break;
+
+    case 'classroomStudentArray':
+      array = storage.getObj('classroomStudentArray');
+      break;
+
+    default:
+  }
+
+  return array;
+};
+
+var viewDeckFromClassroom = function viewDeckFromClassroom(deck) {
+  document.querySelector('.view-classroom__item--deck').addEventListener('click', function (e) {
+    (0, _base.clearOverview)();
+    console.log(deck);
+
+    if (storage.getObj('user').role === 'teacher') {
+      (0, _cardView.renderCardGrid)(_base.elements.overview, deck.cards);
+    } else {
+      (0, _cardView.renderCardNoOptGrid)(_base.elements.overview, deck.cards);
+    }
+  });
+};
+},{"../views/base":"js/views/base.js","../views/classroomView":"js/views/classroomView.js","../views/windowView":"js/views/windowView.js","../utils/localStorage":"js/utils/localStorage.js","../utils/alert":"js/utils/alert.js","./overviewController":"js/controllers/overviewController.js","./deckController":"js/controllers/deckController.js","../views/cardView":"js/views/cardView.js"}],"js/controllers/sidebarController.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.renderActiveItem = void 0;
+
+var _base = require("../views/base");
+
+var _cardController = require("./cardController");
+
+var _deckController = require("./deckController");
+
+var _classroomController = require("./classroomController");
+
+var _overviewController = require("./overviewController");
+
+var _alert = require("../utils/alert");
+
+var storage = _interopRequireWildcard(require("../utils/localStorage"));
+
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+_base.elements.sidebar.addEventListener('click', function (e) {
+  var click = e.target.closest('.side-nav__item');
+  if (click) renderActiveItem(e.target.closest('.side-nav__item'));
+});
+
+var renderActiveItem = function renderActiveItem(click) {
+  _base.elements.sidebarItem.forEach(function (item) {
+    item.classList.remove('side-nav__item--active');
+  });
+
+  click.classList.add('side-nav__item--active');
+}; // User clicks 'MY CARDS' in the sidebar nav
+
+
+exports.renderActiveItem = renderActiveItem;
+
+_base.elements.card.addEventListener('click', /*#__PURE__*/function () {
+  var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(e) {
+    return regeneratorRuntime.wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            _context.prev = 0;
+            // 1. Clear the overview page
+            (0, _base.clearOverview)(); // 2. Check if the user is authenticated
+
+            if (!(storage.getObj('token') || _overviewController.state.user)) {
+              _context.next = 7;
+              break;
+            }
+
+            _context.next = 5;
+            return (0, _cardController.cardLoaderAndRender)();
+
+          case 5:
+            _context.next = 8;
+            break;
+
+          case 7:
+            throw new Error('You are not logged in');
+
+          case 8:
+            _context.next = 13;
+            break;
+
+          case 10:
+            _context.prev = 10;
+            _context.t0 = _context["catch"](0);
+            (0, _alert.showAlert)('error', _context.t0.message);
+
+          case 13:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee, null, [[0, 10]]);
+  }));
+
+  return function (_x) {
+    return _ref.apply(this, arguments);
+  };
+}()); // User clicks 'MY DECKS' in the sidebar nav
+
+
+_base.elements.deck.addEventListener('click', /*#__PURE__*/function () {
+  var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(e) {
+    return regeneratorRuntime.wrap(function _callee2$(_context2) {
+      while (1) {
+        switch (_context2.prev = _context2.next) {
+          case 0:
+            _context2.prev = 0;
+            // 1. Clear the overview page
+            (0, _base.clearOverview)(); // 2. Check if the user is authenticated
+
+            if (!(storage.getObj('token') || _overviewController.state.user)) {
+              _context2.next = 7;
+              break;
+            }
+
+            _context2.next = 5;
+            return (0, _deckController.deckLoaderAndRender)();
+
+          case 5:
+            _context2.next = 8;
+            break;
+
+          case 7:
+            throw new Error('You are not logged in');
+
+          case 8:
+            _context2.next = 13;
+            break;
+
+          case 10:
+            _context2.prev = 10;
+            _context2.t0 = _context2["catch"](0);
+            (0, _alert.showAlert)('error', _context2.t0.message);
+
+          case 13:
+          case "end":
+            return _context2.stop();
+        }
+      }
+    }, _callee2, null, [[0, 10]]);
+  }));
+
+  return function (_x2) {
+    return _ref2.apply(this, arguments);
+  };
+}()); // User clicks 'MY CLASSROOMS' in the sidebar nav
+
+
+_base.elements.classroom.addEventListener('click', /*#__PURE__*/function () {
+  var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(e) {
+    return regeneratorRuntime.wrap(function _callee3$(_context3) {
+      while (1) {
+        switch (_context3.prev = _context3.next) {
+          case 0:
+            _context3.prev = 0;
+            // 1. Clear the overview page
+            (0, _base.clearOverview)(); // 2. Check if the user is authenticated
+
+            if (!(storage.getObj('token') || _overviewController.state.user)) {
+              _context3.next = 7;
+              break;
+            }
+
+            _context3.next = 5;
+            return (0, _classroomController.classroomLoaderAndRender)();
+
+          case 5:
+            _context3.next = 8;
+            break;
+
+          case 7:
+            throw new Error('You are not logged in');
+
+          case 8:
+            _context3.next = 13;
+            break;
+
+          case 10:
+            _context3.prev = 10;
+            _context3.t0 = _context3["catch"](0);
+            (0, _alert.showAlert)('error', _context3.t0.message);
+
+          case 13:
+          case "end":
+            return _context3.stop();
+        }
+      }
+    }, _callee3, null, [[0, 10]]);
+  }));
+
+  return function (_x3) {
+    return _ref3.apply(this, arguments);
+  };
+}());
+},{"../views/base":"js/views/base.js","./cardController":"js/controllers/cardController.js","./deckController":"js/controllers/deckController.js","./classroomController":"js/controllers/classroomController.js","./overviewController":"js/controllers/overviewController.js","../utils/alert":"js/utils/alert.js","../utils/localStorage":"js/utils/localStorage.js"}],"js/controllers/loginController.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.loginHandler = void 0;
+
+var _base = require("../views/base");
+
+var _overviewController = require("./overviewController");
+
+var headerView = _interopRequireWildcard(require("../views/headerView"));
+
+var _cardController = require("./cardController");
+
+var _sidebarController = require("./sidebarController");
+
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+// Logging in handler
+var loginHandler = /*#__PURE__*/function () {
+  var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(e) {
+    var email, password, loggedIn;
+    return regeneratorRuntime.wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            e.preventDefault();
+            email = document.querySelector('#email').value;
+            password = document.querySelector('#password').value; // 1. Check if the login was successful
+
+            _context.next = 5;
+            return _overviewController.state.user.login(email, password);
+
+          case 5:
+            loggedIn = _context.sent;
+
+            // 2. Only render the User Ui for a successful login
+            if (loggedIn) {
+              _overviewController.state.user.email = email; // 2.2. Clear the Login Form
+
+              window.setTimeout(_base.clearOverview, 2500); // 2.3 Render the user info to the Login UI
+
+              window.setTimeout(headerView.renderHeaderLogin, 2500); // 2.4 set the active on sidebar to 'my cards'
+
+              (0, _sidebarController.renderActiveItem)(document.querySelector('.side-nav-card')); // 2.4. Load and render User cards
+
+              window.setTimeout(_cardController.cardLoaderAndRender, 3500);
+            }
+
+          case 7:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee);
+  }));
+
+  return function loginHandler(_x) {
+    return _ref.apply(this, arguments);
+  };
+}();
+
+exports.loginHandler = loginHandler;
+},{"../views/base":"js/views/base.js","./overviewController":"js/controllers/overviewController.js","../views/headerView":"js/views/headerView.js","./cardController":"js/controllers/cardController.js","./sidebarController":"js/controllers/sidebarController.js"}],"../node_modules/axios/lib/helpers/bind.js":[function(require,module,exports) {
 'use strict';
 
 module.exports = function bind(fn, thisArg) {
@@ -8626,59 +11272,7 @@ module.exports.default = axios;
 
 },{"./utils":"../node_modules/axios/lib/utils.js","./helpers/bind":"../node_modules/axios/lib/helpers/bind.js","./core/Axios":"../node_modules/axios/lib/core/Axios.js","./core/mergeConfig":"../node_modules/axios/lib/core/mergeConfig.js","./defaults":"../node_modules/axios/lib/defaults.js","./cancel/Cancel":"../node_modules/axios/lib/cancel/Cancel.js","./cancel/CancelToken":"../node_modules/axios/lib/cancel/CancelToken.js","./cancel/isCancel":"../node_modules/axios/lib/cancel/isCancel.js","./helpers/spread":"../node_modules/axios/lib/helpers/spread.js"}],"../node_modules/axios/index.js":[function(require,module,exports) {
 module.exports = require('./lib/axios');
-},{"./lib/axios":"../node_modules/axios/lib/axios.js"}],"js/utils/alert.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.hideAlert = exports.showAlert = void 0;
-
-var _base = require("../views/base");
-
-var showAlert = function showAlert(type, msg) {
-  hideAlert();
-  var alertMarkup = "<div class=\"alert alert-type--".concat(type, "\">").concat(msg, "<a href=\"#\" class=\"cross\">&Cross;</a></div> ");
-  document.querySelector('body').insertAdjacentHTML('afterbegin', alertMarkup);
-  window.setTimeout(function () {
-    return hideAlert;
-  }, 1000);
-};
-
-exports.showAlert = showAlert;
-
-var hideAlert = function hideAlert() {
-  var alert = document.querySelector('.alert');
-  if (alert) alert.remove();
-};
-
-exports.hideAlert = hideAlert;
-},{"../views/base":"js/views/base.js"}],"js/utils/localStorage.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.removeObj = exports.getObj = exports.storeObj = void 0;
-
-var storeObj = function storeObj(key, value) {
-  window.localStorage.setItem("".concat(key), JSON.stringify(value));
-};
-
-exports.storeObj = storeObj;
-
-var getObj = function getObj(key) {
-  return JSON.parse(window.localStorage.getItem("".concat(key)));
-};
-
-exports.getObj = getObj;
-
-var removeObj = function removeObj(key) {
-  return window.localStorage.removeItem("".concat(key));
-};
-
-exports.removeObj = removeObj;
-},{}],"js/models/cardModel.js":[function(require,module,exports) {
+},{"./lib/axios":"../node_modules/axios/lib/axios.js"}],"js/models/userModel.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -8688,11 +11282,171 @@ exports.default = void 0;
 
 var _axios = _interopRequireDefault(require("axios"));
 
-var _overviewController = require("../controllers/overviewController");
+var storage = _interopRequireWildcard(require("../utils/localStorage"));
 
 var _alert = require("../utils/alert");
 
-var storage = _interopRequireWildcard(require("../utils/localStorage"));
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var User = /*#__PURE__*/function () {
+  function User() {
+    _classCallCheck(this, User);
+  }
+
+  _createClass(User, [{
+    key: "login",
+    value: function () {
+      var _login = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(email, password) {
+        var res, message;
+        return regeneratorRuntime.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _context.prev = 0;
+                _context.next = 3;
+                return _axios.default.post('https://polar-savannah-53668.herokuapp.com/api/v0/users/login', {
+                  email: email,
+                  password: password
+                });
+
+              case 3:
+                res = _context.sent;
+
+                if (!(res.data.status === 'success')) {
+                  _context.next = 13;
+                  break;
+                }
+
+                (0, _alert.showAlert)('success', 'Logged in successfully!');
+                _context.next = 8;
+                return res.data.token;
+
+              case 8:
+                this.token = _context.sent;
+                storage.storeObj('token', this.token); // add user info to the state object
+
+                _context.next = 12;
+                return this.getMe();
+
+              case 12:
+                return _context.abrupt("return", true);
+
+              case 13:
+                return _context.abrupt("return", false);
+
+              case 16:
+                _context.prev = 16;
+                _context.t0 = _context["catch"](0);
+                console.log(_context.t0);
+                message = _context.t0.response.data.message;
+                (0, _alert.showAlert)('error', message);
+
+              case 21:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, this, [[0, 16]]);
+      }));
+
+      function login(_x, _x2) {
+        return _login.apply(this, arguments);
+      }
+
+      return login;
+    }()
+  }, {
+    key: "getMe",
+    value: function () {
+      var _getMe = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
+        var res, message;
+        return regeneratorRuntime.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                if (!(this.token || storage.getObj('token'))) {
+                  _context2.next = 16;
+                  break;
+                }
+
+                _context2.prev = 1;
+                _context2.next = 4;
+                return _axios.default.get('https://polar-savannah-53668.herokuapp.com/api/v0/users/my-account', {
+                  headers: {
+                    Authorization: "Bearer ".concat(this.token)
+                  }
+                });
+
+              case 4:
+                res = _context2.sent;
+
+                if (!(res.data.status === 'success')) {
+                  _context2.next = 10;
+                  break;
+                }
+
+                _context2.next = 8;
+                return res.data.data.user;
+
+              case 8:
+                this.userData = _context2.sent;
+                storage.storeObj('user', this.userData);
+
+              case 10:
+                _context2.next = 16;
+                break;
+
+              case 12:
+                _context2.prev = 12;
+                _context2.t0 = _context2["catch"](1);
+                message = _context2.t0.response.data;
+                (0, _alert.showAlert)('error', message);
+
+              case 16:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2, this, [[1, 12]]);
+      }));
+
+      function getMe() {
+        return _getMe.apply(this, arguments);
+      }
+
+      return getMe;
+    }()
+  }]);
+
+  return User;
+}();
+
+exports.default = User;
+},{"axios":"../node_modules/axios/index.js","../utils/localStorage":"js/utils/localStorage.js","../utils/alert":"js/utils/alert.js"}],"js/models/cardModel.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _axios = _interopRequireDefault(require("axios"));
+
+var _alert = require("../utils/alert");
 
 var windowView = _interopRequireWildcard(require("../views/windowView"));
 
@@ -8914,218 +11668,7 @@ var Card = /*#__PURE__*/function () {
 }();
 
 exports.default = Card;
-},{"axios":"../node_modules/axios/index.js","../controllers/overviewController":"js/controllers/overviewController.js","../utils/alert":"js/utils/alert.js","../utils/localStorage":"js/utils/localStorage.js","../views/windowView":"js/views/windowView.js"}],"img/SVG/plus.svg":[function(require,module,exports) {
-module.exports = '#42274f9c0f0bc0524f4b86d684834329';
-},{}],"img/SVG/minus.svg":[function(require,module,exports) {
-module.exports = '#687401b9368affa5df8150e820f8ce5c';
-},{}],"img/SVG/chevron-thin-right.svg":[function(require,module,exports) {
-module.exports = '#0670a98b8aa1a7eb0a0c37f3cdfba06b';
-},{}],"img/SVG/chevron-thin-left.svg":[function(require,module,exports) {
-module.exports = '#c5773b9a7bce81278c6aba3cd721ec79';
-},{}],"img/SVG/drive.svg":[function(require,module,exports) {
-module.exports = '#4fb5be48250a6c477ecf48c803563a79';
-},{}],"js/views/deckView.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.renderEmptyDeckGrid = exports.renderUpdateDeckGrid = exports.renderMakeDeckGrid = exports.renderMakeCard = exports.renderResults = exports.renderResultsDeck = exports.removePaginationDeck = exports.removePaginationUser = exports.deleteCard = exports.clearDeckCardsResults = exports.renderDeckCards = exports.clearUserCardsResults = exports.renderUserCards = exports.renderDeckGrid = void 0;
-
-var _plus = _interopRequireDefault(require("../../img/SVG/plus.svg"));
-
-var _minus = _interopRequireDefault(require("../../img/SVG/minus.svg"));
-
-var _check = _interopRequireDefault(require("../../img/SVG/check.svg"));
-
-var _circleWithCross = _interopRequireDefault(require("../../img/SVG/circle-with-cross.svg"));
-
-var _chevronThinRight = _interopRequireDefault(require("../../img/SVG/chevron-thin-right.svg"));
-
-var _chevronThinLeft = _interopRequireDefault(require("../../img/SVG/chevron-thin-left.svg"));
-
-var _edit = _interopRequireDefault(require("../../img/SVG/edit.svg"));
-
-var _trash = _interopRequireDefault(require("../../img/SVG/trash.svg"));
-
-var _drive = _interopRequireDefault(require("../../img/SVG/drive.svg"));
-
-var _base = require("./base");
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var renderDeckGrid = function renderDeckGrid(parent, deckArray) {
-  var decks = '';
-  deckArray.forEach(function (deck) {
-    var deckMarkup = "\n        <div class=\"deck deck-".concat(deck.id, "\" data-deck=").concat(deck.id, ">\n          <div class=\"deck__options\">\n            <a href=\"#\" class=\"options options--edit\">\n              <svg class=\"icon icon--options icon--edit\">\n                <use xlink:href=\"").concat(_edit.default, "\"></use>\n              </svg>\n              <span class=\"show-hide card--edit\">Edit</span>\n            </a>\n\n            <a href=\"#\" class=\"options options--delete\">\n              <svg class=\"icon icon--options icon--delete\">\n                <use xlink:href=\"").concat(_trash.default, "\"></use>\n              </svg>\n              <span class=\"show-hide card--delete\">Delete</span>\n            </a>\n          </div>\n\n            <div class=\"deck__details\">\n                <div class=\"name\">").concat(deck.name, "</div>\n            </div>\n        </div> \n        ");
-    decks += deckMarkup;
-  });
-  var markup = "\n    <div class=\"make-deck\">\n        <a href=\"#\" class=\"btn btn--ghost\">Make A New Deck</a>\n    </div>\n\n    <div class=\"deck-grid\">\n        ".concat(decks, "\n    </div>;");
-  parent.insertAdjacentHTML('afterbegin', markup);
-};
-
-exports.renderDeckGrid = renderDeckGrid;
-
-var renderUserCards = function renderUserCards(card) {
-  var markup = "\n    <li class=\"make-deck__item\" data-card=\"".concat(card.id, "\">\n    <a href=\"#\" class=\"make-deck__link\">\n      <svg class=\"icon icon__make-deck--card\">\n        <use href=\"").concat(_plus.default, "\"></use>\n      </svg>\n      <div class=\"make-deck__card-details\">\n        <span class=\"make-deck__span make-deck-span--question\">").concat((0, _base.limitCharacters)(card.question), "</span>\n      <span class=\"make-deck__span make-deck-span--answer\">").concat((0, _base.limitCharacters)(card.answer), "</span>\n      </div>\n    </a>\n  </li>");
-  document.querySelector('.make-deck__list--user').insertAdjacentHTML('beforeend', markup);
-};
-
-exports.renderUserCards = renderUserCards;
-
-var clearUserCardsResults = function clearUserCardsResults() {
-  document.querySelector('.make-deck__list--user').innerHTML = '';
-  document.querySelector('.make-deck__paginate--user').innerHTML = '';
-};
-
-exports.clearUserCardsResults = clearUserCardsResults;
-
-var renderDeckCards = function renderDeckCards(card) {
-  var markup = "\n    <li class=\"make-deck__item\" data-card=\"".concat(card.id, "\">\n    <a href=\"#\" class=\"make-deck__link\">\n      <svg class=\"icon icon__make-deck--card\">\n        <use href=\"").concat(_minus.default, "\"></use>\n      </svg>\n      <div class=\"make-deck__card-details\">\n        <span class=\"make-deck__span make-deck-span--question\">").concat((0, _base.limitCharacters)(card.question), "</span>\n      <span class=\"make-deck__span make-deck-span--answer\">").concat((0, _base.limitCharacters)(card.answer), "</span>\n      </div>\n    </a>\n  </li>");
-  document.querySelector('.make-deck__list--deck').insertAdjacentHTML('beforeend', markup);
-};
-
-exports.renderDeckCards = renderDeckCards;
-
-var clearDeckCardsResults = function clearDeckCardsResults() {
-  document.querySelector('.make-deck__list--deck').innerHTML = '';
-  document.querySelector('.make-deck__paginate--deck').innerHTML = '';
-};
-
-exports.clearDeckCardsResults = clearDeckCardsResults;
-
-var deleteCard = function deleteCard(id) {
-  var card = document.querySelector("[data-card*=\"".concat(id, "\"]"));
-  if (card) card.remove();
-};
-
-exports.deleteCard = deleteCard;
-
-var createButton = function createButton(page, type) {
-  return "\n<button class=\"btn--inline btn__search btn__search--".concat(type, "\" data-goto=").concat(type === 'prev' ? page - 1 : page + 1, ">\n<span>Page ").concat(type === 'prev' ? page - 1 : page + 1, "</span>  \n<svg class=\"icon icon__search icon__search--").concat(type === 'prev' ? 'prev' : 'next', "\">\n    <use href=\"").concat(type === 'prev' ? _chevronThinLeft.default : _chevronThinRight.default, "\"></use>\n  </svg>\n</button>");
-};
-
-var renderButtonsUser = function renderButtonsUser(page, numResults, resPerPage) {
-  var pages = Math.ceil(numResults / resPerPage);
-  var btn;
-
-  if (page === 1 && pages > 1) {
-    // Only Button to go to the next page
-    btn = createButton(page, 'next');
-  } else if (page < pages) {
-    // Both Buttons
-    btn = "\n        ".concat(createButton(page, 'prev'), " \n        ").concat(createButton(page, 'next'), "\n        ");
-  } else if (page === pages && pages > 1) {
-    // Only Button to go to the prev page
-    btn = createButton(page, 'prev');
-  }
-
-  if (btn) {
-    addPaginationUser();
-    document.querySelector('.make-deck__paginate--user').insertAdjacentHTML('afterbegin', btn);
-  } else {
-    removePaginationUser();
-  }
-};
-
-var addPaginationUser = function addPaginationUser() {
-  document.querySelector('.make-deck__paginate--user').style.display = 'flex';
-};
-
-var removePaginationUser = function removePaginationUser() {
-  document.querySelector('.make-deck__paginate--user').style.display = 'none';
-};
-
-exports.removePaginationUser = removePaginationUser;
-
-var renderButtonsDeck = function renderButtonsDeck(page, numResults, resPerPage) {
-  var pages = Math.ceil(numResults / resPerPage);
-  var btn;
-
-  if (page === 1 && pages > 1) {
-    // Only Button to go to the next page
-    btn = createButton(page, 'next');
-  } else if (page < pages) {
-    // Both Buttons
-    btn = "\n        ".concat(createButton(page, 'prev'), " \n        ").concat(createButton(page, 'next'), "\n        ");
-  } else if (page === pages && pages > 1) {
-    // Only Button to go to the prev page
-    btn = createButton(page, 'prev');
-  }
-
-  if (btn) {
-    addPaginationDeck();
-    document.querySelector('.make-deck__paginate--deck').insertAdjacentHTML('afterbegin', btn);
-  } else {
-    removePaginationDeck();
-  }
-};
-
-var addPaginationDeck = function addPaginationDeck() {
-  document.querySelector('.make-deck__paginate--deck').style.display = 'flex';
-};
-
-var removePaginationDeck = function removePaginationDeck() {
-  document.querySelector('.make-deck__paginate--deck').style.display = 'none';
-};
-
-exports.removePaginationDeck = removePaginationDeck;
-
-var renderResultsDeck = function renderResultsDeck(array) {
-  var page = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
-  var resPerPage = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 4;
-  clearDeckCardsResults(); // render the results of the current page
-
-  var start = (page - 1) * resPerPage;
-  var end = page * resPerPage;
-  array.slice(start, end).forEach(renderDeckCards); // render pagination button
-
-  renderButtonsDeck(page, array.length, resPerPage);
-};
-
-exports.renderResultsDeck = renderResultsDeck;
-
-var renderResults = function renderResults(array) {
-  var page = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
-  var resPerPage = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 4;
-  // render the results of the current page
-  var start = (page - 1) * resPerPage;
-  var end = page * resPerPage;
-  array.slice(start, end).forEach(renderUserCards); // render pagination button
-
-  renderButtonsUser(page, array.length, resPerPage);
-};
-
-exports.renderResults = renderResults;
-
-var renderMakeCard = function renderMakeCard(HTMLCard, value) {
-  var markup = "\n  <div class=\"card__options\">\n  <a href=\"#\" class=\"options options--add\">\n    <svg class=\"icon icon--options icon--add\">\n      <use xlink:href=\"".concat(_plus.default, "\"></use>\n    </svg>\n    <span class=\"show-hide card--edit\">Add card</span>\n  </a>\n\n</div>\n\n<div class=\"card__details\">\n  <span class=\"name\">").concat(value, "</span>\n</div>");
-  HTMLCard.innerHTML = markup;
-};
-
-exports.renderMakeCard = renderMakeCard;
-
-var renderMakeDeckGrid = function renderMakeDeckGrid(parent) {
-  var markup = "<div class=\"make-deck-grid\">\n  <form action=\"#\" class=\"make-deck__form\">\n      <label for=\"deck-name\" class=\"make-deck__label\">Enter Deck name</label>\n      <input class=\"make-deck__input\" type=\"text\" minlength=\"5\" maxlength=\"50\" id=\"deck-name\" placeholder=\"Deck Name\">\n  </form>\n\n  <div class=\"make-deck__card-nav make-deck__card-nav--user-cards\">\n    <span class=\"make-deck__name\">My Cards</span>\n    <ul class=\"make-deck__list make-deck__list--user\">\n      \n    </ul>\n\n    <div class=\"make-deck__paginate make-deck__paginate--user\">\n      \n    </div>\n  </div>\n\n  <div class=\"make-deck__card-nav make-deck__card-nav--deck-cards\">\n    <span class=\"make-deck__name\">Deck Cards</span>\n    <ul class=\"make-deck__list make-deck__list--deck\">\n      \n    </ul>\n\n    <div class=\"make-deck__paginate make-deck__paginate--deck\">\n    \n    </div>\n  </div>\n\n  <div class=\"make-deck__card-switch\">\n    <div class=\"card card--make make-deck__card\">\n    <div class=\"card__options\">\n      <a href=\"#\" class=\"options options--add\">\n        <svg class=\"icon icon--options icon--add\">\n          <use xlink:href=\"".concat(_plus.default, "\"></use>\n        </svg>\n        <span class=\"show-hide card--edit\">Add card</span>\n      </a>\n\n    </div>\n\n    <div class=\"card__details\">\n      <span class=\"name\">What is a Question?</span>\n    </div>\n    </div>\n\n    <div class=\"make-deck__group make-deck--switch\">\n      <a href=\"#\" class=\"make-deck__switch btn btn--switch\">Turn Over</a>\n    </div>\n  </div>\n  \n  <div class=\"make-deck__options\">\n    <div class=\"make-deck__group make-deck--right\">\n      <a href=\"#\" class=\"make-deck__link\">\n        <svg class=\"icon icon--make-deck icon--make-deck-right icon--right\">\n          <use href=\"").concat(_check.default, "\"></use>\n        </svg>\n      </a>\n      <span class=\"make-deck__span\">Create The Deck</span>\n    </div>\n\n    <div class=\"make-deck__group make-deck--wrong\">\n      <a href=\"#\" class=\"make-deck__link\">\n        <svg class=\"icon icon--make-deck icon--make-deck-left icon-left icon--wrong\">\n          <use href=\"").concat(_circleWithCross.default, "\"></use>\n        </svg>\n      </a>\n      <span class=\"make-deck__span\">Let's Stop!</span>\n    </div>\n  </div>\n</div>");
-  parent.insertAdjacentHTML('afterbegin', markup);
-};
-
-exports.renderMakeDeckGrid = renderMakeDeckGrid;
-
-var renderUpdateDeckGrid = function renderUpdateDeckGrid(parent, deck) {
-  var markup = "<div class=\"make-deck-grid\">\n  <form action=\"#\" class=\"make-deck__form\">\n      <label for=\"deck-name\" class=\"make-deck__label\">Enter Deck name</label>\n      <input class=\"make-deck__input\" type=\"text\" minlength=\"5\" maxlength=\"50\" id=\"deck-name\" placeholder=\"Deck Name\" value=\"".concat(deck.name, "\">\n  </form>\n\n  <div class=\"make-deck__card-nav make-deck__card-nav--user-cards\">\n    <span class=\"make-deck__name\">My Cards</span>\n    <ul class=\"make-deck__list make-deck__list--user\">\n      \n    </ul>\n\n    <div class=\"make-deck__paginate make-deck__paginate--user\">\n      \n    </div>\n  </div>\n\n  <div class=\"make-deck__card-nav make-deck__card-nav--deck-cards\">\n    <span class=\"make-deck__name\">Deck Cards</span>\n    <ul class=\"make-deck__list make-deck__list--deck\">\n      \n    </ul>\n\n    <div class=\"make-deck__paginate make-deck__paginate--deck\">\n\n    </div>\n  </div>\n\n  <div class=\"make-deck__card-switch\">\n    <div class=\"card card--make make-deck__card\">\n    <div class=\"card__options\">\n      <a href=\"#\" class=\"options options--add\">\n        <svg class=\"icon icon--options icon--add\">\n          <use xlink:href=\"").concat(_plus.default, "\"></use>\n        </svg>\n        <span class=\"show-hide card--edit\">Add card</span>\n      </a>\n\n    </div>\n\n    <div class=\"card__details\">\n      <span class=\"name\">What is a Question?</span>\n    </div>\n    </div>\n\n    <div class=\"make-deck__group make-deck--switch\">\n      <a href=\"#\" class=\"make-deck__switch btn btn--switch\">Turn Over</a>\n    </div>\n  </div>\n  \n  <div class=\"make-deck__options\">\n    <div class=\"make-deck__group make-deck--right\">\n      <a href=\"#\" class=\"make-deck__link\">\n        <svg class=\"icon icon--make-deck icon--make-deck-right icon--right\">\n          <use href=\"").concat(_check.default, "\"></use>\n        </svg>\n      </a>\n      <span class=\"make-deck__span\">Create The Deck</span>\n    </div>\n\n    <div class=\"make-deck__group make-deck--wrong\">\n      <a href=\"#\" class=\"make-deck__link\">\n        <svg class=\"icon icon--make-deck icon--make-deck-left icon-left icon--wrong\">\n          <use href=\"").concat(_circleWithCross.default, "\"></use>\n        </svg>\n      </a>\n      <span class=\"make-deck__span\">Let's Stop!</span>\n    </div>\n  </div>\n</div>");
-  parent.insertAdjacentHTML('afterbegin', markup);
-};
-
-exports.renderUpdateDeckGrid = renderUpdateDeckGrid;
-
-var renderEmptyDeckGrid = function renderEmptyDeckGrid(parent) {
-  var markup = "<div class=\"make-deck\">\n  <a href=\"#\" class=\"btn btn--ghost\">Make A New Deck</a>\n</div>\n\n<div class=\"deck-grid\">\n  <div class=\"no-item\">\n      <svg class=\"icon icon--no-item\">\n        <use href=\"".concat(_drive.default, "\"></use>\n      </svg>\n      <span>make some decks to see them here!</span>\n  </div>\n</div>");
-  parent.insertAdjacentHTML('afterbegin', markup);
-};
-
-exports.renderEmptyDeckGrid = renderEmptyDeckGrid;
-},{"../../img/SVG/plus.svg":"img/SVG/plus.svg","../../img/SVG/minus.svg":"img/SVG/minus.svg","../../img/SVG/check.svg":"img/SVG/check.svg","../../img/SVG/circle-with-cross.svg":"img/SVG/circle-with-cross.svg","../../img/SVG/chevron-thin-right.svg":"img/SVG/chevron-thin-right.svg","../../img/SVG/chevron-thin-left.svg":"img/SVG/chevron-thin-left.svg","../../img/SVG/edit.svg":"img/SVG/edit.svg","../../img/SVG/trash.svg":"img/SVG/trash.svg","../../img/SVG/drive.svg":"img/SVG/drive.svg","./base":"js/views/base.js"}],"js/models/deckModel.js":[function(require,module,exports) {
+},{"axios":"../node_modules/axios/index.js","../utils/alert":"js/utils/alert.js","../views/windowView":"js/views/windowView.js"}],"js/models/deckModel.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -9397,1381 +11940,7 @@ var Deck = /*#__PURE__*/function () {
 }();
 
 exports.default = Deck;
-},{"axios":"../node_modules/axios/index.js","../utils/alert":"js/utils/alert.js","../views/windowView":"js/views/windowView.js"}],"js/controllers/deckController.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.deckUpdateMaker = exports.deckMakerLoader = exports.deleteDeck = exports.getDecksFromAPI = exports.getDeck = exports.deckLoader = exports.deckRender = exports.deckLoaderAndRender = void 0;
-
-var _base = require("../views/base");
-
-var deckView = _interopRequireWildcard(require("../views/deckView"));
-
-var windowView = _interopRequireWildcard(require("../views/windowView"));
-
-var cardView = _interopRequireWildcard(require("../views/cardView"));
-
-var cardController = _interopRequireWildcard(require("../controllers/cardController"));
-
-var windowController = _interopRequireWildcard(require("../controllers/windowController"));
-
-var storage = _interopRequireWildcard(require("../utils/localStorage"));
-
-var _alert = require("../utils/alert");
-
-var _deckModel = _interopRequireDefault(require("../models/deckModel"));
-
-var _overviewController = require("./overviewController");
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
-
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-
-var deckLoaderAndRender = /*#__PURE__*/function () {
-  var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
-    return regeneratorRuntime.wrap(function _callee$(_context) {
-      while (1) {
-        switch (_context.prev = _context.next) {
-          case 0:
-            _context.next = 2;
-            return getDecksFromAPI();
-
-          case 2:
-            deckRender();
-
-          case 3:
-          case "end":
-            return _context.stop();
-        }
-      }
-    }, _callee);
-  }));
-
-  return function deckLoaderAndRender() {
-    return _ref.apply(this, arguments);
-  };
-}();
-
-exports.deckLoaderAndRender = deckLoaderAndRender;
-
-var deckRender = function deckRender() {
-  // 1. Get the cards
-  var decks = _overviewController.state.deck.decks || storage.getObj('decks'); // 2. Check if they are empty, if so render and exit function
-
-  if (decks.length === 0) {
-    return deckView.renderEmptyDeckGrid(_base.elements.overview);
-  } // 3. Render the card grid and cards on the grid
-
-
-  deckView.renderDeckGrid(_base.elements.overview, decks);
-};
-
-exports.deckRender = deckRender;
-
-var deckLoader = function deckLoader(e) {
-  // User has clicked an option
-  if (e.target.matches('.options, .options *')) {
-    var click = e.target.closest('.options');
-    var deckId = e.target.parentNode.parentNode.parentNode.dataset.deck;
-    optionsHandler(click, deckId); // User has clicked the deck itself
-  } else if (e.target.matches('.deck, .deck *')) {
-    var _click = e.target.closest('.deck');
-
-    deckHandler(_click);
-  }
-};
-
-exports.deckLoader = deckLoader;
-
-var optionsHandler = function optionsHandler(click, deckId) {
-  // user clicked edit deck
-  if (Array.from(click.classList).includes('options--edit')) {
-    deckUpdateMaker(deckId); // user clicked delete deck
-  } else if (Array.from(click.classList).includes('options--delete')) {
-    windowController.windowDeletionHandlerDeck(deckId);
-  }
-}; // Get one deck from the array in local storage
-
-
-var getDeck = function getDeck(deckId) {
-  //1. Get the decks array
-  var decks = storage.getObj('decks') || _overviewController.state.deck.decks; //2. Find the deck in the decks array via id
-
-
-  return decks.filter(function (deck) {
-    return deck.id === deckId;
-  })[0];
-};
-
-exports.getDeck = getDeck;
-
-var addCardToDeckHandler = function addCardToDeckHandler(deckArray) {
-  document.querySelector('.make-deck__list--user').addEventListener('click', function (e) {
-    // 1. Get the item that was click
-    var item = e.target.closest('.icon'); // 2. Check if the click was a plus icon
-
-    if (item) {
-      // 2.1 Get the card Id from the item
-      var cardId = item.parentNode.parentNode.dataset.card; // 2.2 Store and get the card from state or local storage
-
-      storeCard(cardId);
-      var card = cardController.getCard(cardId); // 2.3 Add the card to the local deckArray reference
-
-      deckArray.push(card); // 2.4 Store the deckArray to local storage
-
-      _overviewController.state.deck.deckArray = deckArray;
-      storage.storeObj('decks.deckArray', _overviewController.state.deck.deckArray); // 2.5 Render the results to the deck card section
-
-      deckView.renderResultsDeck(deckArray); // 2.6 more than 4 cards, start adding in the paginating handler
-
-      if (deckArray.length > 4) {
-        searchButtonHandler();
-      }
-    }
-  });
-};
-
-var removeCardFromDeck = function removeCardFromDeck(deckArray) {
-  document.querySelector('.make-deck__list--deck').addEventListener('click', function (e) {
-    // 1. Get the item was clicked
-    var item = e.target.closest('.icon'); // 2. Check if the item was a card that was click
-
-    if (item) {
-      // 2.1 Get the card id
-      var cardId = item.parentNode.parentNode.dataset.card; // 2.2 Get the index from the deckArray
-
-      var index;
-      deckArray.forEach(function (el, i) {
-        if (el.id === cardId) {
-          index = i;
-        }
-      }); // 2.3 Remove it from the Deck array
-
-      deckArray.splice(index, 1); // 2.4 Re-render the deck cards back to the screen
-
-      deckView.renderResultsDeck(deckArray);
-    }
-  });
-}; // When the user presses next or prev
-
-
-var searchButtonHandler = function searchButtonHandler() {
-  searchButtonUser();
-  searchButtonDeck();
-};
-
-var searchButtonUser = function searchButtonUser() {
-  document.querySelector('.make-deck__paginate--user').addEventListener('click', function (e) {
-    // 1. See if the button was clicked
-    var btn = e.target.closest('.btn--inline');
-
-    if (btn) {
-      // 1.1. get the page number from the dataset
-      var goToPage = parseInt(btn.dataset.goto, 10);
-      var cards = _overviewController.state.card.cards || storage.getObj('cards'); // 1.2. clear the card results and pagination
-
-      deckView.clearUserCardsResults(); // 1.3. Render the new cards and new buttons
-
-      deckView.renderResults(cards, goToPage);
-      window.scroll(0, 0);
-    }
-  });
-};
-
-var searchButtonDeck = function searchButtonDeck() {
-  document.querySelector('.make-deck__paginate--deck').addEventListener('click', function (e) {
-    // 1. See if the button was clicked
-    var btn = e.target.closest('.btn--inline');
-
-    if (btn) {
-      // 1.1. get the page number from the dataset
-      var goToPage = parseInt(btn.dataset.goto, 10);
-      var deckArray = _overviewController.state.deck.deckArray || storage.getObj('decks.deckArray'); // 1.2. clear the card results and pagination
-
-      deckView.clearDeckCardsResults(); // 1.3. Render the new cards and new buttons
-
-      deckView.renderResultsDeck(deckArray, goToPage);
-      window.scroll(0, 0);
-    }
-  });
-};
-
-var renderCardValue = function renderCardValue(value) {
-  deckView.renderMakeCard(document.querySelector('.card--make'), value);
-};
-
-var storeCard = function storeCard(cardId) {
-  _overviewController.state.deck.card = cardId;
-  storage.storeObj('decks.card', cardId);
-};
-
-var getCardItem = function getCardItem() {
-  document.querySelector('.make-deck__list--user').addEventListener('click', getCardItemHandler);
-  document.querySelector('.make-deck__list--deck').addEventListener('click', getCardItemHandler);
-};
-
-var getCardItemHandler = function getCardItemHandler(e) {
-  {
-    // 1. Get the card that was clicked
-    var item = e.target.closest('.make-deck__item');
-
-    if (item) {
-      // 2. Store a reference of the card that was clicked
-      var cardId = item.dataset.card;
-      storeCard(cardId); // 3. Render the question to the card
-
-      var card = cardController.getCard(cardId);
-      renderCardValue(card.question);
-    }
-  }
-};
-
-var swapCardFacing = function swapCardFacing() {
-  var value = '';
-  var cardFacing = 'question';
-  document.querySelector('.make-deck__switch').addEventListener('click', function (e) {
-    // card to be swapped over to answer side
-    if (cardFacing === 'question') {
-      value = cardController.getCard(_overviewController.state.deck.card || storage.getObj('decks.card')).question;
-      cardFacing = 'answer'; // card to be swapped over to question side
-    } else {
-      value = cardController.getCard(_overviewController.state.deck.card || storage.getObj('decks.card')).answer;
-      cardFacing = 'question';
-    }
-
-    renderCardValue(value);
-  });
-};
-
-var cancelDeckMaker = function cancelDeckMaker() {
-  // User clicks to cancel the deck creation
-  document.querySelector('.icon--make-deck-left').addEventListener('click', function (e) {
-    // 1. Clear the Overview
-    (0, _base.clearOverview)(); // 2. Bring the user back to the deck homepage
-
-    deckRender(_base.elements.overview, _overviewController.state.deck.decks);
-  });
-};
-
-var getDecksFromAPI = /*#__PURE__*/function () {
-  var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
-    var token;
-    return regeneratorRuntime.wrap(function _callee2$(_context2) {
-      while (1) {
-        switch (_context2.prev = _context2.next) {
-          case 0:
-            token = storage.getObj('token') || _overviewController.state.user.token;
-
-            if (token) {
-              _context2.next = 3;
-              break;
-            }
-
-            return _context2.abrupt("return", new Error('You are not logged in'));
-
-          case 3:
-            _context2.next = 5;
-            return _overviewController.state.deck.getDecks(token);
-
-          case 5:
-            _overviewController.state.deck.decks = _context2.sent;
-            storage.storeObj('decks', _overviewController.state.deck.decks);
-
-          case 7:
-          case "end":
-            return _context2.stop();
-        }
-      }
-    }, _callee2);
-  }));
-
-  return function getDecksFromAPI() {
-    return _ref2.apply(this, arguments);
-  };
-}();
-
-exports.getDecksFromAPI = getDecksFromAPI;
-
-var createDeck = function createDeck() {
-  // User clicks to create the deck
-  document.querySelector('.icon--make-deck-right').addEventListener('click', /*#__PURE__*/function () {
-    var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(e) {
-      var name, user, deck, token;
-      return regeneratorRuntime.wrap(function _callee3$(_context3) {
-        while (1) {
-          switch (_context3.prev = _context3.next) {
-            case 0:
-              // 1. Get all the input from user
-              name = document.querySelector('.make-deck__input').value;
-              user = storage.getObj('user') || _overviewController.state.user.userData.id;
-              deck = _overviewController.state.deck.deckArray;
-              token = storage.getObj('token'); // 2. Check if they have a deck of cards or gave it a name
-
-              if (!(name && deck)) {
-                _context3.next = 10;
-                break;
-              }
-
-              _context3.next = 7;
-              return _overviewController.state.deck.createDeck(name, user, deck, token);
-
-            case 7:
-              deckMakerLoader();
-              _context3.next = 11;
-              break;
-
-            case 10:
-              (0, _alert.showAlert)('error', 'Please provide a name and cards');
-
-            case 11:
-            case "end":
-              return _context3.stop();
-          }
-        }
-      }, _callee3);
-    }));
-
-    return function (_x) {
-      return _ref3.apply(this, arguments);
-    };
-  }());
-};
-
-var updateDeck = function updateDeck(deckId) {
-  // User clicks to create the deck
-  document.querySelector('.icon--make-deck-right').addEventListener('click', /*#__PURE__*/function () {
-    var _ref4 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5(e) {
-      var name, deck, token;
-      return regeneratorRuntime.wrap(function _callee5$(_context5) {
-        while (1) {
-          switch (_context5.prev = _context5.next) {
-            case 0:
-              // 1. Get all the input from user
-              name = document.querySelector('.make-deck__input').value;
-              deck = _overviewController.state.deck.deckArray;
-              token = storage.getObj('token');
-              _context5.prev = 3;
-
-              if (!(name && deck)) {
-                _context5.next = 10;
-                break;
-              }
-
-              _context5.next = 7;
-              return _overviewController.state.deck.updateDeck(deckId, name, deck, token);
-
-            case 7:
-              // 2.2 Render the homepage to show the change
-              window.setTimeout( /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4() {
-                return regeneratorRuntime.wrap(function _callee4$(_context4) {
-                  while (1) {
-                    switch (_context4.prev = _context4.next) {
-                      case 0:
-                        (0, _base.clearOverview)();
-                        _context4.next = 3;
-                        return deckLoaderAndRender();
-
-                      case 3:
-                      case "end":
-                        return _context4.stop();
-                    }
-                  }
-                }, _callee4);
-              })), 1500);
-              _context5.next = 11;
-              break;
-
-            case 10:
-              (0, _alert.showAlert)('error', 'Please provide a name and cards');
-
-            case 11:
-              _context5.next = 16;
-              break;
-
-            case 13:
-              _context5.prev = 13;
-              _context5.t0 = _context5["catch"](3);
-              (0, _alert.showAlert)('error', _context5.t0.message);
-
-            case 16:
-            case "end":
-              return _context5.stop();
-          }
-        }
-      }, _callee5, null, [[3, 13]]);
-    }));
-
-    return function (_x2) {
-      return _ref4.apply(this, arguments);
-    };
-  }());
-};
-
-var deleteDeck = /*#__PURE__*/function () {
-  var _ref6 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee7(e, cardId) {
-    var click, token;
-    return regeneratorRuntime.wrap(function _callee7$(_context7) {
-      while (1) {
-        switch (_context7.prev = _context7.next) {
-          case 0:
-            click = e.target.closest('.window__content');
-            _context7.prev = 1;
-
-            if (!click) {
-              _context7.next = 13;
-              break;
-            }
-
-            if (!e.target.matches('.window__ok')) {
-              _context7.next = 12;
-              break;
-            }
-
-            // 3.1 get the token
-            token = storage.getObj('token') || _overviewController.state.user.token; // 3.2 Check to see if they are logged in
-
-            if (token) {
-              _context7.next = 7;
-              break;
-            }
-
-            return _context7.abrupt("return", new Error('You are not logged in!'));
-
-          case 7:
-            _context7.next = 9;
-            return _overviewController.state.deck.deleteDeck(cardId, token);
-
-          case 9:
-            // Render the homepage to show the change
-            window.setTimeout( /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
-              return regeneratorRuntime.wrap(function _callee6$(_context6) {
-                while (1) {
-                  switch (_context6.prev = _context6.next) {
-                    case 0:
-                      (0, _base.clearOverview)();
-                      _context6.next = 3;
-                      return deckLoaderAndRender();
-
-                    case 3:
-                    case "end":
-                      return _context6.stop();
-                  }
-                }
-              }, _callee6);
-            })), 1500); // they clicked no to delete the card
-
-            _context7.next = 13;
-            break;
-
-          case 12:
-            windowView.clearWindow();
-
-          case 13:
-            _context7.next = 18;
-            break;
-
-          case 15:
-            _context7.prev = 15;
-            _context7.t0 = _context7["catch"](1);
-            (0, _alert.showAlert)('error', _context7.t0.message);
-
-          case 18:
-          case "end":
-            return _context7.stop();
-        }
-      }
-    }, _callee7, null, [[1, 15]]);
-  }));
-
-  return function deleteDeck(_x3, _x4) {
-    return _ref6.apply(this, arguments);
-  };
-}(); // When the user interacts with the decks in the overview
-
-
-exports.deleteDeck = deleteDeck;
-
-var deckHandler = function deckHandler(click) {
-  try {
-    // 1. Get the Deck Id
-    var deckId = click.dataset.deck; //2. Get the deck data from the Id
-
-    var deckData = getDeck(deckId); //3. Get the cards associated with the deck
-
-    var deckCards = deckData.cards; //4. Render the deck cards
-
-    cardController.deckCardRender(deckCards);
-  } catch (err) {
-    (0, _alert.showAlert)('error', err.message);
-  }
-}; // When the user selects to make a deck
-
-
-var deckMakerLoader = function deckMakerLoader() {
-  // 1. Clear the overview
-  (0, _base.clearOverview)(); // 2. Render the make a deck grid layout
-
-  deckView.renderMakeDeckGrid(_base.elements.overview); // 3. Get the user cards
-
-  var cards = _overviewController.state.card.cards || storage.getObj('cards'); // 3.1 If they have cards, render them to the page
-
-  if (cards.length !== 0) {
-    deckView.renderResults(cards);
-    searchButtonHandler();
-    deckView.removePaginationDeck();
-  } else {
-    deckView.removePaginationUser();
-    deckView.removePaginationUser();
-  } // 4. Create the DeckArray reference
-
-
-  var deckArray = []; // 5. Add the event handlers
-
-  getCardItem();
-  swapCardFacing();
-  addCardToDeckHandler(deckArray);
-  removeCardFromDeck(deckArray);
-  cancelDeckMaker();
-  createDeck();
-};
-
-exports.deckMakerLoader = deckMakerLoader;
-
-var deckUpdateMaker = function deckUpdateMaker(deckId) {
-  // 1. Get the deck and user cards
-  var deckData = getDeck(deckId);
-  var cards = _overviewController.state.card.cards || storage.getObj('cards'); // 2. Create the Deck array
-
-  var deckArray = deckData.cards;
-
-  if (deckArray.length < 3) {
-    deckView.removePaginationDeck();
-  } // 3. clear Overview
-
-
-  (0, _base.clearOverview)(); // 4. Render the update deck and handlers
-
-  deckView.renderUpdateDeckGrid(_base.elements.overview, deckData);
-  deckView.renderResults(cards);
-  deckView.renderResultsDeck(deckArray);
-  searchButtonHandler();
-  swapCardFacing();
-  getCardItem();
-  addCardToDeckHandler(deckArray);
-  removeCardFromDeck(deckArray);
-  cancelDeckMaker(); // 5. Call the update deck handler
-
-  updateDeck(deckId);
-};
-
-exports.deckUpdateMaker = deckUpdateMaker;
-},{"../views/base":"js/views/base.js","../views/deckView":"js/views/deckView.js","../views/windowView":"js/views/windowView.js","../views/cardView":"js/views/cardView.js","../controllers/cardController":"js/controllers/cardController.js","../controllers/windowController":"js/controllers/windowController.js","../utils/localStorage":"js/utils/localStorage.js","../utils/alert":"js/utils/alert.js","../models/deckModel":"js/models/deckModel.js","./overviewController":"js/controllers/overviewController.js"}],"js/controllers/windowController.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.windowDeletionHandlerDeck = exports.windowDeletionHandlerCard = void 0;
-
-var _base = require("../views/base");
-
-var _alert = require("../utils/alert");
-
-var _cardController = require("./cardController");
-
-var _deckController = require("./deckController");
-
-var windowView = _interopRequireWildcard(require("../views/windowView"));
-
-function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
-
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-
-var windowDeletionHandlerCard = function windowDeletionHandlerCard(cardId) {
-  // 1. Hide any remaining alerts at the top of body
-  (0, _alert.hideAlert)(); // 2. display the yes or no box to the user
-
-  windowView.renderWindow(_base.elements.body); // 3. Add event handler to when a card is deleted
-
-  document.querySelector('body').addEventListener('click', /*#__PURE__*/function () {
-    var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(e) {
-      return regeneratorRuntime.wrap(function _callee$(_context) {
-        while (1) {
-          switch (_context.prev = _context.next) {
-            case 0:
-              _context.next = 2;
-              return (0, _cardController.deleteCard)(e, cardId);
-
-            case 2:
-            case "end":
-              return _context.stop();
-          }
-        }
-      }, _callee);
-    }));
-
-    return function (_x) {
-      return _ref.apply(this, arguments);
-    };
-  }());
-};
-
-exports.windowDeletionHandlerCard = windowDeletionHandlerCard;
-
-var windowDeletionHandlerDeck = function windowDeletionHandlerDeck(deckId) {
-  // 1. Hide any remaining alerts at the top of body
-  (0, _alert.hideAlert)(); // 2. display the yes or no box to the user
-
-  windowView.renderWindow(_base.elements.body); // 3. Add event handler to when a card is deleted
-
-  document.querySelector('body').addEventListener('click', /*#__PURE__*/function () {
-    var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(e) {
-      return regeneratorRuntime.wrap(function _callee2$(_context2) {
-        while (1) {
-          switch (_context2.prev = _context2.next) {
-            case 0:
-              _context2.next = 2;
-              return (0, _deckController.deleteDeck)(e, deckId);
-
-            case 2:
-            case "end":
-              return _context2.stop();
-          }
-        }
-      }, _callee2);
-    }));
-
-    return function (_x2) {
-      return _ref2.apply(this, arguments);
-    };
-  }());
-};
-
-exports.windowDeletionHandlerDeck = windowDeletionHandlerDeck;
-},{"../views/base":"js/views/base.js","../utils/alert":"js/utils/alert.js","./cardController":"js/controllers/cardController.js","./deckController":"js/controllers/deckController.js","../views/windowView":"js/views/windowView.js"}],"js/controllers/cardController.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.cardMakerLoader = exports.deleteCard = exports.swapCardFacing = exports.getCard = exports.cardLoader = exports.deckCardRender = exports.cardRender = exports.getCardsFromAPI = exports.cardLoaderAndRender = void 0;
-
-var _base = require("../views/base");
-
-var cardView = _interopRequireWildcard(require("../views/cardView"));
-
-var windowView = _interopRequireWildcard(require("../views/windowView"));
-
-var _cardModel = _interopRequireDefault(require("../models/cardModel"));
-
-var _overviewController = require("./overviewController");
-
-var windowController = _interopRequireWildcard(require("./windowController"));
-
-var storage = _interopRequireWildcard(require("../utils/localStorage"));
-
-var _alert = require("../utils/alert");
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
-
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-
-var cardLoaderAndRender = /*#__PURE__*/function () {
-  var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
-    return regeneratorRuntime.wrap(function _callee$(_context) {
-      while (1) {
-        switch (_context.prev = _context.next) {
-          case 0:
-            _context.next = 2;
-            return getCardsFromAPI();
-
-          case 2:
-            cardRender();
-
-          case 3:
-          case "end":
-            return _context.stop();
-        }
-      }
-    }, _callee);
-  }));
-
-  return function cardLoaderAndRender() {
-    return _ref.apply(this, arguments);
-  };
-}();
-
-exports.cardLoaderAndRender = cardLoaderAndRender;
-
-var getCardsFromAPI = /*#__PURE__*/function () {
-  var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
-    var token;
-    return regeneratorRuntime.wrap(function _callee2$(_context2) {
-      while (1) {
-        switch (_context2.prev = _context2.next) {
-          case 0:
-            // 1. Get the TOKEN
-            token = storage.getObj('token') || _overviewController.state.user.token;
-
-            if (token) {
-              _context2.next = 3;
-              break;
-            }
-
-            return _context2.abrupt("return", new Error('You are not logged in'));
-
-          case 3:
-            _context2.next = 5;
-            return _overviewController.state.card.getCards(token);
-
-          case 5:
-            _overviewController.state.card.cards = _context2.sent;
-            storage.storeObj('cards', _overviewController.state.card.cards);
-
-          case 7:
-          case "end":
-            return _context2.stop();
-        }
-      }
-    }, _callee2);
-  }));
-
-  return function getCardsFromAPI() {
-    return _ref2.apply(this, arguments);
-  };
-}();
-
-exports.getCardsFromAPI = getCardsFromAPI;
-
-var cardRender = function cardRender() {
-  // 1. Get the cards
-  var cards = _overviewController.state.card.cards || storage.getObj('cards'); // 2. Check if they are empty, if so render and exit function
-
-  if (cards.length === 0) {
-    return cardView.renderEmptyCardGrid(_base.elements.overview);
-  } // 3. Render the card grid and cards on the grid
-
-
-  cardView.renderCardGrid(_base.elements.overview, cards);
-}; // Render the cards that belong to the deck that the User clicked on
-
-
-exports.cardRender = cardRender;
-
-var deckCardRender = function deckCardRender(deckArray) {
-  // 1. Clear the overview
-  (0, _base.clearOverview)(); // 2. Render the card grid and cards from the deck on the grid
-
-  cardView.renderCardGrid(_base.elements.overview, deckArray);
-}; // Load the card if they have click the entire card or the edit/ delete options
-
-
-exports.deckCardRender = deckCardRender;
-
-var cardLoader = function cardLoader(e) {
-  // check if the user clicked either edit or delete card
-  if (e.target.matches('.options, .options *')) {
-    var click = e.target.closest('.options');
-    var cardId = e.target.parentNode.parentNode.parentNode.dataset.card;
-    optionsHandler(click, cardId); // check if the user clicked the whole card
-  } else if (e.target.matches('.card, .card *')) {
-    var _click = e.target.closest('.card');
-
-    cardHandler(_click);
-  }
-}; // Handler for Edit and Delete a card
-
-
-exports.cardLoader = cardLoader;
-
-var optionsHandler = function optionsHandler(click, cardId) {
-  // user clicked edit card
-  if (Array.from(click.classList).includes('options--edit')) {
-    cardUpdaterMaker(cardId); // user clicked delete card
-  } else if (Array.from(click.classList).includes('options--delete')) {
-    windowController.windowDeletionHandlerCard(cardId);
-  }
-};
-
-var cardUpdaterMaker = function cardUpdaterMaker(cardId) {
-  var cardData = getCard(cardId); // 1. Clear overview
-
-  (0, _base.clearOverview)(); // 2. Render the update card and handlers
-
-  cardView.renderUpdateCardGrid(_base.elements.overview, cardData.question);
-  addQAtoTextBox(cardData.question, cardData.answer);
-  QAValueChanger();
-  swapCardFacing();
-  cancelCardMaker(); // 3. Call update Card handler
-
-  updateCard(cardId);
-};
-
-var getCard = function getCard(cardId) {
-  //1. Get the cards array
-  var cards = storage.getObj('cards') || _overviewController.state.card.cards; //2. Find the card in the cards array via id
-
-
-  return cards.filter(function (card) {
-    return card.id === cardId;
-  })[0];
-}; // When the user interacts with cards in the overview
-
-
-exports.getCard = getCard;
-
-var cardHandler = function cardHandler(click) {
-  try {
-    // 1. Get the Card Id
-    var cardId = click.dataset.card; // 2. Get the card from the cards array
-
-    var cardData = getCard(cardId); // 3. check if the card is a question card or an answer card
-    // clicked the question facing side, turn it over to the answer facing side
-
-    if (click.children.length === 2) {
-      cardView.renderCardAnswer(document.querySelector(".card-".concat(cardId)), cardData.answer); // clicked the answer facing side, turn it over to the question facing side
-    } else if (click.children.length === 3) {
-      cardView.renderCardQuestion(document.querySelector(".card-".concat(cardId)), cardData.question);
-    }
-  } catch (err) {// showAlert('error', err.message);
-  }
-}; // render text of card data from when they want to edit the card
-
-
-var addQAtoTextBox = function addQAtoTextBox(question, answer) {
-  document.querySelector('.textarea-q').value = question;
-  document.querySelector('.textarea-a').value = answer;
-}; // render text from input boxes to the card in 'make a card'
-
-
-var QAValueChanger = function QAValueChanger() {
-  // 1. question box update the value in real time to the card
-  document.querySelector('.textarea-q').addEventListener('input', function (e) {
-    cardView.renderCardQuestionMake(document.querySelector('.card--make'), document.querySelector('.textarea-q').value);
-  }); // 2. answer box update the value in real time to the card
-
-  document.querySelector('.textarea-a').addEventListener('input', function (e) {
-    cardView.renderCardQuestionMake(document.querySelector('.card--make'), document.querySelector('.textarea-a').value);
-  });
-}; // Handler when the card is to be swapped to question or answer side
-
-
-var swapCardFacing = function swapCardFacing() {
-  // 1. set the boolean for card facing
-  var cardFacing = 'question'; // 2. swap card facing side
-
-  document.querySelector('.btn--switch').addEventListener('click', function (e) {
-    var textareaBox = '.textarea-q'; // card to be swapped over to answer side
-
-    if (cardFacing === 'question') {
-      textareaBox = '.textarea-q';
-      cardFacing = 'answer'; // card to be swapped over to question side
-    } else {
-      textareaBox = '.textarea-a';
-      cardFacing = 'question';
-    } // Reuse render question as we are just rendering text to the card not the forms attached with answer card
-
-
-    cardView.renderCardQuestionMake(document.querySelector('.card--make'), document.querySelector(textareaBox).value);
-  });
-};
-
-exports.swapCardFacing = swapCardFacing;
-
-var createCard = function createCard() {
-  // User clicks to create the card
-  document.querySelector('.icon--make-card-right').addEventListener('click', /*#__PURE__*/function () {
-    var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(e) {
-      var question, answer, user;
-      return regeneratorRuntime.wrap(function _callee3$(_context3) {
-        while (1) {
-          switch (_context3.prev = _context3.next) {
-            case 0:
-              // 1. Get the question, answer and user
-              question = document.querySelector('.textarea-q').value;
-              answer = document.querySelector('.textarea-a').value;
-              user = storage.getObj('user') || _overviewController.state.user.userData.id; // 2. Check if they have written something to the text-boxes
-
-              if (!(question && answer && user)) {
-                _context3.next = 9;
-                break;
-              }
-
-              _context3.next = 6;
-              return _overviewController.state.card.createCard(question, answer, user, storage.getObj('token'));
-
-            case 6:
-              // 2.2 Clear Overview and reset the grid so they can make more cards
-              cardMakerLoader(); // 3 User has not entered all the text-boxes, send an alert to tell them to write fill it in
-
-              _context3.next = 10;
-              break;
-
-            case 9:
-              (0, _alert.showAlert)('error', 'Please enter a question and an answer');
-
-            case 10:
-            case "end":
-              return _context3.stop();
-          }
-        }
-      }, _callee3);
-    }));
-
-    return function (_x) {
-      return _ref3.apply(this, arguments);
-    };
-  }());
-};
-
-var updateCard = function updateCard(cardId) {
-  // User clicks to update the card
-  document.querySelector('.icon--make-card-right').addEventListener('click', /*#__PURE__*/function () {
-    var _ref4 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5(e) {
-      var question, answer;
-      return regeneratorRuntime.wrap(function _callee5$(_context5) {
-        while (1) {
-          switch (_context5.prev = _context5.next) {
-            case 0:
-              // 1. Get the question, answer and user
-              question = document.querySelector('.textarea-q').value;
-              answer = document.querySelector('.textarea-a').value; // 2. Check if they have written something to the text-boxes
-
-              if (!(question && answer)) {
-                _context5.next = 8;
-                break;
-              }
-
-              _context5.next = 5;
-              return _overviewController.state.card.updateCard(cardId, question, answer, storage.getObj('token'));
-
-            case 5:
-              // 2.2 Render the homepage to show the change
-              window.setTimeout( /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4() {
-                return regeneratorRuntime.wrap(function _callee4$(_context4) {
-                  while (1) {
-                    switch (_context4.prev = _context4.next) {
-                      case 0:
-                        (0, _base.clearOverview)();
-                        _context4.next = 3;
-                        return cardLoaderAndRender();
-
-                      case 3:
-                      case "end":
-                        return _context4.stop();
-                    }
-                  }
-                }, _callee4);
-              })), 1500); // 3 User has not entered all the text-boxes, send an alert to tell them to write fill it in
-
-              _context5.next = 9;
-              break;
-
-            case 8:
-              (0, _alert.showAlert)('error', 'Please enter a question and an answer');
-
-            case 9:
-            case "end":
-              return _context5.stop();
-          }
-        }
-      }, _callee5);
-    }));
-
-    return function (_x2) {
-      return _ref4.apply(this, arguments);
-    };
-  }());
-};
-
-var deleteCard = /*#__PURE__*/function () {
-  var _ref6 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee7(e, cardId) {
-    var click, token;
-    return regeneratorRuntime.wrap(function _callee7$(_context7) {
-      while (1) {
-        switch (_context7.prev = _context7.next) {
-          case 0:
-            click = e.target.closest('.window__content');
-            _context7.prev = 1;
-
-            if (!click) {
-              _context7.next = 13;
-              break;
-            }
-
-            if (!e.target.matches('.window__ok')) {
-              _context7.next = 12;
-              break;
-            }
-
-            // 3.1 get the token
-            token = storage.getObj('token') || _overviewController.state.user.token; // 3.2 Check to see if they are logged in
-
-            if (token) {
-              _context7.next = 7;
-              break;
-            }
-
-            return _context7.abrupt("return", new Error('You are not logged in!'));
-
-          case 7:
-            _context7.next = 9;
-            return _overviewController.state.card.deleteCard(cardId, token);
-
-          case 9:
-            // Render the homepage to show the change
-            window.setTimeout( /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
-              return regeneratorRuntime.wrap(function _callee6$(_context6) {
-                while (1) {
-                  switch (_context6.prev = _context6.next) {
-                    case 0:
-                      (0, _base.clearOverview)();
-                      _context6.next = 3;
-                      return cardLoaderAndRender();
-
-                    case 3:
-                    case "end":
-                      return _context6.stop();
-                  }
-                }
-              }, _callee6);
-            })), 1500); // they clicked no to delete the card
-
-            _context7.next = 13;
-            break;
-
-          case 12:
-            windowView.clearWindow();
-
-          case 13:
-            _context7.next = 18;
-            break;
-
-          case 15:
-            _context7.prev = 15;
-            _context7.t0 = _context7["catch"](1);
-            (0, _alert.showAlert)('error', _context7.t0.message);
-
-          case 18:
-          case "end":
-            return _context7.stop();
-        }
-      }
-    }, _callee7, null, [[1, 15]]);
-  }));
-
-  return function deleteCard(_x3, _x4) {
-    return _ref6.apply(this, arguments);
-  };
-}();
-
-exports.deleteCard = deleteCard;
-
-var cancelCardMaker = function cancelCardMaker() {
-  // User clicks to cancel the card creation
-  document.querySelector('.icon--make-card-left').addEventListener('click', function (e) {
-    (0, _base.clearOverview)();
-    cardRender(_base.elements.overview, _overviewController.state.card.cards);
-  });
-};
-
-var cardMakerLoader = function cardMakerLoader() {
-  (0, _base.clearOverview)();
-  cardView.renderMakeCardGrid(_base.elements.overview);
-  QAValueChanger();
-  swapCardFacing();
-  createCard();
-  cancelCardMaker();
-};
-
-exports.cardMakerLoader = cardMakerLoader;
-},{"../views/base":"js/views/base.js","../views/cardView":"js/views/cardView.js","../views/windowView":"js/views/windowView.js","../models/cardModel":"js/models/cardModel.js","./overviewController":"js/controllers/overviewController.js","./windowController":"js/controllers/windowController.js","../utils/localStorage":"js/utils/localStorage.js","../utils/alert":"js/utils/alert.js"}],"img/default.png":[function(require,module,exports) {
-module.exports = "/default.6c87049f.png";
-},{}],"js/views/headerView.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.renderHeaderDefault = exports.renderHeaderLogin = void 0;
-
-var _base = require("./base");
-
-var _default = _interopRequireDefault(require("../../img/default.png"));
-
-var storage = _interopRequireWildcard(require("../utils/localStorage"));
-
-function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-// TODO: Add user data as args into this func
-var renderHeaderLogin = function renderHeaderLogin(user) {
-  // FIXME: User value comes up undefined when they login due to promise
-  if (!user) {
-    user = storage.getObj('user');
-  }
-
-  var markup = "\n  &nbsp;\n  <nav class=\"user-nav\">\n    <div class=\"header__login\">\n      <a href=\"#\" class=\"btn btn--logout\">Logout</a>\n    </div>\n\n    <div class=\"user-nav__user\">\n      <img\n        src=\"https://polar-savannah-53668.herokuapp.com/img/users/".concat(user.photo, "\"\n        alt=\"").concat(user.name, " Photo\"\n        class=\"user-nav__user-photo\"\n      />\n      <span class=\"user-nav__user-name\">").concat(user.name, "</span>\n    </div>\n</nav>");
-  _base.elements.header.innerHTML = markup;
-};
-
-exports.renderHeaderLogin = renderHeaderLogin;
-
-var renderHeaderDefault = function renderHeaderDefault() {
-  var markup = "\n  &nbsp;\n  <div class=\"header__login\">\n    <a href=\"#\" class=\"btn btn--login\">Login</a>\n    <a href=\"#\" type=\"submit\" class=\"btn btn--ghost\">Sign up</a>\n  </div>";
-  _base.elements.header.innerHTML = markup;
-};
-
-exports.renderHeaderDefault = renderHeaderDefault;
-},{"./base":"js/views/base.js","../../img/default.png":"img/default.png","../utils/localStorage":"js/utils/localStorage.js"}],"img/SVG/graduation-cap.svg":[function(require,module,exports) {
-module.exports = '#6ee829994d94ef5fb09c27197dc2a11f';
-},{}],"img/SVG/user.svg":[function(require,module,exports) {
-module.exports = '#0cb49ca546fb58356376f1c47a03e649';
-},{}],"js/views/classroomView.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.renderMakeClassroom = exports.renderViewClassroom = exports.renderResults = exports.getType = exports.hidePagination = exports.clearResults = exports.renderItemResults = exports.renderEmptyClassroomGrid = exports.renderClassroomGrid = void 0;
-
-var _minus = _interopRequireDefault(require("../../img/SVG/minus.svg"));
-
-var _plus = _interopRequireDefault(require("../../img/SVG/plus.svg"));
-
-var _check = _interopRequireDefault(require("../../img/SVG/check.svg"));
-
-var _circleWithCross = _interopRequireDefault(require("../../img/SVG/circle-with-cross.svg"));
-
-var _chevronThinRight = _interopRequireDefault(require("../../img/SVG/chevron-thin-right.svg"));
-
-var _chevronThinLeft = _interopRequireDefault(require("../../img/SVG/chevron-thin-left.svg"));
-
-var _graduationCap = _interopRequireDefault(require("../../img/SVG/graduation-cap.svg"));
-
-var _drive = _interopRequireDefault(require("../../img/SVG/drive.svg"));
-
-var _user = _interopRequireDefault(require("../../img/SVG/user.svg"));
-
-var _base = require("./base");
-
-var storage = _interopRequireWildcard(require("../utils/localStorage"));
-
-function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var renderClassroomGrid = function renderClassroomGrid(parent, classroomArray) {
-  var classrooms = '';
-  classroomArray.forEach(function (classroom) {
-    var classroomMarkup = "\n      <div class=\"classroom classroom-".concat(classroom.id, "\" data-classroom=").concat(classroom.id, ">\n        <div class=\"classroom__details\">\n          <div class=\"name\">").concat(classroom.name, "</div>\n        </div>\n      </div> \n    ");
-    classrooms += classroomMarkup;
-  }); // checks if the user is a teacher and then allows them to create a new classroom if they are.
-
-  var markup = "";
-
-  if (storage.getObj('user').role === 'teacher') {
-    markup += "\n    <div class=\"make-classroom\">\n        <a href=\"#\" class=\"btn btn--ghost make-classroom\">Make A New Classroom</a>\n    </div>";
-  } else {
-    markup += "<div class=\"make-classroom\">\n    &nbsp; \n</div>";
-  }
-
-  markup += "\n    <div class=\"classroom-grid\">\n        ".concat(classrooms, "\n    </div>;");
-  parent.insertAdjacentHTML('afterbegin', markup);
-};
-
-exports.renderClassroomGrid = renderClassroomGrid;
-
-var renderEmptyClassroomGrid = function renderEmptyClassroomGrid(parent) {
-  var markup = "\n  <div class=\"classroom-grid\">\n  <div class=\"no-item\">\n      <svg class=\"icon icon--no-item\">\n        <use href=\"".concat(_graduationCap.default, "\"></use>\n      </svg>\n      <span>make some decks to see them here!</span>\n  </div>\n  </div>");
-  parent.insertAdjacentHTML('afterbegin', markup);
-}; // Renders all the users in the 'All Users' list
-
-
-exports.renderEmptyClassroomGrid = renderEmptyClassroomGrid;
-
-var renderItemResults = function renderItemResults(user, index, iconType, type, flag) {
-  var icon;
-
-  switch (iconType) {
-    case 'student':
-      icon = _user.default;
-      break;
-
-    case 'plus':
-      icon = _plus.default;
-      break;
-
-    case 'minus':
-      icon = _minus.default;
-      break;
-
-    default:
-      icon = user;
-  }
-
-  var markup = "\n  <li class=\"make-classroom__item\" data-item=\"".concat(user.id, "\">\n    <a href=\"#\" class=\"make-classroom__link\">\n        <svg class=\"icon icon__make-classroom--card\">\n        <use href=\"").concat(icon, "\"></use>\n      </svg>\n      <div class=\"make-classroom__card-details\">\n        <span\n          class=\"make-classroom__span make-classroom-span--question\"\n          >Student ").concat(index, "</span\n        >\n        <span\n          class=\"make-classroom__span make-classroom-span--answer\"\n          >").concat(user.name, "</span\n        >\n      </div>\n    </a>\n  </li>");
-  var element = getType("".concat(type), flag);
-  document.querySelector(element).insertAdjacentHTML('beforeend', markup);
-}; // Clears the users from the 'All Users' list
-
-
-exports.renderItemResults = renderItemResults;
-
-var clearResults = function clearResults(type, flag) {
-  var elements = getType(type, flag);
-  var elementList = elements[0];
-  var elementPaginate = elements[1];
-  document.querySelector("".concat(elementList)).innerHTML = '';
-  document.querySelector("".concat(elementPaginate)).innerHTML = '';
-};
-
-exports.clearResults = clearResults;
-
-var createButton = function createButton(page, type) {
-  return "\n<button class=\"btn--inline btn__search btn__search--".concat(type, "\" data-goto=").concat(type === 'prev' ? page - 1 : page + 1, ">\n<span>Page ").concat(type === 'prev' ? page - 1 : page + 1, "</span>  \n<svg class=\"icon icon__search icon__search--").concat(type === 'prev' ? 'prev' : 'next', "\">\n    <use href=\"").concat(type === 'prev' ? _chevronThinLeft.default : _chevronThinRight.default, "\"></use>\n  </svg>\n</button>");
-}; // Pagination for the 'All Users' list
-
-
-var renderButton = function renderButton(page, numResults, resPerPage, type, flag) {
-  var element = getType(type, 'paginate')[1];
-  var pages = Math.ceil(numResults / resPerPage);
-  var btn;
-
-  if (page === 1 && pages > 1) {
-    // Only Button to go to the next page
-    btn = createButton(page, 'next');
-  } else if (page < pages) {
-    // Both Buttons
-    btn = "\n      ".concat(createButton(page, 'prev'), "\n      ").concat(createButton(page, 'next'), "\n    ");
-  } else if (page === pages && pages > 1) {
-    // Only Button to go to the prev page
-    btn = createButton(page, 'prev');
-  }
-
-  if (btn) {
-    showPagination(type, flag);
-    document.querySelector(element).insertAdjacentHTML('afterbegin', btn);
-  } else {
-    hidePagination(type, flag);
-  }
-};
-
-var hidePagination = function hidePagination(type, flag) {
-  var element = getType(type, flag)[1];
-  document.querySelector(element).style.display = 'none';
-};
-
-exports.hidePagination = hidePagination;
-
-var showPagination = function showPagination(type, flag) {
-  var element = getType(type, flag)[1];
-  document.querySelector(element).style.display = 'flex';
-};
-
-var getType = function getType(type, flag) {
-  var insert = '';
-
-  if (flag === 'make') {
-    switch (type) {
-      case 'all-students':
-        insert += '.make-classroom__list--students .make-classroom__paginate--students';
-        break;
-
-      case 'my-decks':
-        insert += '.make-classroom__list--decks .make-classroom__paginate--decks';
-        break;
-
-      case 'classroom-students':
-        insert += '.make-classroom__list--classroom-students .make-classroom__paginate--classroom-students';
-        break;
-
-      case 'classroom-deck':
-        insert += '.make-classroom__list--classroom-deck .make-classroom__paginate--classroom-deck';
-        break;
-
-      default:
-        break;
-    }
-  } else if (flag === 'view') {
-    switch (type) {
-      case 'all-students':
-        insert = '.view-classroom__list--students .view-classroom__paginate--students';
-        break;
-
-      case 'my-decks':
-        insert = '.view-classroom__list--decks .view-classroom__paginate--decks';
-        break;
-
-      case 'classroom-students':
-        insert = '.view-classroom__list--classroom-students  .view-classroom__paginate--classroom-students';
-        break;
-
-      case 'classroom-deck':
-        insert = '.view-classroom__list--classroom-deck .view-classroom__paginate--classroom-deck';
-        break;
-
-      default:
-        break;
-    }
-  }
-
-  return insert.split(' ');
-};
-
-exports.getType = getType;
-
-var renderResults = function renderResults(students, icon, type, flag) {
-  var page = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 1;
-  var resPerPage = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : 4;
-  clearResults(type, flag);
-  var start = (page - 1) * resPerPage;
-  var end = page * resPerPage;
-  students.slice(start, end).forEach(function (el, i) {
-    renderItemResults(el, i, icon, type, flag);
-  });
-  renderButton(page, students.length, resPerPage, type, flag);
-};
-
-exports.renderResults = renderResults;
-
-var renderViewClassroom = function renderViewClassroom(parent, teacherName, deckName, deckId) {
-  var markup = "\n  <div class=\"view-classroom-grid make-classroom-grid\">\n    <div\n      class=\"view-classroom__student-nav view-classroom__student-nav--users-student\"\n    >\n      <span class=\"view-classroom__name\">Classmates</span>\n      <ul class=\"view-classroom__list view-classroom__list--students\">\n        \n      </ul>\n\n      <div class=\"view-classroom__paginate--students\">\n        \n      </div>\n    </div>\n\n    <div\n      class=\"view-classroom__deck-nav view-classroom__deck-nav--deck\"\n    >\n      <span class=\"view-classroom__name\">Deck</span>\n      <ul class=\"view-classroom__list view-classroom__list--decks\">\n        <li class=\"view-classroom__item view-classroom__item--deck\" data-deck=".concat(deckId, ">\n          <a href=\"#\" class=\"view-classroom__link\">\n            <svg class=\"icon icon__view-classroom--card\">\n              <use href=\"").concat(_drive.default, "\"></use>\n            </svg>\n            <div class=\"view-classroom__card-details\">\n              <span\n                class=\"view-classroom__span view-classroom-span--question\"\n                >").concat(deckName, "</span\n              >\n            </div>\n          </a>\n        </li>\n      </ul>\n    </div>\n\n    <div\n      class=\"view-classroom__teacher-nav view-classroom__teacher-nav--users-teacher\"\n    >\n      <span class=\"view-classroom__name\">Teacher</span>\n      <ul class=\"view-classroom__list view-classroom__list\">\n        <li class=\"view-classroom__item view-classroom__list--teacher\">\n          <a href=\"#\" class=\"view-classroom__link\">\n            <svg class=\"icon icon__view-classroom--card\">\n              <use href=\"").concat(_user.default, "\"></use>\n            </svg>\n            <div class=\"view-classroom__card-details\">\n              <span\n                class=\"view-classroom__span view-classroom-span--question\"\n                >Teacher</span\n              >\n              <span class=\"make-deck__span make-deck-span--answer\"\n                >").concat(teacherName, "</span\n              >\n            </div>\n          </a>\n        </li>\n      </ul>\n    </div>\n\n  </div>");
-  parent.insertAdjacentHTML('afterbegin', markup);
-};
-
-exports.renderViewClassroom = renderViewClassroom;
-
-var renderMakeClassroom = function renderMakeClassroom(parent) {
-  var markup = "<div class=\"make-classroom-grid\">\n\n  <form action=\"#\" class=\"make-classroom__form\">\n      <label for=\"classroom-name\" class=\"make-classroom__label\">Enter Classroom name</label>\n      <input class=\"make-deck__input\" type=\"text\" minlength=\"5\" maxlength=\"50\" id=\"classroom-name\" placeholder=\"Classroom Name\">\n  </form>\n\n  <div class=\"make-classroom__student-nav make-classroom__student-nav--users-student\">\n\n  <span class=\"make-classroom__name\">All Students</span>\n  <ul class=\"make-classroom__list make-classroom__list--students\">\n    \n  </ul>\n\n  <div class=\"make-classroom__paginate make-classroom__paginate--students\">\n    \n  </div>\n</div>\n\n<div class=\"make-classroom__deck-nav make-classroom__deck-nav--deck\">\n  <span class=\"make-classroom__name\">My Decks</span>\n  <ul class=\"make-classroom__list make-classroom__list--decks\">\n   \n  </ul>\n\n  <div class=\"make-classroom__paginate make-classroom__paginate--decks\">\n    \n  </div>\n</div>\n\n<div class=\"make-classroom__deck-nav make-classroom__deck-nav--deck-curr\">\n  <span class=\"make-classroom__name\">Classroom deck</span>\n  <ul class=\"make-classroom__list make-classroom__list--classroom-deck\">\n    \n  </ul>\n</div>\n\n<div class=\"make-classroom__student-nav make-classroom__student-nav--users-student-curr\">\n\n  <span class=\"make-classroom__name\">Classroom Students</span>\n  <ul class=\"make-classroom__list make-classroom__list--classroom-students\">\n    \n  </ul>\n\n  <div class=\"make-classroom__paginate make-classroom__paginate--classroom-students\">\n    \n  </div>\n</div>\n  \n<div class=\"make-classroom__create-box\">\n  <div class=\"make-classroom__group make-classroom--right\">\n    <a href=\"#\" class=\"make-classroom__link\">\n      <svg class=\"icon icon--make-classroom icon--make-classroom-right icon--right\">\n        <use href=\"".concat(_check.default, "\"></use>\n      </svg>\n    </a>\n    <span class=\"make-classroom__span\">Create The Classroom</span>\n  </div>\n\n  <div class=\"make-classroom__group make-classroom--wrong\">\n    <a href=\"#\" class=\"make-classroom__link\">\n      <svg class=\"icon icon--make-classroom icon--make-classroom-left icon-left icon--wrong\">\n        <use href=\"").concat(_circleWithCross.default, "\"></use>\n      </svg>\n    </a>\n    <span class=\"make-classroom__span\">Let's Stop!</span>\n  </div>\n  </div>\n\n</div>");
-  parent.insertAdjacentHTML('afterbegin', markup);
-};
-
-exports.renderMakeClassroom = renderMakeClassroom;
-},{"../../img/SVG/minus.svg":"img/SVG/minus.svg","../../img/SVG/plus.svg":"img/SVG/plus.svg","../../img/SVG/check.svg":"img/SVG/check.svg","../../img/SVG/circle-with-cross.svg":"img/SVG/circle-with-cross.svg","../../img/SVG/chevron-thin-right.svg":"img/SVG/chevron-thin-right.svg","../../img/SVG/chevron-thin-left.svg":"img/SVG/chevron-thin-left.svg","../../img/SVG/graduation-cap.svg":"img/SVG/graduation-cap.svg","../../img/SVG/drive.svg":"img/SVG/drive.svg","../../img/SVG/user.svg":"img/SVG/user.svg","./base":"js/views/base.js","../utils/localStorage":"js/utils/localStorage.js"}],"js/models/classroomModel.js":[function(require,module,exports) {
+},{"axios":"../node_modules/axios/index.js","../utils/alert":"js/utils/alert.js","../views/windowView":"js/views/windowView.js"}],"js/models/classroomModel.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -10782,6 +11951,8 @@ exports.default = void 0;
 var _axios = _interopRequireDefault(require("axios"));
 
 var _alert = require("../utils/alert");
+
+var _windowView = require("../views/windowView");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -10884,768 +12055,164 @@ var Classroom = /*#__PURE__*/function () {
 
       return getStudents;
     }()
+  }, {
+    key: "createClassroom",
+    value: function () {
+      var _createClassroom = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(name, students, deck, teacher, token) {
+        var res, message;
+        return regeneratorRuntime.wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                _context3.prev = 0;
+                _context3.next = 3;
+                return _axios.default.post("https://polar-savannah-53668.herokuapp.com/api/v0/classrooms/", {
+                  name: name,
+                  teacher: teacher,
+                  deck: deck,
+                  students: students
+                }, {
+                  headers: {
+                    Authorization: "Bearer ".concat(token)
+                  }
+                });
+
+              case 3:
+                res = _context3.sent;
+
+                if (res.data.status === 'success') {
+                  (0, _alert.showAlert)('success', 'Classroom was created');
+                }
+
+                _context3.next = 11;
+                break;
+
+              case 7:
+                _context3.prev = 7;
+                _context3.t0 = _context3["catch"](0);
+                message = _context3.t0.response.data.message;
+                (0, _alert.showAlert)('error', message);
+
+              case 11:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee3, null, [[0, 7]]);
+      }));
+
+      function createClassroom(_x4, _x5, _x6, _x7, _x8) {
+        return _createClassroom.apply(this, arguments);
+      }
+
+      return createClassroom;
+    }()
+  }, {
+    key: "updateClassroom",
+    value: function () {
+      var _updateClassroom = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4(classroomId, name, students, deck, token) {
+        var res, message;
+        return regeneratorRuntime.wrap(function _callee4$(_context4) {
+          while (1) {
+            switch (_context4.prev = _context4.next) {
+              case 0:
+                _context4.prev = 0;
+                _context4.next = 3;
+                return _axios.default.patch("https://polar-savannah-53668.herokuapp.com/api/v0/classrooms/".concat(classroomId), {
+                  name: name,
+                  deck: deck,
+                  students: students
+                }, {
+                  headers: {
+                    Authorization: "Bearer ".concat(token)
+                  }
+                });
+
+              case 3:
+                res = _context4.sent;
+
+                if (res.data.status === 'success') {
+                  (0, _alert.showAlert)('success', 'Classroom was updated');
+                }
+
+                _context4.next = 11;
+                break;
+
+              case 7:
+                _context4.prev = 7;
+                _context4.t0 = _context4["catch"](0);
+                message = _context4.t0.response.data.message;
+                (0, _alert.showAlert)('error', message);
+
+              case 11:
+              case "end":
+                return _context4.stop();
+            }
+          }
+        }, _callee4, null, [[0, 7]]);
+      }));
+
+      function updateClassroom(_x9, _x10, _x11, _x12, _x13) {
+        return _updateClassroom.apply(this, arguments);
+      }
+
+      return updateClassroom;
+    }()
+  }, {
+    key: "deleteClassroom",
+    value: function () {
+      var _deleteClassroom = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5(classroomId, token) {
+        var res, message;
+        return regeneratorRuntime.wrap(function _callee5$(_context5) {
+          while (1) {
+            switch (_context5.prev = _context5.next) {
+              case 0:
+                _context5.prev = 0;
+                _context5.next = 3;
+                return _axios.default.delete("https://polar-savannah-53668.herokuapp.com/api/v0/classrooms/".concat(classroomId), {
+                  headers: {
+                    Authorization: "Bearer ".concat(token)
+                  }
+                });
+
+              case 3:
+                res = _context5.sent;
+
+                if (res.status === 204) {
+                  (0, _windowView.clearWindow)();
+                  (0, _alert.showAlert)('success', 'Classroom was deleted');
+                }
+
+                _context5.next = 11;
+                break;
+
+              case 7:
+                _context5.prev = 7;
+                _context5.t0 = _context5["catch"](0);
+                message = _context5.t0.response.data.message;
+                (0, _alert.showAlert)('error', message);
+
+              case 11:
+              case "end":
+                return _context5.stop();
+            }
+          }
+        }, _callee5, null, [[0, 7]]);
+      }));
+
+      function deleteClassroom(_x14, _x15) {
+        return _deleteClassroom.apply(this, arguments);
+      }
+
+      return deleteClassroom;
+    }()
   }]);
 
   return Classroom;
 }();
 
 exports.default = Classroom;
-},{"axios":"../node_modules/axios/index.js","../utils/alert":"js/utils/alert.js"}],"js/controllers/classroomController.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.classroomMakerLoader = exports.classroomLoader = exports.classroomRender = exports.getClassroomsFromAPI = exports.classroomLoaderAndRender = void 0;
-
-var _base = require("../views/base");
-
-var classroomView = _interopRequireWildcard(require("../views/classroomView"));
-
-var storage = _interopRequireWildcard(require("../utils/localStorage"));
-
-var _alert = require("../utils/alert");
-
-var _classroomModel = _interopRequireDefault(require("../models/classroomModel"));
-
-var _overviewController = require("./overviewController");
-
-var _cardView = require("../views/cardView");
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
-
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-
-var classroomLoaderAndRender = /*#__PURE__*/function () {
-  var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
-    return regeneratorRuntime.wrap(function _callee$(_context) {
-      while (1) {
-        switch (_context.prev = _context.next) {
-          case 0:
-            _context.next = 2;
-            return getClassroomsFromAPI();
-
-          case 2:
-            classroomRender();
-
-          case 3:
-          case "end":
-            return _context.stop();
-        }
-      }
-    }, _callee);
-  }));
-
-  return function classroomLoaderAndRender() {
-    return _ref.apply(this, arguments);
-  };
-}();
-
-exports.classroomLoaderAndRender = classroomLoaderAndRender;
-
-var getClassroomsFromAPI = /*#__PURE__*/function () {
-  var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
-    var token;
-    return regeneratorRuntime.wrap(function _callee2$(_context2) {
-      while (1) {
-        switch (_context2.prev = _context2.next) {
-          case 0:
-            token = storage.getObj('token') || _overviewController.state.user.token;
-
-            if (token) {
-              _context2.next = 3;
-              break;
-            }
-
-            return _context2.abrupt("return", new Error('You are not logged in'));
-
-          case 3:
-            _context2.next = 5;
-            return _overviewController.state.classroom.getClassroom("".concat(storage.getObj('user').role), token);
-
-          case 5:
-            _overviewController.state.classroom.classrooms = _context2.sent;
-            storage.storeObj('classrooms', _overviewController.state.classroom.classrooms);
-
-          case 7:
-          case "end":
-            return _context2.stop();
-        }
-      }
-    }, _callee2);
-  }));
-
-  return function getClassroomsFromAPI() {
-    return _ref2.apply(this, arguments);
-  };
-}();
-
-exports.getClassroomsFromAPI = getClassroomsFromAPI;
-
-var classroomRender = function classroomRender() {
-  // 1. Get the classrooms
-  var classrooms = _overviewController.state.classroom.classrooms || storage.getObj('classrooms'); // 2. No classrooms, render the empty grid version
-
-  if (classrooms.length === 0) {
-    return classroomView.renderEmptyClassroomGrid(_base.elements.overview);
-  } // 3. Render the classrooms
-
-
-  classroomView.renderClassroomGrid(_base.elements.overview, classrooms);
-}; // Get one classroom from the array in local storage
-
-
-exports.classroomRender = classroomRender;
-
-var getClassroom = function getClassroom(classroomId) {
-  //1. Get the classrooms array
-  var classrooms = storage.getObj('classrooms') || _overviewController.state.classroom.classrooms; //2. Find the classroom in the classrooms array via id
-
-
-  return classrooms.filter(function (classroom) {
-    return classroom.id === classroomId;
-  })[0];
-};
-
-var getStudent = function getStudent(studentId) {
-  var students = storage.getObj('student') || _overviewController.state.classroom.studentArray;
-
-  return students.filter(function (student) {
-    return student.id === studentId;
-  })[0];
-};
-
-var classroomLoader = function classroomLoader(e) {
-  var click = e.target.closest('.classroom');
-
-  if (e.target.matches('.classroom, .classroom *')) {
-    try {
-      // 1. Get the Classroom Id
-      var classroomId = click.dataset.classroom; // 2. Get the classroom
-
-      var classroom = getClassroom(classroomId);
-      console.log(classroom.deck); // 3. Render view classroom
-
-      classroomViewHandler(classroom);
-    } catch (err) {}
-  }
-};
-
-exports.classroomLoader = classroomLoader;
-
-var classroomViewHandler = /*#__PURE__*/function () {
-  var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(classroom) {
-    var classroomStudents, classroomTeacher, deckId, token, classroomDeck;
-    return regeneratorRuntime.wrap(function _callee3$(_context3) {
-      while (1) {
-        switch (_context3.prev = _context3.next) {
-          case 0:
-            _context3.prev = 0;
-            // 1. Get students and teacher from classroom
-            classroomStudents = classroom.students;
-            classroomTeacher = classroom.teacher; // 2. Store the students to state
-
-            _overviewController.state.classroom.studentArray = classroomStudents;
-            storage.storeObj('students', classroomStudents); // 3. Get the deck for that classroom
-
-            deckId = classroom.deck;
-            token = _overviewController.state.token || storage.getObj('token');
-            _context3.next = 9;
-            return _overviewController.state.deck.getDeck(deckId, token);
-
-          case 9:
-            classroomDeck = _context3.sent;
-            // 4. Store the teacher's deck array to state
-            _overviewController.state.classroom.deckArray = classroomDeck;
-            storage.storeObj('classroom.deck', classroomDeck); // 5. Render classroom
-
-            (0, _base.clearOverview)();
-            classroomView.renderViewClassroom(_base.elements.overview, classroomTeacher.name, classroomDeck.name, deckId); // 5.1 Render students
-
-            if (classroomStudents.length !== 0) {
-              classroomView.renderResults(classroomStudents, 'student', 'all-students', 'view');
-              searchButton('all-students', 'view');
-            } else {
-              classroomView.hidePagination('all-students', 'view');
-            } // 6. Add event handlers
-
-
-            viewDeckFromClassroom(deckId);
-            _context3.next = 22;
-            break;
-
-          case 18:
-            _context3.prev = 18;
-            _context3.t0 = _context3["catch"](0);
-            (0, _alert.showAlert)('error', _context3.t0.message);
-            console.log(_context3.t0.stack);
-
-          case 22:
-          case "end":
-            return _context3.stop();
-        }
-      }
-    }, _callee3, null, [[0, 18]]);
-  }));
-
-  return function classroomViewHandler(_x) {
-    return _ref3.apply(this, arguments);
-  };
-}();
-
-var classroomMakerLoader = /*#__PURE__*/function () {
-  var _ref4 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4() {
-    var token, students, decks;
-    return regeneratorRuntime.wrap(function _callee4$(_context4) {
-      while (1) {
-        switch (_context4.prev = _context4.next) {
-          case 0:
-            // 1. Get the token
-            token = _overviewController.state.token || storage.getObj('token'); // 2. Get the students
-
-            _context4.next = 3;
-            return _overviewController.state.classroom.getStudents(token);
-
-          case 3:
-            students = _context4.sent;
-            _overviewController.state.classroom.studentArray = students;
-            storage.storeObj('studentArray', students); // 3. Get the decks
-
-            _context4.next = 8;
-            return _overviewController.state.deck.getDecks(token);
-
-          case 8:
-            decks = _context4.sent;
-            _overviewController.state.classroom.deckArray = decks;
-            storage.storeObj('classroom.deckArray', decks); // 4. Render the classroom maker grid to the homepage
-
-            classroomMaker(students, decks);
-
-          case 12:
-          case "end":
-            return _context4.stop();
-        }
-      }
-    }, _callee4);
-  }));
-
-  return function classroomMakerLoader() {
-    return _ref4.apply(this, arguments);
-  };
-}();
-
-exports.classroomMakerLoader = classroomMakerLoader;
-
-var classroomMaker = function classroomMaker(students, decks) {
-  // 1. Render the make classroom grid
-  (0, _base.clearOverview)();
-  classroomView.renderMakeClassroom(_base.elements.overview); // 2. Render students
-
-  if (students.length !== 0) {
-    classroomView.renderResults(students, 'plus', 'all-students', 'make');
-    searchButton('all-students', 'make');
-  } else {
-    classroomView.hidePagination('all-students', 'make');
-  } // 3. Render the decks
-
-
-  if (decks.length !== 0) {
-    classroomView.renderResults(decks, 'plus', 'my-decks', 'make');
-    searchButton('my-decks', 'make');
-  } else {
-    classroomView.hidePagination('my-decks', 'make');
-  } // 4. create local arrays for students
-
-
-  var studentArray = []; // 5. Add handlers
-
-  addItemHandler(studentArray, 'make', 'all-students', 'my-deck');
-};
-
-var addItemHandler = function addItemHandler(studentArray, flag) {
-  var studentNav = classroomView.getType(arguments.length <= 2 ? undefined : arguments[2], flag)[0];
-  var deckNav = classroomView.getType(arguments.length <= 3 ? undefined : arguments[3], flag)[0];
-  document.querySelector(studentNav).addEventListener('click', function (e) {
-    // 1. Get the item that was clicked
-    var item = e.target.closest('.icon');
-    console.log(item); // 2. check if the click was a plus icon
-
-    if (item) {
-      // 2.1 Get the student Id and get the student
-      var studentId = item.parentNode.parentNode.dataset.item;
-      var student = getStudent(studentId); // 2.2 Append the student to local studentArray
-
-      studentArray.push(student); // 2.3 Store the studentArray in local storage
-
-      storage.storeObj('classroomStudentArray', studentArray); // 2.4 render the students to the classroom student nav
-
-      classroomView.renderResults(studentArray, 'minus', 'classroom-students', 'make');
-    }
-  });
-};
-
-var searchButton = function searchButton(type, flag) {
-  var element = classroomView.getType(type, flag)[1];
-  document.querySelector(element).addEventListener('click', function (e) {
-    // 1. See if the button was clicked
-    var btn = e.target.closest('.btn--inline');
-
-    if (btn) {
-      // 1.1. get the page number from the dataset
-      var goToPage = parseInt(btn.dataset.goto, 10);
-      var students = _overviewController.state.classroom.studentArray || storage.getObj('students'); // 1.2. clear the card results and pagination
-
-      classroomView.clearAllStudents(); // 1.3. Render the new cards and new buttons
-
-      classroomView.renderStudents(students, goToPage);
-      window.scroll(0, 0);
-    }
-  });
-};
-
-var viewDeckFromClassroom = function viewDeckFromClassroom() {
-  document.querySelector('.view-classroom__item--deck').addEventListener('click', function (e) {
-    var deck = _overviewController.state.classroom.deckArray || storage.getObj('classroom.deck');
-    (0, _base.clearOverview)();
-    (0, _cardView.renderCardGrid)(_base.elements.overview, deck.cards, 'teacher-deck');
-  });
-};
-},{"../views/base":"js/views/base.js","../views/classroomView":"js/views/classroomView.js","../utils/localStorage":"js/utils/localStorage.js","../utils/alert":"js/utils/alert.js","../models/classroomModel":"js/models/classroomModel.js","./overviewController":"js/controllers/overviewController.js","../views/cardView":"js/views/cardView.js"}],"js/controllers/sidebarController.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.renderActiveItem = void 0;
-
-var _base = require("../views/base");
-
-var _cardController = require("./cardController");
-
-var _deckController = require("./deckController");
-
-var _classroomController = require("./classroomController");
-
-var _overviewController = require("./overviewController");
-
-var _alert = require("../utils/alert");
-
-var storage = _interopRequireWildcard(require("../utils/localStorage"));
-
-function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
-
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-
-_base.elements.sidebar.addEventListener('click', function (e) {
-  var click = e.target.closest('.side-nav__item');
-  if (click) renderActiveItem(e.target.closest('.side-nav__item'));
-});
-
-var renderActiveItem = function renderActiveItem(click) {
-  _base.elements.sidebarItem.forEach(function (item) {
-    item.classList.remove('side-nav__item--active');
-  });
-
-  click.classList.add('side-nav__item--active');
-}; // User clicks 'MY CARDS' in the sidebar nav
-
-
-exports.renderActiveItem = renderActiveItem;
-
-_base.elements.card.addEventListener('click', /*#__PURE__*/function () {
-  var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(e) {
-    return regeneratorRuntime.wrap(function _callee$(_context) {
-      while (1) {
-        switch (_context.prev = _context.next) {
-          case 0:
-            _context.prev = 0;
-            // 1. Clear the overview page
-            (0, _base.clearOverview)(); // 2. Check if the user is authenticated
-
-            if (!(storage.getObj('token') || _overviewController.state.user)) {
-              _context.next = 8;
-              break;
-            }
-
-            _context.next = 5;
-            return (0, _cardController.getCardsFromAPI)();
-
-          case 5:
-            (0, _cardController.cardRender)(); // 2.1 Tell them to login
-
-            _context.next = 9;
-            break;
-
-          case 8:
-            throw new Error('You are not logged in');
-
-          case 9:
-            _context.next = 14;
-            break;
-
-          case 11:
-            _context.prev = 11;
-            _context.t0 = _context["catch"](0);
-            (0, _alert.showAlert)('error', _context.t0.message);
-
-          case 14:
-          case "end":
-            return _context.stop();
-        }
-      }
-    }, _callee, null, [[0, 11]]);
-  }));
-
-  return function (_x) {
-    return _ref.apply(this, arguments);
-  };
-}()); // User clicks 'MY DECKS' in the sidebar nav
-
-
-_base.elements.deck.addEventListener('click', /*#__PURE__*/function () {
-  var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(e) {
-    return regeneratorRuntime.wrap(function _callee2$(_context2) {
-      while (1) {
-        switch (_context2.prev = _context2.next) {
-          case 0:
-            _context2.prev = 0;
-            // 1. Clear the overview page
-            (0, _base.clearOverview)(); // 2. Check if the user is authenticated
-
-            if (!(storage.getObj('token') || _overviewController.state.user)) {
-              _context2.next = 8;
-              break;
-            }
-
-            _context2.next = 5;
-            return (0, _deckController.getDecksFromAPI)();
-
-          case 5:
-            (0, _deckController.deckRender)(); // 2.1 Tell them to login
-
-            _context2.next = 9;
-            break;
-
-          case 8:
-            throw new Error('You are not logged in');
-
-          case 9:
-            _context2.next = 14;
-            break;
-
-          case 11:
-            _context2.prev = 11;
-            _context2.t0 = _context2["catch"](0);
-            (0, _alert.showAlert)('error', _context2.t0.message);
-
-          case 14:
-          case "end":
-            return _context2.stop();
-        }
-      }
-    }, _callee2, null, [[0, 11]]);
-  }));
-
-  return function (_x2) {
-    return _ref2.apply(this, arguments);
-  };
-}()); // User clicks 'MY CLASSROOMS' in the sidebar nav
-
-
-_base.elements.classroom.addEventListener('click', /*#__PURE__*/function () {
-  var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(e) {
-    return regeneratorRuntime.wrap(function _callee3$(_context3) {
-      while (1) {
-        switch (_context3.prev = _context3.next) {
-          case 0:
-            _context3.prev = 0;
-            // 1. Clear the overview page
-            (0, _base.clearOverview)(); // 2. Check if the user is authenticated
-
-            if (!(storage.getObj('token') || _overviewController.state.user)) {
-              _context3.next = 8;
-              break;
-            }
-
-            _context3.next = 5;
-            return (0, _classroomController.getClassroomsFromAPI)();
-
-          case 5:
-            (0, _classroomController.classroomRender)(); // 2.1 Tell them to login
-
-            _context3.next = 9;
-            break;
-
-          case 8:
-            throw new Error('You are not logged in');
-
-          case 9:
-            _context3.next = 14;
-            break;
-
-          case 11:
-            _context3.prev = 11;
-            _context3.t0 = _context3["catch"](0);
-            (0, _alert.showAlert)('error', _context3.t0.message);
-
-          case 14:
-          case "end":
-            return _context3.stop();
-        }
-      }
-    }, _callee3, null, [[0, 11]]);
-  }));
-
-  return function (_x3) {
-    return _ref3.apply(this, arguments);
-  };
-}());
-},{"../views/base":"js/views/base.js","./cardController":"js/controllers/cardController.js","./deckController":"js/controllers/deckController.js","./classroomController":"js/controllers/classroomController.js","./overviewController":"js/controllers/overviewController.js","../utils/alert":"js/utils/alert.js","../utils/localStorage":"js/utils/localStorage.js"}],"js/controllers/loginController.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.loginHandler = void 0;
-
-var _base = require("../views/base");
-
-var _overviewController = require("./overviewController");
-
-var headerView = _interopRequireWildcard(require("../views/headerView"));
-
-var _cardController = require("./cardController");
-
-var _sidebarController = require("./sidebarController");
-
-function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
-
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-
-// Logging in handler
-var loginHandler = /*#__PURE__*/function () {
-  var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(e) {
-    var email, password, loggedIn;
-    return regeneratorRuntime.wrap(function _callee$(_context) {
-      while (1) {
-        switch (_context.prev = _context.next) {
-          case 0:
-            e.preventDefault();
-            email = document.querySelector('#email').value;
-            password = document.querySelector('#password').value; // 1. Check if the login was successful
-
-            _context.next = 5;
-            return _overviewController.state.user.login(email, password);
-
-          case 5:
-            loggedIn = _context.sent;
-
-            // 2. Only render the User Ui for a successful login
-            if (loggedIn) {
-              _overviewController.state.user.email = email; // 2.2. Clear the Login Form
-
-              window.setTimeout(_base.clearOverview, 2500); // 2.3 Render the user info to the Login UI
-
-              window.setTimeout(headerView.renderHeaderLogin, 2500); // 2.4 set the active on sidebar to 'my cards'
-
-              (0, _sidebarController.renderActiveItem)(document.querySelector('.side-nav-card')); // 2.4. Load and render User cards
-
-              window.setTimeout(_cardController.cardLoaderAndRender, 3500);
-            }
-
-          case 7:
-          case "end":
-            return _context.stop();
-        }
-      }
-    }, _callee);
-  }));
-
-  return function loginHandler(_x) {
-    return _ref.apply(this, arguments);
-  };
-}();
-
-exports.loginHandler = loginHandler;
-},{"../views/base":"js/views/base.js","./overviewController":"js/controllers/overviewController.js","../views/headerView":"js/views/headerView.js","./cardController":"js/controllers/cardController.js","./sidebarController":"js/controllers/sidebarController.js"}],"js/models/userModel.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _axios = _interopRequireDefault(require("axios"));
-
-var storage = _interopRequireWildcard(require("../utils/localStorage"));
-
-var _alert = require("../utils/alert");
-
-function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-var User = /*#__PURE__*/function () {
-  function User() {
-    _classCallCheck(this, User);
-  }
-
-  _createClass(User, [{
-    key: "login",
-    value: function () {
-      var _login = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(email, password) {
-        var res, message;
-        return regeneratorRuntime.wrap(function _callee$(_context) {
-          while (1) {
-            switch (_context.prev = _context.next) {
-              case 0:
-                _context.prev = 0;
-                _context.next = 3;
-                return _axios.default.post('https://polar-savannah-53668.herokuapp.com/api/v0/users/login', {
-                  email: email,
-                  password: password
-                });
-
-              case 3:
-                res = _context.sent;
-
-                if (!(res.data.status === 'success')) {
-                  _context.next = 13;
-                  break;
-                }
-
-                (0, _alert.showAlert)('success', 'Logged in successfully!');
-                _context.next = 8;
-                return res.data.token;
-
-              case 8:
-                this.token = _context.sent;
-                storage.storeObj('token', this.token); // add user info to the state object
-
-                _context.next = 12;
-                return this.getMe();
-
-              case 12:
-                return _context.abrupt("return", true);
-
-              case 13:
-                return _context.abrupt("return", false);
-
-              case 16:
-                _context.prev = 16;
-                _context.t0 = _context["catch"](0);
-                console.log(_context.t0);
-                message = _context.t0.response.data.message;
-                (0, _alert.showAlert)('error', message);
-
-              case 21:
-              case "end":
-                return _context.stop();
-            }
-          }
-        }, _callee, this, [[0, 16]]);
-      }));
-
-      function login(_x, _x2) {
-        return _login.apply(this, arguments);
-      }
-
-      return login;
-    }()
-  }, {
-    key: "getMe",
-    value: function () {
-      var _getMe = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
-        var res, message;
-        return regeneratorRuntime.wrap(function _callee2$(_context2) {
-          while (1) {
-            switch (_context2.prev = _context2.next) {
-              case 0:
-                if (!(this.token || storage.getObj('token'))) {
-                  _context2.next = 16;
-                  break;
-                }
-
-                _context2.prev = 1;
-                _context2.next = 4;
-                return _axios.default.get('https://polar-savannah-53668.herokuapp.com/api/v0/users/my-account', {
-                  headers: {
-                    Authorization: "Bearer ".concat(this.token)
-                  }
-                });
-
-              case 4:
-                res = _context2.sent;
-
-                if (!(res.data.status === 'success')) {
-                  _context2.next = 10;
-                  break;
-                }
-
-                _context2.next = 8;
-                return res.data.data.user;
-
-              case 8:
-                this.userData = _context2.sent;
-                storage.storeObj('user', this.userData);
-
-              case 10:
-                _context2.next = 16;
-                break;
-
-              case 12:
-                _context2.prev = 12;
-                _context2.t0 = _context2["catch"](1);
-                message = _context2.t0.response.data;
-                (0, _alert.showAlert)('error', message);
-
-              case 16:
-              case "end":
-                return _context2.stop();
-            }
-          }
-        }, _callee2, this, [[1, 12]]);
-      }));
-
-      function getMe() {
-        return _getMe.apply(this, arguments);
-      }
-
-      return getMe;
-    }()
-  }]);
-
-  return User;
-}();
-
-exports.default = User;
-},{"axios":"../node_modules/axios/index.js","../utils/localStorage":"js/utils/localStorage.js","../utils/alert":"js/utils/alert.js"}],"js/controllers/overviewController.js":[function(require,module,exports) {
+},{"axios":"../node_modules/axios/index.js","../utils/alert":"js/utils/alert.js","../views/windowView":"js/views/windowView.js"}],"js/controllers/overviewController.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -12097,7 +12664,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "63082" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61999" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

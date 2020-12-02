@@ -700,6 +700,14 @@
   justify-content: space-evenly;
   align-items: center;
   cursor: pointer; }
+  .classroom__options {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    display: flex;
+    flex-direction: column; }
+    .classroom__options > *:not(:last-child) {
+      margin-bottom: 1.5rem; }
   .classroom__details {
     font-size: 1.4rem;
     text-align: center;

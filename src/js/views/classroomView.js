@@ -1,3 +1,5 @@
+import edit from '../../img/SVG/edit.svg';
+import bin from '../../img/SVG/trash.svg';
 import minus from '../../img/SVG/minus.svg';
 import plus from '../../img/SVG/plus.svg';
 import tick from '../../img/SVG/check.svg';
@@ -16,6 +18,22 @@ export const renderClassroomGrid = (parent, classroomArray) => {
   classroomArray.forEach((classroom) => {
     const classroomMarkup = `
       <div class="classroom classroom-${classroom.id}" data-classroom=${classroom.id}>
+      <div class="classroom__options">
+            <a href="#" class="options options--edit">
+              <svg class="icon icon--options icon--edit">
+                <use xlink:href="${edit}"></use>
+              </svg>
+              <span class="show-hide card--edit">Edit</span>
+            </a>
+
+            <a href="#" class="options options--delete">
+              <svg class="icon icon--options icon--delete">
+                <use xlink:href="${bin}"></use>
+              </svg>
+              <span class="show-hide card--delete">Delete</span>
+            </a>
+          </div>
+
         <div class="classroom__details">
           <div class="name">${classroom.name}</div>
         </div>
@@ -25,17 +43,8 @@ export const renderClassroomGrid = (parent, classroomArray) => {
   });
 
   // checks if the user is a teacher and then allows them to create a new classroom if they are.
-  let markup = ``;
-  if (storage.getObj('user').role === 'teacher') {
-    markup += `
-    <div class="make-classroom">
-        <a href="#" class="btn btn--ghost make-classroom">Make A New Classroom</a>
-    </div>`;
-  } else {
-    markup += `<div class="make-classroom">
-    &nbsp; 
-</div>`;
-  }
+  let markup = '';
+  markup += isTeacher();
 
   markup += `
     <div class="classroom-grid">
@@ -46,21 +55,36 @@ export const renderClassroomGrid = (parent, classroomArray) => {
 };
 
 export const renderEmptyClassroomGrid = (parent) => {
-  const markup = `
-  <div class="classroom-grid">
+  let markup = isTeacher();
+  markup += `<div class="classroom-grid">
   <div class="no-item">
       <svg class="icon icon--no-item">
         <use href="${graduation}"></use>
       </svg>
-      <span>make some decks to see them here!</span>
+      <span>There are no classrooms here!</span>
   </div>
   </div>`;
 
   parent.insertAdjacentHTML('afterbegin', markup);
 };
 
+const isTeacher = () => {
+  let markup = '';
+  if (storage.getObj('user').role === 'teacher') {
+    markup += `
+    <div class="make-classroom">
+        <a href="#" class="btn btn--ghost make-classroom">Make A New Classroom</a>
+    </div>`;
+  } else {
+    markup += `<div class="make-classroom">
+    &nbsp; 
+      </div>`;
+  }
+  return markup;
+};
+
 // Renders all the users in the 'All Users' list
-export const renderItemResults = (user, index, iconType, type, flag) => {
+export const renderItemResults = (user, iconType, type, flag) => {
   let icon;
 
   switch (iconType) {
@@ -84,13 +108,10 @@ export const renderItemResults = (user, index, iconType, type, flag) => {
         <use href="${icon}"></use>
       </svg>
       <div class="make-classroom__card-details">
-        <span
-          class="make-classroom__span make-classroom-span--question"
-          >Student ${index}</span
-        >
+        
         <span
           class="make-classroom__span make-classroom-span--answer"
-          >${user.name}</span
+          >${limitCharacters(user.name)}</span
         >
       </div>
     </a>
@@ -101,14 +122,18 @@ export const renderItemResults = (user, index, iconType, type, flag) => {
   document.querySelector(element).insertAdjacentHTML('beforeend', markup);
 };
 
-// Clears the users from the 'All Users' list
 export const clearResults = (type, flag) => {
   const elements = getType(type, flag);
   const elementList = elements[0];
   const elementPaginate = elements[1];
 
-  document.querySelector(`${elementList}`).innerHTML = '';
-  document.querySelector(`${elementPaginate}`).innerHTML = '';
+  if (elementList) {
+    document.querySelector(`${elementList}`).innerHTML = '';
+  }
+
+  if (elementPaginate) {
+    document.querySelector(`${elementPaginate}`).innerHTML = '';
+  }
 };
 
 const createButton = (page, type) => `
@@ -125,7 +150,7 @@ const createButton = (page, type) => `
 
 // Pagination for the 'All Users' list
 const renderButton = (page, numResults, resPerPage, type, flag) => {
-  const element = getType(type, 'paginate')[1];
+  const element = getType(type, flag)[1];
   const pages = Math.ceil(numResults / resPerPage);
 
   let btn;
@@ -145,7 +170,6 @@ const renderButton = (page, numResults, resPerPage, type, flag) => {
 
   if (btn) {
     showPagination(type, flag);
-
     document.querySelector(element).insertAdjacentHTML('afterbegin', btn);
   } else {
     hidePagination(type, flag);
@@ -154,14 +178,25 @@ const renderButton = (page, numResults, resPerPage, type, flag) => {
 
 export const hidePagination = (type, flag) => {
   const element = getType(type, flag)[1];
-  document.querySelector(element).style.display = 'none';
+
+  if (element) {
+    document.querySelector(element).style.display = 'none';
+  }
 };
 
 const showPagination = (type, flag) => {
   const element = getType(type, flag)[1];
-  document.querySelector(element).style.display = 'flex';
+
+  if (element) {
+    document.querySelector(element).style.display = 'flex';
+  }
 };
 
+/**
+ *
+ * @param {Refers to class for the element} type
+ * @param {Either being in the view render portion or the make render portion} flag
+ */
 export const getType = (type, flag) => {
   let insert = '';
   if (flag === 'make') {
@@ -179,8 +214,7 @@ export const getType = (type, flag) => {
           '.make-classroom__list--classroom-students .make-classroom__paginate--classroom-students';
         break;
       case 'classroom-deck':
-        insert +=
-          '.make-classroom__list--classroom-deck .make-classroom__paginate--classroom-deck';
+        insert += '.make-classroom__list--classroom-deck';
         break;
       default:
         break;
@@ -200,8 +234,7 @@ export const getType = (type, flag) => {
           '.view-classroom__list--classroom-students  .view-classroom__paginate--classroom-students';
         break;
       case 'classroom-deck':
-        insert =
-          '.view-classroom__list--classroom-deck .view-classroom__paginate--classroom-deck';
+        insert = '.view-classroom__list--classroom-deck';
         break;
       default:
         break;
@@ -210,24 +243,33 @@ export const getType = (type, flag) => {
   return insert.split(' ');
 };
 
+/**
+ *
+ * @param {Being an array of students, decks or cards} array
+ * @param {Identifier to determine what icon it should be} icon
+ * @param {Identifier to determine what element it should retrieve} type
+ * @param {Being either make or view render} flag
+ * @param {The page number to pass for pagination} page
+ * @param {The number of results per page} resPerPage
+ */
 export const renderResults = (
-  students,
+  array,
   icon,
   type,
   flag,
   page = 1,
-  resPerPage = 4
+  resPerPage = 3
 ) => {
   clearResults(type, flag);
 
   const start = (page - 1) * resPerPage;
   const end = page * resPerPage;
 
-  students.slice(start, end).forEach((el, i) => {
-    renderItemResults(el, i, icon, type, flag);
+  array.slice(start, end).forEach((el) => {
+    renderItemResults(el, icon, type, flag);
   });
 
-  renderButton(page, students.length, resPerPage, type, flag);
+  renderButton(page, array.length, resPerPage, type, flag);
 };
 
 export const renderViewClassroom = (parent, teacherName, deckName, deckId) => {
@@ -296,12 +338,14 @@ export const renderViewClassroom = (parent, teacherName, deckName, deckId) => {
   parent.insertAdjacentHTML('afterbegin', markup);
 };
 
-export const renderMakeClassroom = (parent) => {
+export const renderMakeClassroom = (parent, classroomData) => {
   const markup = `<div class="make-classroom-grid">
 
   <form action="#" class="make-classroom__form">
       <label for="classroom-name" class="make-classroom__label">Enter Classroom name</label>
-      <input class="make-deck__input" type="text" minlength="5" maxlength="50" id="classroom-name" placeholder="Classroom Name">
+      <input class="make-classroom__input" type="text" minlength="5" maxlength="50" id="classroom-name" placeholder="Classroom Name" value="${
+        classroomData === undefined ? '' : classroomData.name
+      }">
   </form>
 
   <div class="make-classroom__student-nav make-classroom__student-nav--users-student">

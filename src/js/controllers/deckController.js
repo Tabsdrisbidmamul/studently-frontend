@@ -1,12 +1,15 @@
-import { elements, clearOverview } from '../views/base';
+import {
+  elements,
+  clearOverview,
+  optionsHandler,
+  cancelMaker,
+} from '../views/base';
 import * as deckView from '../views/deckView';
 import * as windowView from '../views/windowView';
-import * as cardView from '../views/cardView';
+import { renderCardGrid } from '../views/cardView';
 import * as cardController from '../controllers/cardController';
-import * as windowController from '../controllers/windowController';
 import * as storage from '../utils/localStorage';
 import { showAlert } from '../utils/alert';
-import Deck from '../models/deckModel';
 import { state } from './overviewController';
 
 export const deckLoaderAndRender = async () => {
@@ -32,7 +35,7 @@ export const deckLoader = (e) => {
   if (e.target.matches('.options, .options *')) {
     const click = e.target.closest('.options');
     const deckId = e.target.parentNode.parentNode.parentNode.dataset.deck;
-    optionsHandler(click, deckId);
+    optionsHandler(click, deckId, deleteDeck, deckUpdateMaker);
 
     // User has clicked the deck itself
   } else if (e.target.matches('.deck, .deck *')) {
@@ -41,21 +44,14 @@ export const deckLoader = (e) => {
   }
 };
 
-const optionsHandler = (click, deckId) => {
-  // user clicked edit deck
-  if (Array.from(click.classList).includes('options--edit')) {
-    deckUpdateMaker(deckId);
-
-    // user clicked delete deck
-  } else if (Array.from(click.classList).includes('options--delete')) {
-    windowController.windowDeletionHandlerDeck(deckId);
-  }
-};
-
 // Get one deck from the array in local storage
-export const getDeck = (deckId) => {
-  //1. Get the decks array
-  const decks = storage.getObj('decks') || state.deck.decks;
+export const getDeck = (deckId, deckArray) => {
+  let decks = deckArray;
+
+  //1. Get the decks array if not given
+  if (deckArray === undefined) {
+    decks = storage.getObj('decks') || state.deck.decks;
+  }
 
   //2. Find the deck in the decks array via id
   return decks.filter((deck) => {
@@ -215,39 +211,24 @@ const swapCardFacing = () => {
   let value = '';
   let cardFacing = 'question';
 
-  document
-    .querySelector('.make-deck__switch')
-    .addEventListener('click', (e) => {
-      // card to be swapped over to answer side
-      if (cardFacing === 'question') {
-        value = cardController.getCard(
-          state.deck.card || storage.getObj('decks.card')
-        ).question;
-        cardFacing = 'answer';
+  document.querySelector('.btn--switch').addEventListener('click', (e) => {
+    // card to be swapped over to answer side
+    if (cardFacing === 'question') {
+      value = cardController.getCard(
+        state.deck.card || storage.getObj('decks.card')
+      ).question;
+      cardFacing = 'answer';
 
-        // card to be swapped over to question side
-      } else {
-        value = cardController.getCard(
-          state.deck.card || storage.getObj('decks.card')
-        ).answer;
-        cardFacing = 'question';
-      }
+      // card to be swapped over to question side
+    } else {
+      value = cardController.getCard(
+        state.deck.card || storage.getObj('decks.card')
+      ).answer;
+      cardFacing = 'question';
+    }
 
-      renderCardValue(value);
-    });
-};
-
-const cancelDeckMaker = () => {
-  // User clicks to cancel the deck creation
-  document
-    .querySelector('.icon--make-deck-left')
-    .addEventListener('click', (e) => {
-      // 1. Clear the Overview
-      clearOverview();
-
-      // 2. Bring the user back to the deck homepage
-      deckRender(elements.overview, state.deck.decks);
-    });
+    renderCardValue(value);
+  });
 };
 
 export const getDecksFromAPI = async () => {
@@ -269,13 +250,16 @@ const createDeck = () => {
       // 1. Get all the input from user
       const name = document.querySelector('.make-deck__input').value;
       const user = storage.getObj('user') || state.user.userData.id;
-      const deck = state.deck.deckArray;
+      const cards = state.deck.deckArray;
       const token = storage.getObj('token');
 
       // 2. Check if they have a deck of cards or gave it a name
-      if (name && deck) {
-        // 2.1 Create the Deck and reload a new deckMaker Session
-        await state.deck.createDeck(name, user, deck, token);
+      if (name && cards) {
+        // 2.1 Create a card array with only distinct values
+        const distinctCards = [...new Set(cards.map((card) => card.id))];
+
+        // 2.2 Create the Deck and reload a new deckMaker Session
+        await state.deck.createDeck(name, user, distinctCards, token);
         deckMakerLoader();
       } else {
         showAlert('error', 'Please provide a name and cards');
@@ -296,10 +280,13 @@ const updateDeck = (deckId) => {
       try {
         // 2. Check if they have a deck of cards or gave it a name
         if (name && deck) {
-          // 2.1 Create the Deck and reload a new deckMaker Session
-          await state.deck.updateDeck(deckId, name, deck, token);
+          // 2.1 Create a card array with only distinct values
+          const distinctCards = [...new Set(cards.map((card) => card.id))];
 
-          // 2.2 Render the homepage to show the change
+          // 2.2 Create the Deck and reload a new deckMaker Session
+          await state.deck.updateDeck(deckId, name, distinctCards, token);
+
+          // 2.3 Render the homepage to show the change
           window.setTimeout(async () => {
             clearOverview();
             await deckLoaderAndRender();
@@ -313,7 +300,7 @@ const updateDeck = (deckId) => {
     });
 };
 
-export const deleteDeck = async (e, cardId) => {
+export const deleteDeck = async (e, deckId) => {
   const click = e.target.closest('.window__content');
   try {
     if (click) {
@@ -329,7 +316,7 @@ export const deleteDeck = async (e, cardId) => {
         }
 
         // 3.3 Delete the card by calling the API
-        await state.deck.deleteDeck(cardId, token);
+        await state.deck.deleteDeck(deckId, token);
 
         // Render the homepage to show the change
         window.setTimeout(async () => {
@@ -360,7 +347,8 @@ const deckHandler = (click) => {
     const deckCards = deckData.cards;
 
     //4. Render the deck cards
-    cardController.deckCardRender(deckCards);
+    clearOverview();
+    renderCardGrid(elements.overview, deckCards);
   } catch (err) {
     showAlert('error', err.message);
   }
@@ -396,7 +384,7 @@ export const deckMakerLoader = () => {
   swapCardFacing();
   addCardToDeckHandler(deckArray);
   removeCardFromDeck(deckArray);
-  cancelDeckMaker();
+  cancelMaker('deck', state.deck.decks, deckView.renderDeckGrid);
   createDeck();
 };
 
@@ -408,15 +396,14 @@ export const deckUpdateMaker = (deckId) => {
   // 2. Create the Deck array
   const deckArray = deckData.cards;
 
+  clearOverview();
+  deckView.renderUpdateDeckGrid(elements.overview, deckData);
+
   if (deckArray.length < 3) {
     deckView.removePaginationDeck();
   }
 
-  // 3. clear Overview
-  clearOverview();
-
   // 4. Render the update deck and handlers
-  deckView.renderUpdateDeckGrid(elements.overview, deckData);
   deckView.renderResults(cards);
   deckView.renderResultsDeck(deckArray);
   searchButtonHandler();
@@ -424,7 +411,7 @@ export const deckUpdateMaker = (deckId) => {
   getCardItem();
   addCardToDeckHandler(deckArray);
   removeCardFromDeck(deckArray);
-  cancelDeckMaker();
+  cancelMaker('deck', state.deck.decks, deckView.renderDeckGrid);
 
   // 5. Call the update deck handler
   updateDeck(deckId);
