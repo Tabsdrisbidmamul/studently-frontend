@@ -6772,14 +6772,14 @@ var renderCardNoOptGrid = function renderCardNoOptGrid(parent, cardArray) {
 exports.renderCardNoOptGrid = renderCardNoOptGrid;
 
 var renderCardAnswer = function renderCardAnswer(HTMLCard, answer) {
-  var markup = "\n  <div class=\"card__options\">\n      <a href=\"#\" class=\"options options--edit\">\n        <svg class=\"icon icon--options icon--edit\">\n          <use class=\"card--edit\" xlink:href=\"".concat(_edit.default, "\"></use>\n        </svg>\n        <span class=\"show-hide card--edit\">Edit</span>\n      </a>\n\n      <a href=\"#\" class=\"options options--delete\">\n        <svg class=\"icon icon--options icon--delete\">\n          <use class=\"card--delete\" xlink:href=\"").concat(_trash.default, "\"></use>\n        </svg>\n        <span class=\"show-hide card--delete\">Delete</span>\n      </a>\n      </div>\n\n  <div class=\"card__details\">\n    <div class=\"card__name\">").concat(answer, "</div>\n  </div>\n\n  <div class=\"answer-form\">\n    <a href=\"#\" class=\"answer-form__link\">\n      <svg class=\"icon icon--card icon--card-right icon--right\">\n        <use xlink:href=\"").concat(_check.default, "\"></use>\n      </svg>\n    </a>\n\n    <a href=\"#\" class=\"answer-form__link\">\n      <svg class=\"icon icon--card icon--card-left icon--wrong\">\n        <use xlink:href=\"").concat(_circleWithCross.default, "\"></use>\n      </svg>\n    </a>\n  ");
+  var markup = "\n  <div class=\"card__options\">\n      <a href=\"#\" class=\"options options--edit\">\n        <svg class=\"icon icon--options icon--edit\">\n          <use class=\"card--edit\" xlink:href=\"".concat(_edit.default, "\"></use>\n        </svg>\n        <span class=\"show-hide card--edit\">Edit</span>\n      </a>\n\n      <a href=\"#\" class=\"options options--delete\">\n        <svg class=\"icon icon--options icon--delete\">\n          <use class=\"card--delete\" xlink:href=\"").concat(_trash.default, "\"></use>\n        </svg>\n        <span class=\"show-hide card--delete\">Delete</span>\n      </a>\n      </div>\n\n  <div class=\"card__details\">\n    <div class=\"card__name\">").concat(answer, "</div>\n  </div>\n\n  <div class=\"answer-form\">\n    <a href=\"#\" class=\"answer-form__link\">\n      <svg class=\"icon icon--card icon--card-right icon--right\">\n        <use xlink:href=\"").concat(_check.default, "\"></use>\n      </svg>\n    </a>\n\n    <a href=\"#\" class=\"answer-form__link\">\n      <svg class=\"icon icon--card icon--card-left icon--wrong\">\n        <use xlink:href=\"").concat(_circleWithCross.default, "\"></use>\n      </svg>\n    </a>\n    </div>\n  ");
   HTMLCard.innerHTML = markup;
 };
 
 exports.renderCardAnswer = renderCardAnswer;
 
 var renderCardAnswerMake = function renderCardAnswerMake(HTMLCard, answer) {
-  var markup = "\n  <div class=\"card__details\">\n    <div class=\"card__name\">".concat(answer, "</div>\n  </div>\n\n  <div class=\"answer-form\">\n    <a href=\"#\" class=\"answer-form__link\">\n      <svg class=\"icon icon--card icon--card-right icon--right\">\n        <use xlink:href=\"").concat(_check.default, "\"></use>\n      </svg>\n    </a>\n\n    <a href=\"#\" class=\"answer-form__link\">\n      <svg class=\"icon icon--card icon--card-left icon--wrong\">\n        <use xlink:href=\"").concat(_circleWithCross.default, "\"></use>\n      </svg>\n    </a>\n  ");
+  var markup = "\n  <div class=\"card__details\">\n    <div class=\"card__name\">".concat(answer, "</div>\n  </div>\n\n  <div class=\"answer-form\">\n    <a href=\"#\" class=\"answer-form__link\">\n      <svg class=\"icon icon--card icon--card-right icon--right\">\n        <use xlink:href=\"").concat(_check.default, "\"></use>\n      </svg>\n    </a>\n\n    <a href=\"#\" class=\"answer-form__link\">\n      <svg class=\"icon icon--card icon--card-left icon--wrong\">\n        <use xlink:href=\"").concat(_circleWithCross.default, "\"></use>\n      </svg>\n    </a>\n    </div>\n  ");
   HTMLCard.innerHTML = markup;
 };
 
@@ -6813,7 +6813,7 @@ var renderMakeCardGrid = function renderMakeCardGrid(parent) {
 
 exports.renderMakeCardGrid = renderMakeCardGrid;
 
-var renderEmptyCardGrid = function renderEmptyCardGrid(parent) {
+var renderEmptyCardGrid = function renderEmptyCardGrid(parent, array) {
   var markup = "<div class=\"make-card\">\n  <a href=\"#\" class=\"btn btn--ghost\">Make A New Card</a>\n</div>\n\n<div class=\"card-grid\">\n  <div class=\"no-item\">\n      <svg class=\"icon icon--no-item\">\n        <use href=\"".concat(_documents.default, "\"></use>\n      </svg>\n      <span>make some cards to see them here!</span>\n  </div>\n</div>");
   parent.insertAdjacentHTML('afterbegin', markup);
 };
@@ -7478,7 +7478,7 @@ var renderUpdateDeckGrid = function renderUpdateDeckGrid(parent, deck) {
 
 exports.renderUpdateDeckGrid = renderUpdateDeckGrid;
 
-var renderEmptyDeckGrid = function renderEmptyDeckGrid(parent) {
+var renderEmptyDeckGrid = function renderEmptyDeckGrid(parent, array) {
   var markup = "<div class=\"make-deck\">\n  <a href=\"#\" class=\"btn btn--ghost\">Make A New Deck</a>\n</div>\n\n<div class=\"deck-grid\">\n  <div class=\"no-item\">\n      <svg class=\"icon icon--no-item\">\n        <use href=\"".concat(_drive.default, "\"></use>\n      </svg>\n      <span>make some decks to see them here!</span>\n  </div>\n</div>");
   parent.insertAdjacentHTML('afterbegin', markup);
 };
@@ -8153,8 +8153,13 @@ var clearOverview = function clearOverview() {
 exports.clearOverview = clearOverview;
 
 var limitCharacters = function limitCharacters(word) {
-  var newWord = word.split(' ').splice(0, 3);
-  newWord.push('...');
+  var newWord = word.split(' ');
+
+  if (newWord.length > 3) {
+    newWord.splice(0, 3);
+    newWord.push('...');
+  }
+
   return newWord.join(' ');
 };
 
@@ -8311,7 +8316,7 @@ var renderClassroomGrid = function renderClassroomGrid(parent, classroomArray) {
 
 exports.renderClassroomGrid = renderClassroomGrid;
 
-var renderEmptyClassroomGrid = function renderEmptyClassroomGrid(parent) {
+var renderEmptyClassroomGrid = function renderEmptyClassroomGrid(parent, array) {
   var markup = isTeacher();
   markup += "<div class=\"classroom-grid\">\n  <div class=\"no-item\">\n      <svg class=\"icon icon--no-item\">\n        <use href=\"".concat(_graduationCap.default, "\"></use>\n      </svg>\n      <span>There are no classrooms here!</span>\n  </div>\n  </div>");
   parent.insertAdjacentHTML('afterbegin', markup);

@@ -54,7 +54,7 @@ export const renderClassroomGrid = (parent, classroomArray) => {
   parent.insertAdjacentHTML('afterbegin', markup);
 };
 
-export const renderEmptyClassroomGrid = (parent) => {
+export const renderEmptyClassroomGrid = (parent, array) => {
   let markup = isTeacher();
   markup += `<div class="classroom-grid">
   <div class="no-item">

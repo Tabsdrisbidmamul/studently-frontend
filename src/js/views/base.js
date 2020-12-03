@@ -21,8 +21,11 @@ export const clearOverview = () => {
 };
 
 export const limitCharacters = (word) => {
-  const newWord = word.split(' ').splice(0, 3);
-  newWord.push('...');
+  let newWord = word.split(' ');
+  if (newWord.length > 3) {
+    newWord.splice(0, 3);
+    newWord.push('...');
+  }
   return newWord.join(' ');
 };
 

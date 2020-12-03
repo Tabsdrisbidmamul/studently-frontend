@@ -390,7 +390,7 @@ export const renderUpdateDeckGrid = (parent, deck) => {
   parent.insertAdjacentHTML('afterbegin', markup);
 };
 
-export const renderEmptyDeckGrid = (parent) => {
+export const renderEmptyDeckGrid = (parent, array) => {
   const markup = `<div class="make-deck">
   <a href="#" class="btn btn--ghost">Make A New Deck</a>
 </div>

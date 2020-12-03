@@ -195,11 +195,13 @@ const classroomMaker = (students, decks) => {
     'classroom-deck'
   );
   searchButton('classroom-students', 'make', 'minus', 'classroomStudentArray');
+
   cancelMaker(
     'classroom',
     state.classroom.classrooms,
     classroomView.renderClassroomGrid
   );
+
   createClassroom();
 };
 

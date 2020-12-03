@@ -67,6 +67,7 @@ const cardUpdaterMaker = (cardId) => {
   addQAtoTextBox(cardData.question, cardData.answer);
   QAValueChanger();
   swapCardFacing();
+
   cancelMaker('card', state.card.cards, cardView.renderCardGrid);
 
   // 3. Call update Card handler
@@ -264,5 +265,6 @@ export const cardMakerLoader = () => {
   QAValueChanger();
   swapCardFacing();
   createCard();
+
   cancelMaker('card', state.card.cards, cardView.renderCardGrid);
 };

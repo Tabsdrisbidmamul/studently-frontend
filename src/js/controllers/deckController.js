@@ -385,6 +385,7 @@ export const deckMakerLoader = () => {
   addCardToDeckHandler(deckArray);
   removeCardFromDeck(deckArray);
   cancelMaker('deck', state.deck.decks, deckView.renderDeckGrid);
+
   createDeck();
 };
 
@@ -411,6 +412,7 @@ export const deckUpdateMaker = (deckId) => {
   getCardItem();
   addCardToDeckHandler(deckArray);
   removeCardFromDeck(deckArray);
+
   cancelMaker('deck', state.deck.decks, deckView.renderDeckGrid);
 
   // 5. Call the update deck handler

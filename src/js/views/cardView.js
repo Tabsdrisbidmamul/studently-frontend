@@ -101,6 +101,7 @@ export const renderCardAnswer = (HTMLCard, answer) => {
         <use xlink:href="${cross}"></use>
       </svg>
     </a>
+    </div>
   `;
 
   HTMLCard.innerHTML = markup;
@@ -124,6 +125,7 @@ export const renderCardAnswerMake = (HTMLCard, answer) => {
         <use xlink:href="${cross}"></use>
       </svg>
     </a>
+    </div>
   `;
 
   HTMLCard.innerHTML = markup;
@@ -251,7 +253,7 @@ export const renderMakeCardGrid = (parent) => {
   parent.insertAdjacentHTML('afterbegin', markup);
 };
 
-export const renderEmptyCardGrid = (parent) => {
+export const renderEmptyCardGrid = (parent, array) => {
   const markup = `<div class="make-card">
   <a href="#" class="btn btn--ghost">Make A New Card</a>
 </div>
