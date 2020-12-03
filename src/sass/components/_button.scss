@@ -96,7 +96,10 @@
   }
 }
 
-.btn--btn-login {
+.btn--btn-login,
+.btn--btn-signup,
+.btn--btn-save-settings,
+.btn--btn-save-password {
   text-transform: uppercase;
   font-size: 1.6rem;
 
@@ -118,4 +121,9 @@
     // transform: translateY(1rem);
     color: $color-grey-light-1;
   }
+}
+
+.btn--btn-save-settings,
+.btn--btn-save-password {
+  width: 50%;
 }

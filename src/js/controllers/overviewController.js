@@ -1,14 +1,11 @@
-import { elements, clearOverview } from '../views/base';
-import { cardLoader, cardRender, cardMakerLoader } from './cardController';
-import { loginHandler } from './loginController';
+import { elements } from '../views/base';
+import { cardLoader, cardMakerLoader } from './cardController';
+import { loginHandler, signupHandler } from './loginController';
+import { saveSettingsHandler, savePasswordHandler } from './settingsController';
 import User from '../models/userModel';
 import Card from '../models/cardModel';
 import Deck from '../models/deckModel';
 import Classroom from '../models/classroomModel';
-import * as storage from '../utils/localStorage';
-import * as cardView from '../views/cardView';
-import * as deckView from '../views/deckView';
-import { renderMakeClassroomGrid } from '../views/classroomView';
 import { deckLoader, deckMakerLoader } from './deckController';
 import { classroomLoader, classroomMakerLoader } from './classroomController';
 
@@ -20,12 +17,17 @@ state.card = new Card();
 state.deck = new Deck();
 state.classroom = new Classroom();
 
-// FIXME: REFACTOR THIS PIECE OF SHIT
 // Overview Handler
 elements.overview.addEventListener('click', async (e) => {
   // user clicks login button in login form
   if (e.target.matches('.btn--btn-login')) {
     loginHandler(e);
+  } else if (e.target.matches('.btn--btn-signup')) {
+    signupHandler(e);
+  } else if (e.target.matches('.btn--btn-save-settings')) {
+    saveSettingsHandler(e);
+  } else if (e.target.matches('.btn--btn-save-password')) {
+    savePasswordHandler(e);
 
     // User clicks a card in the card homepage
   } else if (e.target.closest('.card')) {

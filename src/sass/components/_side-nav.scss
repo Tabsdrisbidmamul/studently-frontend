@@ -35,7 +35,19 @@
     &:hover::before,
     &--active::before {
       transform: scaleY(1);
-      width: 100%;
+      width: 0.5rem;
+    }
+
+    &:hover a {
+      transform: translateX(1.5rem) translateY(-0.5rem);
+    }
+
+    &--active a {
+      transform: translateX(1.5rem);
+
+      &:hover {
+        transform: translateX(1.5rem) translateY(0);
+      }
     }
   }
 
@@ -51,6 +63,7 @@
 
     position: relative;
     z-index: 10;
+    transition: all 200ms;
   }
 
   &__icon {

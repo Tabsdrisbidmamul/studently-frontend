@@ -2,6 +2,7 @@ import { elements, clearOverview } from '../views/base';
 import { cardLoaderAndRender } from './cardController';
 import { deckLoaderAndRender } from './deckController';
 import { classroomLoaderAndRender } from './classroomController';
+import { renderSettingsView } from './settingsController';
 import { state } from './overviewController';
 import { showAlert } from '../utils/alert';
 import * as storage from '../utils/localStorage';
@@ -26,7 +27,7 @@ elements.card.addEventListener('click', async (e) => {
     clearOverview();
 
     // 2. Check if the user is authenticated
-    if (storage.getObj('token') || state.user) {
+    if (storage.getObj('token') || state.user.token) {
       // 3. Get and Load the cards
       await cardLoaderAndRender();
 
@@ -46,7 +47,7 @@ elements.deck.addEventListener('click', async (e) => {
     clearOverview();
 
     // 2. Check if the user is authenticated
-    if (storage.getObj('token') || state.user) {
+    if (storage.getObj('token') || state.user.token) {
       // 3. Get and Load the decks
       await deckLoaderAndRender();
 
@@ -66,7 +67,7 @@ elements.classroom.addEventListener('click', async (e) => {
     clearOverview();
 
     // 2. Check if the user is authenticated
-    if (storage.getObj('token') || state.user) {
+    if (storage.getObj('token') || state.user.token) {
       // 3. Get and Load the type
       await classroomLoaderAndRender();
 
@@ -76,5 +77,12 @@ elements.classroom.addEventListener('click', async (e) => {
     }
   } catch (err) {
     showAlert('error', err.message);
+  }
+});
+
+elements.settings.addEventListener('click', (e) => {
+  if (storage.getObj('token') || state.user.token) {
+    clearOverview();
+    renderSettingsView(e);
   }
 });

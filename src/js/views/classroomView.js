@@ -70,7 +70,10 @@ export const renderEmptyClassroomGrid = (parent) => {
 
 const isTeacher = () => {
   let markup = '';
-  if (storage.getObj('user').role === 'teacher') {
+  if (
+    storage.getObj('user').role === 'teacher' ||
+    storage.getObj('user').role === 'admin'
+  ) {
     markup += `
     <div class="make-classroom">
         <a href="#" class="btn btn--ghost make-classroom">Make A New Classroom</a>

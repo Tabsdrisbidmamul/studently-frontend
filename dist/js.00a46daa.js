@@ -8206,21 +8206,48 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-// TODO: Add user data as args into this func
-var renderHeaderLogin = function renderHeaderLogin(user) {
-  // FIXME: User value comes up undefined when they login due to promise
-  if (!user) {
-    user = storage.getObj('user');
-  }
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
-  var markup = "\n  &nbsp;\n  <nav class=\"user-nav\">\n    <div class=\"header__login\">\n      <a href=\"#\" class=\"btn btn--logout\">Logout</a>\n    </div>\n\n    <div class=\"user-nav__user\">\n      <img\n        src=\"https://polar-savannah-53668.herokuapp.com/img/users/".concat(user.photo, "\"\n        alt=\"").concat(user.name, " Photo\"\n        class=\"user-nav__user-photo\"\n      />\n      <span class=\"user-nav__user-name\">").concat(user.name, "</span>\n    </div>\n</nav>");
-  _base.elements.header.innerHTML = markup;
-};
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+// TODO: Add user data as args into this func
+var renderHeaderLogin = /*#__PURE__*/function () {
+  var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(user) {
+    var url, markup;
+    return regeneratorRuntime.wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            // FIXME: User value comes up undefined when they login due to promise
+            if (!user) {
+              user = storage.getObj('user');
+            }
+
+            _context.next = 3;
+            return "https://polar-savannah-53668.herokuapp.com/img/users/".concat(user.photo);
+
+          case 3:
+            url = _context.sent;
+            markup = "\n  &nbsp;\n  <nav class=\"user-nav\">\n    <div class=\"header__login\">\n      <a href=\"#\" class=\"btn btn--logout\">Logout</a>\n    </div>\n\n    <div class=\"user-nav__user\">\n      <img\n        src=\"".concat(url, "\"\n        alt=\"").concat(user.name, " Photo\"\n        class=\"user-nav__user-photo\"\n      />\n      <span class=\"user-nav__user-name\">").concat((0, _base.limitCharacters)(user.name), "</span>\n    </div>\n</nav>");
+            _base.elements.header.innerHTML = markup;
+
+          case 6:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee);
+  }));
+
+  return function renderHeaderLogin(_x) {
+    return _ref.apply(this, arguments);
+  };
+}();
 
 exports.renderHeaderLogin = renderHeaderLogin;
 
 var renderHeaderDefault = function renderHeaderDefault() {
-  var markup = "\n  &nbsp;\n  <div class=\"header__login\">\n    <a href=\"#\" class=\"btn btn--login\">Login</a>\n    <a href=\"#\" type=\"submit\" class=\"btn btn--ghost\">Sign up</a>\n  </div>";
+  var markup = "\n  &nbsp;\n  <div class=\"header__login\">\n    <a href=\"#\" class=\"btn btn--login\">Login</a>\n    <a href=\"#\" type=\"submit\" class=\"btn btn--ghost btn--signup\">Sign up</a>\n  </div>";
   _base.elements.header.innerHTML = markup;
 };
 
@@ -8295,7 +8322,7 @@ exports.renderEmptyClassroomGrid = renderEmptyClassroomGrid;
 var isTeacher = function isTeacher() {
   var markup = '';
 
-  if (storage.getObj('user').role === 'teacher') {
+  if (storage.getObj('user').role === 'teacher' || storage.getObj('user').role === 'admin') {
     markup += "\n    <div class=\"make-classroom\">\n        <a href=\"#\" class=\"btn btn--ghost make-classroom\">Make A New Classroom</a>\n    </div>";
   } else {
     markup += "<div class=\"make-classroom\">\n    &nbsp; \n      </div>";
@@ -8645,8 +8672,7 @@ var classroomLoader = function classroomLoader(e) {
       // 1. Get the Classroom Id
       var _classroomId = _click.dataset.classroom; // 2. Get the classroom
 
-      var classroom = getClassroom(_classroomId);
-      console.log(classroom.deck); // 3. Render view classroom
+      var classroom = getClassroom(_classroomId); // 3. Render view classroom
 
       classroomViewHandler(classroom);
     } catch (err) {}
@@ -8677,6 +8703,15 @@ var classroomViewHandler = /*#__PURE__*/function () {
 
           case 9:
             classroomDeck = _context3.sent;
+
+            if (classroomDeck) {
+              _context3.next = 12;
+              break;
+            }
+
+            return _context3.abrupt("return", new Error('The deck no longer exists for this class, please add one'));
+
+          case 12:
             // 4. Store the teacher's deck array to state
             _overviewController.state.classroom.deckArray = classroomDeck;
             storage.storeObj('classroom.deck', classroomDeck); // 5. Render classroom
@@ -8693,21 +8728,21 @@ var classroomViewHandler = /*#__PURE__*/function () {
 
 
             viewDeckFromClassroom(classroomDeck);
-            _context3.next = 22;
+            _context3.next = 24;
             break;
 
-          case 18:
-            _context3.prev = 18;
+          case 20:
+            _context3.prev = 20;
             _context3.t0 = _context3["catch"](0);
             (0, _alert.showAlert)('error', _context3.t0.message);
             console.log(_context3.t0.stack);
 
-          case 22:
+          case 24:
           case "end":
             return _context3.stop();
         }
       }
-    }, _callee3, null, [[0, 18]]);
+    }, _callee3, null, [[0, 20]]);
   }));
 
   return function classroomViewHandler(_x) {
@@ -8790,7 +8825,7 @@ var classroomMaker = function classroomMaker(students, decks) {
 
 var classroomUpdateMaker = /*#__PURE__*/function () {
   var _ref5 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5(classroomId) {
-    var token, classroomData, students, decks, classroomDeckId, classroomStudents, classroomDeck;
+    var token, classroomData, students, decks, classroomDeckId, classroomStudents, deck, classroomDeck;
     return regeneratorRuntime.wrap(function _callee5$(_context5) {
       while (1) {
         switch (_context5.prev = _context5.next) {
@@ -8811,7 +8846,14 @@ var classroomUpdateMaker = /*#__PURE__*/function () {
             classroomDeckId = classroomData.deck;
             classroomStudents = classroomData.students; // 1.1 Get the classroom Deck
 
-            classroomDeck = [(0, _deckController.getDeck)(classroomDeckId, decks)]; // 1.3 add the students and decks to the local storage
+            deck = [(0, _deckController.getDeck)(classroomDeckId, decks)];
+            classroomDeck = [];
+
+            if (deck.length !== 0) {
+              classroomDeck = deck;
+            }
+
+            console.log(classroomDeck); // 1.3 add the students and decks to the local storage
 
             _overviewController.state.classroom.studentArray = students;
             storage.storeObj('studentArray', students);
@@ -8856,7 +8898,7 @@ var classroomUpdateMaker = /*#__PURE__*/function () {
 
             updateClassroom(classroomId);
 
-          case 25:
+          case 28:
           case "end":
             return _context5.stop();
         }
@@ -9229,7 +9271,145 @@ var viewDeckFromClassroom = function viewDeckFromClassroom(deck) {
     }
   });
 };
-},{"../views/base":"js/views/base.js","../views/classroomView":"js/views/classroomView.js","../views/windowView":"js/views/windowView.js","../utils/localStorage":"js/utils/localStorage.js","../utils/alert":"js/utils/alert.js","./overviewController":"js/controllers/overviewController.js","./deckController":"js/controllers/deckController.js","../views/cardView":"js/views/cardView.js"}],"js/controllers/sidebarController.js":[function(require,module,exports) {
+},{"../views/base":"js/views/base.js","../views/classroomView":"js/views/classroomView.js","../views/windowView":"js/views/windowView.js","../utils/localStorage":"js/utils/localStorage.js","../utils/alert":"js/utils/alert.js","./overviewController":"js/controllers/overviewController.js","./deckController":"js/controllers/deckController.js","../views/cardView":"js/views/cardView.js"}],"js/views/settingsView.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.renderSettings = void 0;
+
+var renderSettings = function renderSettings(parent, user) {
+  var markup = "<div class=\"update-settings\">\n  <form action=\"#\" class=\"update-settings__form\">\n    <h2 class=\"form__heading form__heading--1\">Your Account Settings</h2>\n\n    <div class=\"form__group form__group--1\">\n      <input type=\"name\" class=\"form__input\" id=\"name\" placeholder=\"your name\" value=\"".concat(user.name, "\">\n      <label for=\"name\" class=\"form__label\">Your name</label>\n    </div>\n\n    <div class=\"form__group form__group--2\">\n      <input type=\"email\" class=\"form__input\" id=\"email\" placeholder=\"Email Address\" value=\"").concat(user.email, "\">\n      <label for=\"email\" class=\"form__label\">Email Address</label>\n    </div>\n\n    <div class=\"form__group form__group--3\">\n      <img src=\"https://polar-savannah-53668.herokuapp.com/img/users/").concat(user.photo, "\" alt=\"").concat(user.name, "\" class=\"form__img--photo\" />\n    </div>\n\n    <div class=\"form__group form__group--4\">\n      <label for=\"photo\" class=\"form__label--photo\">Select a photo</label>\n      <input type=\"file\" class=\"form__input--photo\" id=\"photo\" accept=\"image/*\" >\n    </div>\n\n    <div class=\"form__group form__group--5\">\n      <button class=\"btn--btn-save-settings\">Save Settings</button>\n    </div>\n    \n    <div class=\"form__group form__group--6\">\n      <input type=\"password\" class=\"form__input\" id=\"oldPassword\" placeholder=\"Old Password\" required>\n      <label for=\"oldPassword\" class=\"form__label\">Old Password</label>\n    </div>\n\n    <div class=\"form__group form__group--7\">\n      <input type=\"password\" class=\"form__input\" id=\"newPassword\" placeholder=\"New Password\" required>\n      <label for=\"newPassword\" class=\"form__label\">New Password</label>\n    </div>\n\n    <div class=\"form__group form__group--8\">\n      <input type=\"password\" class=\"form__input\" id=\"confirmPassword\" placeholder=\"Confirm Password\" required>\n      <label for=\"confirmPassword\" class=\"form__label\">Confirm Password</label>\n    </div>\n    \n    <div class=\"form__group form__group--9\">\n      <button class=\"btn--btn-save-password\">Change Password</button>\n    </div>\n  </form>\n</div>");
+  parent.insertAdjacentHTML('afterbegin', markup);
+};
+
+exports.renderSettings = renderSettings;
+},{}],"js/controllers/settingsController.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.savePasswordHandler = exports.saveSettingsHandler = exports.renderSettingsView = void 0;
+
+var _base = require("../views/base");
+
+var settingsView = _interopRequireWildcard(require("../views/settingsView"));
+
+var headerView = _interopRequireWildcard(require("../views/headerView"));
+
+var storage = _interopRequireWildcard(require("../utils/localStorage"));
+
+var _overviewController = require("./overviewController");
+
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+var renderSettingsView = function renderSettingsView(e) {
+  settingsView.renderSettings(_base.elements.overview, storage.getObj('user'));
+};
+
+exports.renderSettingsView = renderSettingsView;
+
+var saveSettingsHandler = /*#__PURE__*/function () {
+  var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(e) {
+    var form, name, email, photo, token, updated, user;
+    return regeneratorRuntime.wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            e.preventDefault();
+            form = new FormData();
+            name = document.querySelector('#name').value;
+            email = document.querySelector('#email').value;
+            photo = document.querySelector('#photo').files[0];
+            token = _overviewController.state.token || storage.getObj('token');
+            form.append('name', name);
+            form.append('email', email);
+            form.append('photo', photo);
+            _context.next = 11;
+            return _overviewController.state.user.updateMe(form, token);
+
+          case 11:
+            updated = _context.sent;
+
+            if (!updated) {
+              _context.next = 18;
+              break;
+            }
+
+            user = storage.getObj('user');
+            _context.next = 16;
+            return headerView.renderHeaderLogin(user);
+
+          case 16:
+            (0, _base.clearOverview)();
+            settingsView.renderSettings(_base.elements.overview, storage.getObj('user'));
+
+          case 18:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee);
+  }));
+
+  return function saveSettingsHandler(_x) {
+    return _ref.apply(this, arguments);
+  };
+}();
+
+exports.saveSettingsHandler = saveSettingsHandler;
+
+var savePasswordHandler = /*#__PURE__*/function () {
+  var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(e) {
+    var oldPassword, newPassword, newPasswordConfirm, token, updated;
+    return regeneratorRuntime.wrap(function _callee2$(_context2) {
+      while (1) {
+        switch (_context2.prev = _context2.next) {
+          case 0:
+            e.preventDefault();
+            document.querySelector('.btn--btn-save-password').value = 'updating ...';
+            oldPassword = document.querySelector('#oldPassword').value;
+            newPassword = document.querySelector('#newPassword').value;
+            newPasswordConfirm = document.querySelector('#confirmPassword').value;
+            token = _overviewController.state.token || storage.getObj('token');
+            _context2.next = 8;
+            return _overviewController.state.user.updatePassword({
+              oldPassword: oldPassword,
+              newPassword: newPassword,
+              newPasswordConfirm: newPasswordConfirm
+            }, token);
+
+          case 8:
+            updated = _context2.sent;
+
+            if (updated) {
+              (0, _base.clearOverview)();
+              settingsView.renderSettings(_base.elements.overview, storage.getObj('user'));
+            }
+
+          case 10:
+          case "end":
+            return _context2.stop();
+        }
+      }
+    }, _callee2);
+  }));
+
+  return function savePasswordHandler(_x2) {
+    return _ref2.apply(this, arguments);
+  };
+}();
+
+exports.savePasswordHandler = savePasswordHandler;
+},{"../views/base":"js/views/base.js","../views/settingsView":"js/views/settingsView.js","../views/headerView":"js/views/headerView.js","../utils/localStorage":"js/utils/localStorage.js","./overviewController":"js/controllers/overviewController.js"}],"js/controllers/sidebarController.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -9244,6 +9424,8 @@ var _cardController = require("./cardController");
 var _deckController = require("./deckController");
 
 var _classroomController = require("./classroomController");
+
+var _settingsController = require("./settingsController");
 
 var _overviewController = require("./overviewController");
 
@@ -9285,7 +9467,7 @@ _base.elements.card.addEventListener('click', /*#__PURE__*/function () {
             // 1. Clear the overview page
             (0, _base.clearOverview)(); // 2. Check if the user is authenticated
 
-            if (!(storage.getObj('token') || _overviewController.state.user)) {
+            if (!(storage.getObj('token') || _overviewController.state.user.token)) {
               _context.next = 7;
               break;
             }
@@ -9333,7 +9515,7 @@ _base.elements.deck.addEventListener('click', /*#__PURE__*/function () {
             // 1. Clear the overview page
             (0, _base.clearOverview)(); // 2. Check if the user is authenticated
 
-            if (!(storage.getObj('token') || _overviewController.state.user)) {
+            if (!(storage.getObj('token') || _overviewController.state.user.token)) {
               _context2.next = 7;
               break;
             }
@@ -9381,7 +9563,7 @@ _base.elements.classroom.addEventListener('click', /*#__PURE__*/function () {
             // 1. Clear the overview page
             (0, _base.clearOverview)(); // 2. Check if the user is authenticated
 
-            if (!(storage.getObj('token') || _overviewController.state.user)) {
+            if (!(storage.getObj('token') || _overviewController.state.user.token)) {
               _context3.next = 7;
               break;
             }
@@ -9417,13 +9599,20 @@ _base.elements.classroom.addEventListener('click', /*#__PURE__*/function () {
     return _ref3.apply(this, arguments);
   };
 }());
-},{"../views/base":"js/views/base.js","./cardController":"js/controllers/cardController.js","./deckController":"js/controllers/deckController.js","./classroomController":"js/controllers/classroomController.js","./overviewController":"js/controllers/overviewController.js","../utils/alert":"js/utils/alert.js","../utils/localStorage":"js/utils/localStorage.js"}],"js/controllers/loginController.js":[function(require,module,exports) {
+
+_base.elements.settings.addEventListener('click', function (e) {
+  if (storage.getObj('token') || _overviewController.state.user.token) {
+    (0, _base.clearOverview)();
+    (0, _settingsController.renderSettingsView)(e);
+  }
+});
+},{"../views/base":"js/views/base.js","./cardController":"js/controllers/cardController.js","./deckController":"js/controllers/deckController.js","./classroomController":"js/controllers/classroomController.js","./settingsController":"js/controllers/settingsController.js","./overviewController":"js/controllers/overviewController.js","../utils/alert":"js/utils/alert.js","../utils/localStorage":"js/utils/localStorage.js"}],"js/controllers/loginController.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.loginHandler = void 0;
+exports.signupHandler = exports.loginHandler = void 0;
 
 var _base = require("../views/base");
 
@@ -9488,6 +9677,59 @@ var loginHandler = /*#__PURE__*/function () {
 }();
 
 exports.loginHandler = loginHandler;
+
+var signupHandler = /*#__PURE__*/function () {
+  var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(e) {
+    var name, email, password, passwordConfirm, roles, role, signedUp;
+    return regeneratorRuntime.wrap(function _callee2$(_context2) {
+      while (1) {
+        switch (_context2.prev = _context2.next) {
+          case 0:
+            e.preventDefault();
+            name = document.querySelector('#name').value;
+            email = document.querySelector('#email').value;
+            password = document.querySelector('#password').value;
+            passwordConfirm = document.querySelector('#passwordConfirm').value;
+            roles = Array.from(document.querySelectorAll('.form__radio-input'));
+            roles.forEach(function (el) {
+              if (el.checked) {
+                role = el.value;
+              }
+            }); // 1. Check if they sign up was successful
+
+            _context2.next = 9;
+            return _overviewController.state.user.signup(name, email, password, passwordConfirm, role);
+
+          case 9:
+            signedUp = _context2.sent;
+
+            // 2. Only render the User Ui for a successful login
+            if (signedUp) {
+              _overviewController.state.user.email = email; // 2.2. Clear the Login Form
+
+              window.setTimeout(_base.clearOverview, 2500); // 2.3 Render the user info to the Login UI
+
+              window.setTimeout(headerView.renderHeaderLogin, 2500); // 2.4 set the active on sidebar to 'my cards'
+
+              (0, _sidebarController.renderActiveItem)(document.querySelector('.side-nav-card')); // 2.4. Load and render User cards
+
+              window.setTimeout(_cardController.cardLoaderAndRender, 3500);
+            }
+
+          case 11:
+          case "end":
+            return _context2.stop();
+        }
+      }
+    }, _callee2);
+  }));
+
+  return function signupHandler(_x2) {
+    return _ref2.apply(this, arguments);
+  };
+}();
+
+exports.signupHandler = signupHandler;
 },{"../views/base":"js/views/base.js","./overviewController":"js/controllers/overviewController.js","../views/headerView":"js/views/headerView.js","./cardController":"js/controllers/cardController.js","./sidebarController":"js/controllers/sidebarController.js"}],"../node_modules/axios/lib/helpers/bind.js":[function(require,module,exports) {
 'use strict';
 
@@ -11308,9 +11550,9 @@ var User = /*#__PURE__*/function () {
   }
 
   _createClass(User, [{
-    key: "login",
+    key: "updatePassword",
     value: function () {
-      var _login = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(email, password) {
+      var _updatePassword = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(data, token) {
         var res, message;
         return regeneratorRuntime.wrap(function _callee$(_context) {
           while (1) {
@@ -11318,9 +11560,10 @@ var User = /*#__PURE__*/function () {
               case 0:
                 _context.prev = 0;
                 _context.next = 3;
-                return _axios.default.post('https://polar-savannah-53668.herokuapp.com/api/v0/users/login', {
-                  email: email,
-                  password: password
+                return _axios.default.patch('https://polar-savannah-53668.herokuapp.com/api/v0/users/update-password', data, {
+                  headers: {
+                    Authorization: "Bearer ".concat(token)
+                  }
                 });
 
               case 3:
@@ -11331,7 +11574,8 @@ var User = /*#__PURE__*/function () {
                   break;
                 }
 
-                (0, _alert.showAlert)('success', 'Logged in successfully!');
+                (0, _alert.showAlert)('success', 'Password updated successfully!'); // store the new token
+
                 _context.next = 8;
                 return res.data.token;
 
@@ -11351,11 +11595,10 @@ var User = /*#__PURE__*/function () {
               case 16:
                 _context.prev = 16;
                 _context.t0 = _context["catch"](0);
-                console.log(_context.t0);
                 message = _context.t0.response.data.message;
                 (0, _alert.showAlert)('error', message);
 
-              case 21:
+              case 20:
               case "end":
                 return _context.stop();
             }
@@ -11363,7 +11606,188 @@ var User = /*#__PURE__*/function () {
         }, _callee, this, [[0, 16]]);
       }));
 
-      function login(_x, _x2) {
+      function updatePassword(_x, _x2) {
+        return _updatePassword.apply(this, arguments);
+      }
+
+      return updatePassword;
+    }()
+  }, {
+    key: "updateMe",
+    value: function () {
+      var _updateMe = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(data, token) {
+        var res, message;
+        return regeneratorRuntime.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                _context2.prev = 0;
+                _context2.next = 3;
+                return _axios.default.patch('https://polar-savannah-53668.herokuapp.com/api/v0/users/update-me', data, {
+                  headers: {
+                    Authorization: "Bearer ".concat(token)
+                  }
+                });
+
+              case 3:
+                res = _context2.sent;
+
+                if (!(res.data.status === 'success')) {
+                  _context2.next = 9;
+                  break;
+                }
+
+                (0, _alert.showAlert)('success', 'Account updated successfully!'); // add user info to the state object
+
+                _context2.next = 8;
+                return this.getMe();
+
+              case 8:
+                return _context2.abrupt("return", true);
+
+              case 9:
+                return _context2.abrupt("return", false);
+
+              case 12:
+                _context2.prev = 12;
+                _context2.t0 = _context2["catch"](0);
+                message = _context2.t0.response.data.message;
+                (0, _alert.showAlert)('error', message);
+
+              case 16:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2, this, [[0, 12]]);
+      }));
+
+      function updateMe(_x3, _x4) {
+        return _updateMe.apply(this, arguments);
+      }
+
+      return updateMe;
+    }()
+  }, {
+    key: "signup",
+    value: function () {
+      var _signup = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(name, email, password, passwordConfirm, role) {
+        var res, message;
+        return regeneratorRuntime.wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                _context3.prev = 0;
+                _context3.next = 3;
+                return _axios.default.post('https://polar-savannah-53668.herokuapp.com/api/v0/users/sign-up', {
+                  name: name,
+                  email: email,
+                  password: password,
+                  passwordConfirm: passwordConfirm,
+                  role: role
+                });
+
+              case 3:
+                res = _context3.sent;
+
+                if (!(res.data.status === 'success')) {
+                  _context3.next = 13;
+                  break;
+                }
+
+                (0, _alert.showAlert)('success', 'Signed up successfully!');
+                _context3.next = 8;
+                return res.data.token;
+
+              case 8:
+                this.token = _context3.sent;
+                storage.storeObj('token', this.token); // add user info to the state object
+
+                _context3.next = 12;
+                return this.getMe();
+
+              case 12:
+                return _context3.abrupt("return", true);
+
+              case 13:
+                return _context3.abrupt("return", false);
+
+              case 16:
+                _context3.prev = 16;
+                _context3.t0 = _context3["catch"](0);
+                message = _context3.t0.response.data.message;
+                (0, _alert.showAlert)('error', message);
+
+              case 20:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee3, this, [[0, 16]]);
+      }));
+
+      function signup(_x5, _x6, _x7, _x8, _x9) {
+        return _signup.apply(this, arguments);
+      }
+
+      return signup;
+    }()
+  }, {
+    key: "login",
+    value: function () {
+      var _login = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4(email, password) {
+        var res, message;
+        return regeneratorRuntime.wrap(function _callee4$(_context4) {
+          while (1) {
+            switch (_context4.prev = _context4.next) {
+              case 0:
+                _context4.prev = 0;
+                _context4.next = 3;
+                return _axios.default.post('https://polar-savannah-53668.herokuapp.com/api/v0/users/login', {
+                  email: email,
+                  password: password
+                });
+
+              case 3:
+                res = _context4.sent;
+
+                if (!(res.data.status === 'success')) {
+                  _context4.next = 13;
+                  break;
+                }
+
+                (0, _alert.showAlert)('success', 'Logged in successfully!');
+                _context4.next = 8;
+                return res.data.token;
+
+              case 8:
+                this.token = _context4.sent;
+                storage.storeObj('token', this.token); // add user info to the state object
+
+                _context4.next = 12;
+                return this.getMe();
+
+              case 12:
+                return _context4.abrupt("return", true);
+
+              case 13:
+                return _context4.abrupt("return", false);
+
+              case 16:
+                _context4.prev = 16;
+                _context4.t0 = _context4["catch"](0);
+                message = _context4.t0.response.data.message;
+                (0, _alert.showAlert)('error', message);
+
+              case 20:
+              case "end":
+                return _context4.stop();
+            }
+          }
+        }, _callee4, this, [[0, 16]]);
+      }));
+
+      function login(_x10, _x11) {
         return _login.apply(this, arguments);
       }
 
@@ -11372,56 +11796,58 @@ var User = /*#__PURE__*/function () {
   }, {
     key: "getMe",
     value: function () {
-      var _getMe = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
-        var res, message;
-        return regeneratorRuntime.wrap(function _callee2$(_context2) {
+      var _getMe = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5() {
+        var token, res, message;
+        return regeneratorRuntime.wrap(function _callee5$(_context5) {
           while (1) {
-            switch (_context2.prev = _context2.next) {
+            switch (_context5.prev = _context5.next) {
               case 0:
-                if (!(this.token || storage.getObj('token'))) {
-                  _context2.next = 16;
+                token = storage.getObj('token') || this.token;
+
+                if (!token) {
+                  _context5.next = 17;
                   break;
                 }
 
-                _context2.prev = 1;
-                _context2.next = 4;
+                _context5.prev = 2;
+                _context5.next = 5;
                 return _axios.default.get('https://polar-savannah-53668.herokuapp.com/api/v0/users/my-account', {
                   headers: {
-                    Authorization: "Bearer ".concat(this.token)
+                    Authorization: "Bearer ".concat(token)
                   }
                 });
 
-              case 4:
-                res = _context2.sent;
+              case 5:
+                res = _context5.sent;
 
                 if (!(res.data.status === 'success')) {
-                  _context2.next = 10;
+                  _context5.next = 11;
                   break;
                 }
 
-                _context2.next = 8;
+                _context5.next = 9;
                 return res.data.data.user;
 
-              case 8:
-                this.userData = _context2.sent;
+              case 9:
+                this.userData = _context5.sent;
                 storage.storeObj('user', this.userData);
 
-              case 10:
-                _context2.next = 16;
+              case 11:
+                _context5.next = 17;
                 break;
 
-              case 12:
-                _context2.prev = 12;
-                _context2.t0 = _context2["catch"](1);
-                message = _context2.t0.response.data;
+              case 13:
+                _context5.prev = 13;
+                _context5.t0 = _context5["catch"](2);
+                message = _context5.t0.response.data;
                 (0, _alert.showAlert)('error', message);
 
-              case 16:
+              case 17:
               case "end":
-                return _context2.stop();
+                return _context5.stop();
             }
           }
-        }, _callee2, this, [[1, 12]]);
+        }, _callee5, this, [[2, 13]]);
       }));
 
       function getMe() {
@@ -11728,7 +12154,7 @@ var Deck = /*#__PURE__*/function () {
                 _context.prev = 7;
                 _context.t0 = _context["catch"](0);
                 message = _context.t0.response.data.message;
-                (0, _alert.showAlert)('error', message);
+                (0, _alert.showAlert)('error', 'The deck no longer exists for this class, please add one');
 
               case 11:
               case "end":
@@ -12226,6 +12652,8 @@ var _cardController = require("./cardController");
 
 var _loginController = require("./loginController");
 
+var _settingsController = require("./settingsController");
+
 var _userModel = _interopRequireDefault(require("../models/userModel"));
 
 var _cardModel = _interopRequireDefault(require("../models/cardModel"));
@@ -12234,21 +12662,9 @@ var _deckModel = _interopRequireDefault(require("../models/deckModel"));
 
 var _classroomModel = _interopRequireDefault(require("../models/classroomModel"));
 
-var storage = _interopRequireWildcard(require("../utils/localStorage"));
-
-var cardView = _interopRequireWildcard(require("../views/cardView"));
-
-var deckView = _interopRequireWildcard(require("../views/deckView"));
-
-var _classroomView = require("../views/classroomView");
-
 var _deckController = require("./deckController");
 
 var _classroomController = require("./classroomController");
-
-function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -12262,8 +12678,7 @@ exports.state = state;
 state.user = new _userModel.default();
 state.card = new _cardModel.default();
 state.deck = new _deckModel.default();
-state.classroom = new _classroomModel.default(); // FIXME: REFACTOR THIS PIECE OF SHIT
-// Overview Handler
+state.classroom = new _classroomModel.default(); // Overview Handler
 
 _base.elements.overview.addEventListener('click', /*#__PURE__*/function () {
   var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(e) {
@@ -12273,7 +12688,13 @@ _base.elements.overview.addEventListener('click', /*#__PURE__*/function () {
           case 0:
             // user clicks login button in login form
             if (e.target.matches('.btn--btn-login')) {
-              (0, _loginController.loginHandler)(e); // User clicks a card in the card homepage
+              (0, _loginController.loginHandler)(e);
+            } else if (e.target.matches('.btn--btn-signup')) {
+              (0, _loginController.signupHandler)(e);
+            } else if (e.target.matches('.btn--btn-save-settings')) {
+              (0, _settingsController.saveSettingsHandler)(e);
+            } else if (e.target.matches('.btn--btn-save-password')) {
+              (0, _settingsController.savePasswordHandler)(e); // User clicks a card in the card homepage
             } else if (e.target.closest('.card')) {
               (0, _cardController.cardLoader)(e); // User click 'make a new card' button in card homepage
             } else if (e.target.closest('.make-card')) {
@@ -12300,7 +12721,7 @@ _base.elements.overview.addEventListener('click', /*#__PURE__*/function () {
     return _ref.apply(this, arguments);
   };
 }());
-},{"../views/base":"js/views/base.js","./cardController":"js/controllers/cardController.js","./loginController":"js/controllers/loginController.js","../models/userModel":"js/models/userModel.js","../models/cardModel":"js/models/cardModel.js","../models/deckModel":"js/models/deckModel.js","../models/classroomModel":"js/models/classroomModel.js","../utils/localStorage":"js/utils/localStorage.js","../views/cardView":"js/views/cardView.js","../views/deckView":"js/views/deckView.js","../views/classroomView":"js/views/classroomView.js","./deckController":"js/controllers/deckController.js","./classroomController":"js/controllers/classroomController.js"}],"js/controllers/alertController.js":[function(require,module,exports) {
+},{"../views/base":"js/views/base.js","./cardController":"js/controllers/cardController.js","./loginController":"js/controllers/loginController.js","./settingsController":"js/controllers/settingsController.js","../models/userModel":"js/models/userModel.js","../models/cardModel":"js/models/cardModel.js","../models/deckModel":"js/models/deckModel.js","../models/classroomModel":"js/models/classroomModel.js","./deckController":"js/controllers/deckController.js","./classroomController":"js/controllers/classroomController.js"}],"js/controllers/alertController.js":[function(require,module,exports) {
 "use strict";
 
 var _alert = require("../utils/alert");
@@ -12316,7 +12737,7 @@ document.querySelector('body').addEventListener('click', function (e) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.renderLoginForm = void 0;
+exports.renderSignupForm = exports.renderLoginForm = void 0;
 
 var _base = require("./base");
 
@@ -12326,6 +12747,13 @@ var renderLoginForm = function renderLoginForm(parent) {
 };
 
 exports.renderLoginForm = renderLoginForm;
+
+var renderSignupForm = function renderSignupForm(parent) {
+  var markup = "<div class=\"login signup\">\n  <form action=\"#\" class=\"form\">\n    <div class=\"form__group\">\n      <input type=\"name\" class=\"form__input\" id=\"name\" placeholder=\"Name\" required>\n      <label for=\"nYame\" class=\"form__label\">Name</label>\n    </div>\n\n    <div class=\"form__group\">\n      <input type=\"email\" class=\"form__input\" id=\"email\" placeholder=\"Email Address\" required>\n      <label for=\"email\" class=\"form__label\">Email Address</label>\n    </div>\n    \n    <div class=\"form__group\">\n      <input type=\"password\" class=\"form__input\" id=\"password\" placeholder=\"Password\" required>\n      <label for=\"password\" class=\"form__label\">Password</label>\n    </div>\n\n    <div class=\"form__group\">\n      <input type=\"password\" class=\"form__input\" id=\"passwordConfirm\" placeholder=\"Confirm Password\" required>\n      <label for=\"passwordConfirm\" class=\"form__label\">Confirm Password</label>\n    </div>\n\n    <div class=\"form__group\">\n      <span class=\"form__span\"><a href=\"#\" class=\"form__link\">Forgot your password?</a></span>\n    </div>\n\n    <div class=\"form__group\">\n      <div class=\"form__radio-group\">\n          \n          <input type=\"radio\" id=\"student\" class=\"form__radio-input\" name=\"tour-group\" value=\"student\" required>\n\n          <label for=\"student\" class=\"form__radio-label\">\n              <span class=\"form__radio-button\"></span>\n              Student\n          </label>\n     \n          <input type=\"radio\" id=\"teacher\" class=\"form__radio-input\" name=\"tour-group\" value=\"teacher\" required>\n\n          <label for=\"teacher\" class=\"form__radio-label\">\n              <span class=\"form__radio-button\"></span>\n              Teacher\n          </label>\n      </div>\n  </div>\n    \n    <div class=\"form__group\">\n      <button class=\"btn--btn-signup\">Signup</button>\n    </div>\n  </form>\n</div>\n";
+  parent.insertAdjacentHTML('afterbegin', markup);
+};
+
+exports.renderSignupForm = renderSignupForm;
 },{"./base":"js/views/base.js"}],"js/controllers/headerController.js":[function(require,module,exports) {
 "use strict";
 
@@ -12360,6 +12788,9 @@ _base.elements.header.addEventListener('click', function (e) {
   } else if (e.target.matches('.btn--login')) {
     (0, _base.clearOverview)();
     loginView.renderLoginForm(_base.elements.overview);
+  } else if (e.target.matches('.btn--signup')) {
+    (0, _base.clearOverview)();
+    loginView.renderSignupForm(_base.elements.overview);
   }
 });
 },{"../views/base":"js/views/base.js","./overviewController":"js/controllers/overviewController.js","../views/headerView":"js/views/headerView.js","../views/loginView":"js/views/loginView.js","../utils/localStorage":"js/utils/localStorage.js"}],"js/index.js":[function(require,module,exports) {
@@ -12664,7 +13095,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61999" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "53177" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

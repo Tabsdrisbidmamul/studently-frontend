@@ -22,5 +22,8 @@ elements.header.addEventListener('click', (e) => {
   } else if (e.target.matches('.btn--login')) {
     clearOverview();
     loginView.renderLoginForm(elements.overview);
+  } else if (e.target.matches('.btn--signup')) {
+    clearOverview();
+    loginView.renderSignupForm(elements.overview);
   }
 });

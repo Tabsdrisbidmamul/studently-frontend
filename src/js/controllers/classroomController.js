@@ -80,7 +80,6 @@ export const classroomLoader = (e) => {
 
       // 2. Get the classroom
       const classroom = getClassroom(classroomId);
-      console.log(classroom.deck);
 
       // 3. Render view classroom
       classroomViewHandler(classroom);
@@ -102,6 +101,13 @@ const classroomViewHandler = async (classroom) => {
     const deckId = classroom.deck;
     const token = state.token || storage.getObj('token');
     const classroomDeck = await state.deck.getDeck(deckId, token);
+
+    // 3.1 Check if the deck exists
+    if (!classroomDeck) {
+      return new Error(
+        'The deck no longer exists for this class, please add one'
+      );
+    }
 
     // 4. Store the teacher's deck array to state
     state.classroom.deckArray = classroomDeck;
@@ -208,8 +214,13 @@ const classroomUpdateMaker = async (classroomId) => {
   const classroomStudents = classroomData.students;
 
   // 1.1 Get the classroom Deck
-  const classroomDeck = [getDeck(classroomDeckId, decks)];
+  const deck = [getDeck(classroomDeckId, decks)];
+  let classroomDeck = [];
+  if (deck.length !== 0) {
+    classroomDeck = deck;
+  }
 
+  console.log(classroomDeck);
   // 1.3 add the students and decks to the local storage
   state.classroom.studentArray = students;
   storage.storeObj('studentArray', students);

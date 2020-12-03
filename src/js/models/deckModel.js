@@ -14,7 +14,10 @@ export default class Deck {
       return res.data.data.deck;
     } catch (err) {
       const { message } = err.response.data;
-      showAlert('error', message);
+      showAlert(
+        'error',
+        'The deck no longer exists for this class, please add one'
+      );
     }
   }
 
