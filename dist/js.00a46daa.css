@@ -112,6 +112,8 @@
     flex-direction: column; }
     .card__options > *:not(:last-child) {
       margin-bottom: 1.5rem; }
+    .card__options--hide {
+      display: none; }
   .card__name {
     display: inline-block;
     width: 100%;

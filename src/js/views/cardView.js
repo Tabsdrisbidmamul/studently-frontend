@@ -51,6 +51,22 @@ export const renderCardNoOptGrid = (parent, cardArray) => {
   cardArray.forEach((card) => {
     const cardMarkup = `
     <div class="card card-${card.id}" data-card=${card.id}>
+    <div class="card__options card__options--hide">
+    <a href="#" class="options options--edit">
+      <svg class="icon icon--options icon--edit">
+        <use xlink:href="${edit}"></use>
+      </svg>
+      <span class="show-hide card--edit">Edit</span>
+    </a>
+
+    <a href="#" class="options options--delete">
+      <svg class="icon icon--options icon--delete">
+        <use xlink:href="${bin}"></use>
+      </svg>
+      <span class="show-hide card--delete">Delete</span>
+    </a>
+    </div>
+
       <div class="card__details">
         <div class="name">${card.question}</div>
       </div>
@@ -69,7 +85,7 @@ export const renderCardNoOptGrid = (parent, cardArray) => {
 
 export const renderCardAnswer = (HTMLCard, answer) => {
   const markup = `
-  <div class="card__options">
+  <div class="card__options ">
       <a href="#" class="options options--edit">
         <svg class="icon icon--options icon--edit">
           <use class="card--edit" xlink:href="${edit}"></use>

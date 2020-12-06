@@ -109,6 +109,7 @@ const removeCardFromDeck = (deckArray) => {
         let index;
         deckArray.forEach((el, i) => {
           if (el.id === cardId) {
+            console.log(el, index);
             index = i;
           }
         });
@@ -116,7 +117,11 @@ const removeCardFromDeck = (deckArray) => {
         // 2.3 Remove it from the Deck array
         deckArray.splice(index, 1);
 
-        // 2.4 Re-render the deck cards back to the screen
+        // 2.4 Store the deckArray in storage
+        state.deck.deckArray = deckArray;
+        storage.storeObj('decks.deckArray', state.deck.deckArray);
+
+        // 2.5 Re-render the deck cards back to the screen
         deckView.renderResultsDeck(deckArray);
       }
     });
@@ -274,14 +279,14 @@ const updateDeck = (deckId) => {
     .addEventListener('click', async (e) => {
       // 1. Get all the input from user
       const name = document.querySelector('.make-deck__input').value;
-      const deck = state.deck.deckArray;
+      const deck = state.deck.deckArray || storage.getObj('decks.deckArray');
       const token = storage.getObj('token');
 
       try {
         // 2. Check if they have a deck of cards or gave it a name
         if (name && deck) {
           // 2.1 Create a card array with only distinct values
-          const distinctCards = [...new Set(cards.map((card) => card.id))];
+          const distinctCards = [...new Set(deck.map((card) => card.id))];
 
           // 2.2 Create the Deck and reload a new deckMaker Session
           await state.deck.updateDeck(deckId, name, distinctCards, token);
@@ -373,7 +378,7 @@ export const deckMakerLoader = () => {
     deckView.removePaginationDeck();
   } else {
     deckView.removePaginationUser();
-    deckView.removePaginationUser();
+    deckView.removePaginationDeck();
   }
 
   // 4. Create the DeckArray reference
@@ -396,17 +401,21 @@ export const deckUpdateMaker = (deckId) => {
 
   // 2. Create the Deck array
   const deckArray = deckData.cards;
+  storage.storeObj('decks.deckArray', deckArray);
 
   clearOverview();
   deckView.renderUpdateDeckGrid(elements.overview, deckData);
 
-  if (deckArray.length < 3) {
+  if (deckArray.length < 4) {
+    deckView.renderResultsDeck(deckArray);
     deckView.removePaginationDeck();
+  } else {
+    deckView.renderResultsDeck(deckArray);
+    searchButtonHandler();
   }
 
   // 4. Render the update deck and handlers
   deckView.renderResults(cards);
-  deckView.renderResultsDeck(deckArray);
   searchButtonHandler();
   swapCardFacing();
   getCardItem();

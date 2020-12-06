@@ -16,29 +16,7 @@ import * as storage from '../utils/localStorage';
 export const renderClassroomGrid = (parent, classroomArray) => {
   let classrooms = '';
   classroomArray.forEach((classroom) => {
-    const classroomMarkup = `
-      <div class="classroom classroom-${classroom.id}" data-classroom=${classroom.id}>
-      <div class="classroom__options">
-            <a href="#" class="options options--edit">
-              <svg class="icon icon--options icon--edit">
-                <use xlink:href="${edit}"></use>
-              </svg>
-              <span class="show-hide card--edit">Edit</span>
-            </a>
-
-            <a href="#" class="options options--delete">
-              <svg class="icon icon--options icon--delete">
-                <use xlink:href="${bin}"></use>
-              </svg>
-              <span class="show-hide card--delete">Delete</span>
-            </a>
-          </div>
-
-        <div class="classroom__details">
-          <div class="name">${classroom.name}</div>
-        </div>
-      </div> 
-    `;
+    const classroomMarkup = isStudent(classroom);
     classrooms += classroomMarkup;
   });
 
@@ -83,6 +61,43 @@ const isTeacher = () => {
     &nbsp; 
       </div>`;
   }
+  return markup;
+};
+
+const isStudent = (classroom) => {
+  let markup = '';
+  if (storage.getObj('user').role === 'student') {
+    markup = `<div class="classroom classroom-${classroom.id}" data-classroom=${classroom.id}>
+    
+
+      <div class="classroom__details">
+        <div class="name">${classroom.name}</div>
+      </div>
+    </div> `;
+  } else {
+    markup = `<div class="classroom classroom-${classroom.id}" data-classroom=${classroom.id}>
+    <div class="classroom__options">
+          <a href="#" class="options options--edit">
+            <svg class="icon icon--options icon--edit">
+              <use xlink:href="${edit}"></use>
+            </svg>
+            <span class="show-hide card--edit">Edit</span>
+          </a>
+
+          <a href="#" class="options options--delete">
+            <svg class="icon icon--options icon--delete">
+              <use xlink:href="${bin}"></use>
+            </svg>
+            <span class="show-hide card--delete">Delete</span>
+          </a>
+        </div>
+
+      <div class="classroom__details">
+        <div class="name">${classroom.name}</div>
+      </div>
+    </div> `;
+  }
+
   return markup;
 };
 

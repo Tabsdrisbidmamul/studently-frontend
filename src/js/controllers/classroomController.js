@@ -222,7 +222,6 @@ const classroomUpdateMaker = async (classroomId) => {
     classroomDeck = deck;
   }
 
-  console.log(classroomDeck);
   // 1.3 add the students and decks to the local storage
   state.classroom.studentArray = students;
   storage.storeObj('studentArray', students);
@@ -338,10 +337,14 @@ const updateClassroom = (classroomId) => {
     .addEventListener('click', async (e) => {
       // 1. Get all the input from user
       const name = document.querySelector('.make-classroom__input').value;
-      const user = storage.getObj('user').id || state.user.userData.id;
-      const deckId = storage.getObj('classroomDeck')[0].id;
+      const deck = storage.getObj('classroomDeck');
       const students = storage.getObj('classroomStudentArray');
       const token = storage.getObj('token');
+
+      let deckId;
+      if (deck.length !== 0) {
+        deckId = deck[0].id;
+      }
 
       try {
         // 2. Check if they have given a name, students and a deck
@@ -561,7 +564,7 @@ const viewDeckFromClassroom = (deck) => {
     .addEventListener('click', (e) => {
       clearOverview();
 
-      console.log(deck);
+      storage.storeObj('cards', deck.cards);
 
       if (storage.getObj('user').role === 'teacher') {
         renderCardGrid(elements.overview, deck.cards);

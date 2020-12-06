@@ -30,7 +30,7 @@ export const getCardsFromAPI = async () => {
 
 export const cardRender = () => {
   // 1. Get the cards
-  const cards = state.card.cards || storage.getObj('cards');
+  const cards = storage.getObj('cards') || state.card.cards;
 
   // 2. Check if they are empty, if so render and exit function
   if (cards.length === 0) {

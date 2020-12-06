@@ -223,13 +223,8 @@ export const renderResults = (array, page = 1, resPerPage = 4) => {
 
 export const renderMakeCard = (HTMLCard, value) => {
   const markup = `
-  <div class="card__options">
-  <a href="#" class="options options--add">
-    <svg class="icon icon--options icon--add">
-      <use xlink:href="${plus}"></use>
-    </svg>
-    <span class="show-hide card--edit">Add card</span>
-  </a>
+
+  
 
 </div>
 
