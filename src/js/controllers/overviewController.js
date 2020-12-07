@@ -22,10 +22,16 @@ elements.overview.addEventListener('click', async (e) => {
   // user clicks login button in login form
   if (e.target.matches('.btn--btn-login')) {
     loginHandler(e);
+
+    // user clicks signup in the signup form
   } else if (e.target.matches('.btn--btn-signup')) {
     signupHandler(e);
+
+    // user clicks the save settings in the 'my settings' form
   } else if (e.target.matches('.btn--btn-save-settings')) {
     saveSettingsHandler(e);
+
+    // user clicks the change my password in 'my settings' form
   } else if (e.target.matches('.btn--btn-save-password')) {
     savePasswordHandler(e);
 
@@ -48,6 +54,8 @@ elements.overview.addEventListener('click', async (e) => {
     // User clicks a classroom in the homepage
   } else if (e.target.closest('.classroom')) {
     classroomLoader(e);
+
+    // user clicks 'make a classroom' in the homepage
   } else if (e.target.closest('.make-classroom')) {
     classroomMakerLoader();
   }
