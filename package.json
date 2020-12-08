@@ -13,7 +13,7 @@
     "build:css": "npm-run-all compile:sass prefix:css compress:css",
     "watch:js": "parcel watch ./src/js/index.js --out-dir ./dist/js --out-file bundle.js --public-url /js",
     "build:js": "parcel build ./src/js/index.js --out-dir ./dist/js --out-file bundle.js --public-url /js",
-    "dev:parcel": "parcel src/index.html",
+    "dev:parcel": "parcel serve src/index.html --port 5000",
     "build:parcel": "parcel build src/index.html"
   },
   "author": "Idris",

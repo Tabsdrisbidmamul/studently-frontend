@@ -18,10 +18,12 @@ elements.header.addEventListener('click', (e) => {
     headerView.renderHeaderDefault();
     storage.removeObj('token');
 
-    // User clicks login render the login form in the overview
+    // User clicks login, render the login form in the overview
   } else if (e.target.matches('.btn--login')) {
     clearOverview();
     loginView.renderLoginForm(elements.overview);
+
+    // user has clicks signup, render the signup form into the overview
   } else if (e.target.matches('.btn--signup')) {
     clearOverview();
     loginView.renderSignupForm(elements.overview);

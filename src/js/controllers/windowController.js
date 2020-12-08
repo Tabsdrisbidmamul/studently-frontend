@@ -1,7 +1,5 @@
 import { elements } from '../views/base';
 import { hideAlert } from '../utils/alert';
-import { deleteCard } from './cardController';
-import { deleteDeck } from './deckController';
 import * as windowView from '../views/windowView';
 
 export const windowDeletionHandler = (itemId, deleteHandler) => {

@@ -6714,7 +6714,151 @@ var hideAlert = function hideAlert() {
 };
 
 exports.hideAlert = hideAlert;
-},{"../views/base":"js/views/base.js"}],"img/SVG/check.svg":[function(require,module,exports) {
+},{"../views/base":"js/views/base.js"}],"js/views/windowView.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.clearWindow = exports.renderWindow = void 0;
+
+var renderWindow = function renderWindow(parent) {
+  var markup = "<div class=\"window__content\">\n  <div class=\"window__ok\">\n    Yes, please delete it\n  </div>\n\n  <div class=\"window__cancel\">\n    No, I want to cancel\n  </div>\n</div>";
+  parent.insertAdjacentHTML('afterbegin', markup);
+};
+
+exports.renderWindow = renderWindow;
+
+var clearWindow = function clearWindow() {
+  var windowAlert = document.querySelector('.window__content');
+  if (windowAlert) windowAlert.remove();
+};
+
+exports.clearWindow = clearWindow;
+},{}],"js/controllers/windowController.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.windowDeletionHandler = void 0;
+
+var _base = require("../views/base");
+
+var _alert = require("../utils/alert");
+
+var windowView = _interopRequireWildcard(require("../views/windowView"));
+
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+var windowDeletionHandler = function windowDeletionHandler(itemId, deleteHandler) {
+  // 1. Hide any remaining alerts at the top of body
+  (0, _alert.hideAlert)(); // 2. display the yes or no box to the user
+
+  windowView.renderWindow(_base.elements.body); // 3. Add event handler to when a card is deleted
+
+  document.querySelector('body').addEventListener('click', /*#__PURE__*/function () {
+    var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(e) {
+      return regeneratorRuntime.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              _context.next = 2;
+              return deleteHandler(e, itemId);
+
+            case 2:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, _callee);
+    }));
+
+    return function (_x) {
+      return _ref.apply(this, arguments);
+    };
+  }());
+};
+
+exports.windowDeletionHandler = windowDeletionHandler;
+},{"../views/base":"js/views/base.js","../utils/alert":"js/utils/alert.js","../views/windowView":"js/views/windowView.js"}],"js/views/base.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.optionsHandler = exports.cancelMaker = exports.limitCharacters = exports.clearOverview = exports.elements = void 0;
+
+var _windowController = require("../controllers/windowController");
+
+var elements = {
+  headerLoginBtn: document.querySelector('.header__login'),
+  header: document.querySelector('header'),
+  body: document.querySelector('body'),
+  sidebar: document.querySelector('.sidebar'),
+  sidebarItem: document.querySelectorAll('.side-nav__item'),
+  overview: document.querySelector('.overview'),
+  card: document.querySelector('.side-nav-card'),
+  deck: document.querySelector('.side-nav-deck'),
+  classroom: document.querySelector('.side-nav-classroom'),
+  settings: document.querySelector('.side-nav-settings')
+};
+exports.elements = elements;
+
+var clearOverview = function clearOverview() {
+  var overview = elements.overview;
+
+  if (overview.hasChildNodes) {
+    overview.innerHTML = '';
+  }
+};
+
+exports.clearOverview = clearOverview;
+
+var limitCharacters = function limitCharacters(word) {
+  var newWord = word.split(' ');
+
+  if (newWord.length > 3) {
+    newWord.splice(0, 3);
+    newWord.push('...');
+  }
+
+  return newWord.join(' ');
+};
+
+exports.limitCharacters = limitCharacters;
+
+var cancelMaker = function cancelMaker(type, typeArray, typeRender) {
+  // User clicks to cancel the type creation
+  document.querySelector(".icon--make-".concat(type, "-left")).addEventListener('click', function (e) {
+    // 1. Clear the Overview
+    clearOverview(); // 2. Bring the user back to the type homepage
+    // deckRender(elements.overview, state.deck.decks);
+
+    typeRender(elements.overview, typeArray);
+  });
+}; // Handler for Edit and Delete an item
+
+
+exports.cancelMaker = cancelMaker;
+
+var optionsHandler = function optionsHandler(click, itemId, deleteHandler, editHandler) {
+  // user clicked edit card
+  if (Array.from(click.classList).includes('options--edit')) {
+    editHandler(itemId); // user clicked delete card
+  } else if (Array.from(click.classList).includes('options--delete')) {
+    (0, _windowController.windowDeletionHandler)(itemId, deleteHandler);
+  }
+};
+
+exports.optionsHandler = optionsHandler;
+},{"../controllers/windowController":"js/controllers/windowController.js"}],"img/SVG/check.svg":[function(require,module,exports) {
 module.exports = '#030794220a577069b4c9e37f7881512d';
 },{}],"img/SVG/circle-with-cross.svg":[function(require,module,exports) {
 module.exports = '#fcba2f951158d7741a6b4f3c6594ec67';
@@ -6819,28 +6963,7 @@ var renderEmptyCardGrid = function renderEmptyCardGrid(parent, array) {
 };
 
 exports.renderEmptyCardGrid = renderEmptyCardGrid;
-},{"../../img/SVG/check.svg":"img/SVG/check.svg","../../img/SVG/circle-with-cross.svg":"img/SVG/circle-with-cross.svg","../../img/SVG/edit.svg":"img/SVG/edit.svg","../../img/SVG/trash.svg":"img/SVG/trash.svg","../../img/SVG/documents.svg":"img/SVG/documents.svg"}],"js/views/windowView.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.clearWindow = exports.renderWindow = void 0;
-
-var renderWindow = function renderWindow(parent) {
-  var markup = "<div class=\"window__content\">\n  <div class=\"window__ok\">\n    Yes, please delete it\n  </div>\n\n  <div class=\"window__cancel\">\n    No, I want to cancel\n  </div>\n</div>";
-  parent.insertAdjacentHTML('afterbegin', markup);
-};
-
-exports.renderWindow = renderWindow;
-
-var clearWindow = function clearWindow() {
-  var windowAlert = document.querySelector('.window__content');
-  if (windowAlert) windowAlert.remove();
-};
-
-exports.clearWindow = clearWindow;
-},{}],"js/utils/localStorage.js":[function(require,module,exports) {
+},{"../../img/SVG/check.svg":"img/SVG/check.svg","../../img/SVG/circle-with-cross.svg":"img/SVG/circle-with-cross.svg","../../img/SVG/edit.svg":"img/SVG/edit.svg","../../img/SVG/trash.svg":"img/SVG/trash.svg","../../img/SVG/documents.svg":"img/SVG/documents.svg"}],"js/utils/localStorage.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -7274,7 +7397,75 @@ var cardMakerLoader = function cardMakerLoader() {
 };
 
 exports.cardMakerLoader = cardMakerLoader;
-},{"../views/base":"js/views/base.js","../views/cardView":"js/views/cardView.js","../views/windowView":"js/views/windowView.js","./overviewController":"js/controllers/overviewController.js","../utils/localStorage":"js/utils/localStorage.js","../utils/alert":"js/utils/alert.js"}],"img/SVG/plus.svg":[function(require,module,exports) {
+},{"../views/base":"js/views/base.js","../views/cardView":"js/views/cardView.js","../views/windowView":"js/views/windowView.js","./overviewController":"js/controllers/overviewController.js","../utils/localStorage":"js/utils/localStorage.js","../utils/alert":"js/utils/alert.js"}],"img/default.png":[function(require,module,exports) {
+module.exports = "/default.6c87049f.png";
+},{}],"js/views/headerView.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.renderHeaderDefault = exports.renderHeaderLogin = void 0;
+
+var _base = require("./base");
+
+var _default = _interopRequireDefault(require("../../img/default.png"));
+
+var storage = _interopRequireWildcard(require("../utils/localStorage"));
+
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+// TODO: Add user data as args into this func
+var renderHeaderLogin = /*#__PURE__*/function () {
+  var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(user) {
+    var url, markup;
+    return regeneratorRuntime.wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            // FIXME: User value comes up undefined when they login due to promise
+            if (!user) {
+              user = storage.getObj('user');
+            }
+
+            _context.next = 3;
+            return "https://polar-savannah-53668.herokuapp.com/img/users/".concat(user.photo);
+
+          case 3:
+            url = _context.sent;
+            markup = "\n  &nbsp;\n  <nav class=\"user-nav\">\n    <div class=\"header__login\">\n      <a href=\"#\" class=\"btn btn--logout\">Logout</a>\n    </div>\n\n    <div class=\"user-nav__user\">\n      <img\n        src=\"".concat(url, "\"\n        alt=\"").concat(user.name, " Photo\"\n        class=\"user-nav__user-photo\"\n      />\n      <span class=\"user-nav__user-name\">").concat((0, _base.limitCharacters)(user.name), "</span>\n    </div>\n</nav>");
+            _base.elements.header.innerHTML = markup;
+
+          case 6:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee);
+  }));
+
+  return function renderHeaderLogin(_x) {
+    return _ref.apply(this, arguments);
+  };
+}();
+
+exports.renderHeaderLogin = renderHeaderLogin;
+
+var renderHeaderDefault = function renderHeaderDefault() {
+  var markup = "\n  &nbsp;\n  <div class=\"header__login\">\n    <a href=\"#\" class=\"btn btn--login\">Login</a>\n    <a href=\"#\" type=\"submit\" class=\"btn btn--ghost btn--signup\">Sign up</a>\n  </div>";
+  _base.elements.header.innerHTML = markup;
+};
+
+exports.renderHeaderDefault = renderHeaderDefault;
+},{"./base":"js/views/base.js","../../img/default.png":"img/default.png","../utils/localStorage":"js/utils/localStorage.js"}],"img/SVG/plus.svg":[function(require,module,exports) {
 module.exports = '#42274f9c0f0bc0524f4b86d684834329';
 },{}],"img/SVG/minus.svg":[function(require,module,exports) {
 module.exports = '#687401b9368affa5df8150e820f8ce5c';
@@ -8069,202 +8260,7 @@ var deckUpdateMaker = function deckUpdateMaker(deckId) {
 };
 
 exports.deckUpdateMaker = deckUpdateMaker;
-},{"../views/base":"js/views/base.js","../views/deckView":"js/views/deckView.js","../views/windowView":"js/views/windowView.js","../views/cardView":"js/views/cardView.js","../controllers/cardController":"js/controllers/cardController.js","../utils/localStorage":"js/utils/localStorage.js","../utils/alert":"js/utils/alert.js","./overviewController":"js/controllers/overviewController.js"}],"js/controllers/windowController.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.windowDeletionHandler = void 0;
-
-var _base = require("../views/base");
-
-var _alert = require("../utils/alert");
-
-var _cardController = require("./cardController");
-
-var _deckController = require("./deckController");
-
-var windowView = _interopRequireWildcard(require("../views/windowView"));
-
-function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
-
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-
-var windowDeletionHandler = function windowDeletionHandler(itemId, deleteHandler) {
-  // 1. Hide any remaining alerts at the top of body
-  (0, _alert.hideAlert)(); // 2. display the yes or no box to the user
-
-  windowView.renderWindow(_base.elements.body); // 3. Add event handler to when a card is deleted
-
-  document.querySelector('body').addEventListener('click', /*#__PURE__*/function () {
-    var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(e) {
-      return regeneratorRuntime.wrap(function _callee$(_context) {
-        while (1) {
-          switch (_context.prev = _context.next) {
-            case 0:
-              _context.next = 2;
-              return deleteHandler(e, itemId);
-
-            case 2:
-            case "end":
-              return _context.stop();
-          }
-        }
-      }, _callee);
-    }));
-
-    return function (_x) {
-      return _ref.apply(this, arguments);
-    };
-  }());
-};
-
-exports.windowDeletionHandler = windowDeletionHandler;
-},{"../views/base":"js/views/base.js","../utils/alert":"js/utils/alert.js","./cardController":"js/controllers/cardController.js","./deckController":"js/controllers/deckController.js","../views/windowView":"js/views/windowView.js"}],"js/views/base.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.optionsHandler = exports.cancelMaker = exports.limitCharacters = exports.clearOverview = exports.elements = void 0;
-
-var _windowController = require("../controllers/windowController");
-
-var elements = {
-  headerLoginBtn: document.querySelector('.header__login'),
-  header: document.querySelector('header'),
-  body: document.querySelector('body'),
-  sidebar: document.querySelector('.sidebar'),
-  sidebarItem: document.querySelectorAll('.side-nav__item'),
-  overview: document.querySelector('.overview'),
-  card: document.querySelector('.side-nav-card'),
-  deck: document.querySelector('.side-nav-deck'),
-  classroom: document.querySelector('.side-nav-classroom'),
-  settings: document.querySelector('.side-nav-settings')
-};
-exports.elements = elements;
-
-var clearOverview = function clearOverview() {
-  var overview = elements.overview;
-
-  if (overview.hasChildNodes) {
-    overview.innerHTML = '';
-  }
-};
-
-exports.clearOverview = clearOverview;
-
-var limitCharacters = function limitCharacters(word) {
-  var newWord = word.split(' ');
-
-  if (newWord.length > 3) {
-    newWord.splice(0, 3);
-    newWord.push('...');
-  }
-
-  return newWord.join(' ');
-};
-
-exports.limitCharacters = limitCharacters;
-
-var cancelMaker = function cancelMaker(type, typeArray, typeRender) {
-  // User clicks to cancel the type creation
-  document.querySelector(".icon--make-".concat(type, "-left")).addEventListener('click', function (e) {
-    // 1. Clear the Overview
-    clearOverview(); // 2. Bring the user back to the type homepage
-    // deckRender(elements.overview, state.deck.decks);
-
-    typeRender(elements.overview, typeArray);
-  });
-}; // Handler for Edit and Delete an item
-
-
-exports.cancelMaker = cancelMaker;
-
-var optionsHandler = function optionsHandler(click, itemId, deleteHandler, editHandler) {
-  // user clicked edit card
-  if (Array.from(click.classList).includes('options--edit')) {
-    editHandler(itemId); // user clicked delete card
-  } else if (Array.from(click.classList).includes('options--delete')) {
-    (0, _windowController.windowDeletionHandler)(itemId, deleteHandler);
-  }
-};
-
-exports.optionsHandler = optionsHandler;
-},{"../controllers/windowController":"js/controllers/windowController.js"}],"img/default.png":[function(require,module,exports) {
-module.exports = "/default.6c87049f.png";
-},{}],"js/views/headerView.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.renderHeaderDefault = exports.renderHeaderLogin = void 0;
-
-var _base = require("./base");
-
-var _default = _interopRequireDefault(require("../../img/default.png"));
-
-var storage = _interopRequireWildcard(require("../utils/localStorage"));
-
-function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-
-// TODO: Add user data as args into this func
-var renderHeaderLogin = /*#__PURE__*/function () {
-  var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(user) {
-    var url, markup;
-    return regeneratorRuntime.wrap(function _callee$(_context) {
-      while (1) {
-        switch (_context.prev = _context.next) {
-          case 0:
-            // FIXME: User value comes up undefined when they login due to promise
-            if (!user) {
-              user = storage.getObj('user');
-            }
-
-            _context.next = 3;
-            return "https://polar-savannah-53668.herokuapp.com/img/users/".concat(user.photo);
-
-          case 3:
-            url = _context.sent;
-            markup = "\n  &nbsp;\n  <nav class=\"user-nav\">\n    <div class=\"header__login\">\n      <a href=\"#\" class=\"btn btn--logout\">Logout</a>\n    </div>\n\n    <div class=\"user-nav__user\">\n      <img\n        src=\"".concat(url, "\"\n        alt=\"").concat(user.name, " Photo\"\n        class=\"user-nav__user-photo\"\n      />\n      <span class=\"user-nav__user-name\">").concat((0, _base.limitCharacters)(user.name), "</span>\n    </div>\n</nav>");
-            _base.elements.header.innerHTML = markup;
-
-          case 6:
-          case "end":
-            return _context.stop();
-        }
-      }
-    }, _callee);
-  }));
-
-  return function renderHeaderLogin(_x) {
-    return _ref.apply(this, arguments);
-  };
-}();
-
-exports.renderHeaderLogin = renderHeaderLogin;
-
-var renderHeaderDefault = function renderHeaderDefault() {
-  var markup = "\n  &nbsp;\n  <div class=\"header__login\">\n    <a href=\"#\" class=\"btn btn--login\">Login</a>\n    <a href=\"#\" type=\"submit\" class=\"btn btn--ghost btn--signup\">Sign up</a>\n  </div>";
-  _base.elements.header.innerHTML = markup;
-};
-
-exports.renderHeaderDefault = renderHeaderDefault;
-},{"./base":"js/views/base.js","../../img/default.png":"img/default.png","../utils/localStorage":"js/utils/localStorage.js"}],"img/SVG/graduation-cap.svg":[function(require,module,exports) {
+},{"../views/base":"js/views/base.js","../views/deckView":"js/views/deckView.js","../views/windowView":"js/views/windowView.js","../views/cardView":"js/views/cardView.js","../controllers/cardController":"js/controllers/cardController.js","../utils/localStorage":"js/utils/localStorage.js","../utils/alert":"js/utils/alert.js","./overviewController":"js/controllers/overviewController.js"}],"img/SVG/graduation-cap.svg":[function(require,module,exports) {
 module.exports = '#6ee829994d94ef5fb09c27197dc2a11f';
 },{}],"img/SVG/user.svg":[function(require,module,exports) {
 module.exports = '#0cb49ca546fb58356376f1c47a03e649';
@@ -9659,7 +9655,6 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
-// Logging in handler
 var loginHandler = /*#__PURE__*/function () {
   var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(e) {
     var email, password, loggedIn;
@@ -9677,7 +9672,7 @@ var loginHandler = /*#__PURE__*/function () {
           case 5:
             loggedIn = _context.sent;
 
-            // 2. Only render the User Ui for a successful login
+            // 2. Only render the User UI for a successful login
             if (loggedIn) {
               _overviewController.state.user.email = email; // 2.2. Clear the Login Form
 
@@ -9730,7 +9725,7 @@ var signupHandler = /*#__PURE__*/function () {
           case 9:
             signedUp = _context2.sent;
 
-            // 2. Only render the User Ui for a successful login
+            // 2. Only render the User UI for a successful signup
             if (signedUp) {
               _overviewController.state.user.email = email; // 2.2. Clear the Login Form
 
@@ -9738,7 +9733,7 @@ var signupHandler = /*#__PURE__*/function () {
 
               window.setTimeout(headerView.renderHeaderLogin, 2500); // 2.4 set the active on sidebar to 'my cards'
 
-              (0, _sidebarController.renderActiveItem)(document.querySelector('.side-nav-card')); // 2.4. Load and render User cards
+              (0, _sidebarController.renderActiveItem)(document.querySelector('.side-nav-card')); // 2.5 Load and render User cards
 
               window.setTimeout(_cardController.cardLoaderAndRender, 3500);
             }
@@ -12715,11 +12710,11 @@ _base.elements.overview.addEventListener('click', /*#__PURE__*/function () {
           case 0:
             // user clicks login button in login form
             if (e.target.matches('.btn--btn-login')) {
-              (0, _loginController.loginHandler)(e);
+              (0, _loginController.loginHandler)(e); // user clicks signup in the signup form
             } else if (e.target.matches('.btn--btn-signup')) {
-              (0, _loginController.signupHandler)(e);
+              (0, _loginController.signupHandler)(e); // user clicks the save settings in the 'my settings' form
             } else if (e.target.matches('.btn--btn-save-settings')) {
-              (0, _settingsController.saveSettingsHandler)(e);
+              (0, _settingsController.saveSettingsHandler)(e); // user clicks the change my password in 'my settings' form
             } else if (e.target.matches('.btn--btn-save-password')) {
               (0, _settingsController.savePasswordHandler)(e); // User clicks a card in the card homepage
             } else if (e.target.closest('.card')) {
@@ -12731,7 +12726,7 @@ _base.elements.overview.addEventListener('click', /*#__PURE__*/function () {
             } else if (e.target.closest('.make-deck')) {
               (0, _deckController.deckMakerLoader)(e); // User clicks a classroom in the homepage
             } else if (e.target.closest('.classroom')) {
-              (0, _classroomController.classroomLoader)(e);
+              (0, _classroomController.classroomLoader)(e); // user clicks 'make a classroom' in the homepage
             } else if (e.target.closest('.make-classroom')) {
               (0, _classroomController.classroomMakerLoader)();
             }
@@ -12811,10 +12806,10 @@ _base.elements.header.addEventListener('click', function (e) {
   if (e.target.matches('.btn--logout')) {
     (0, _base.clearOverview)();
     headerView.renderHeaderDefault();
-    storage.removeObj('token'); // User clicks login render the login form in the overview
+    storage.removeObj('token'); // User clicks login, render the login form in the overview
   } else if (e.target.matches('.btn--login')) {
     (0, _base.clearOverview)();
-    loginView.renderLoginForm(_base.elements.overview);
+    loginView.renderLoginForm(_base.elements.overview); // user has clicks signup, render the signup form into the overview
   } else if (e.target.matches('.btn--signup')) {
     (0, _base.clearOverview)();
     loginView.renderSignupForm(_base.elements.overview);
@@ -13122,7 +13117,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61698" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "56861" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

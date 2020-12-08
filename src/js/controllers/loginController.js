@@ -4,7 +4,6 @@ import * as headerView from '../views/headerView';
 import { cardLoaderAndRender } from './cardController';
 import { renderActiveItem } from './sidebarController';
 
-// Logging in handler
 export const loginHandler = async (e) => {
   e.preventDefault();
   const email = document.querySelector('#email').value;
@@ -13,7 +12,7 @@ export const loginHandler = async (e) => {
   // 1. Check if the login was successful
   const loggedIn = await state.user.login(email, password);
 
-  // 2. Only render the User Ui for a successful login
+  // 2. Only render the User UI for a successful login
   if (loggedIn) {
     state.user.email = email;
 
@@ -55,7 +54,7 @@ export const signupHandler = async (e) => {
     role
   );
 
-  // 2. Only render the User Ui for a successful login
+  // 2. Only render the User UI for a successful signup
   if (signedUp) {
     state.user.email = email;
 
@@ -68,7 +67,7 @@ export const signupHandler = async (e) => {
     // 2.4 set the active on sidebar to 'my cards'
     renderActiveItem(document.querySelector('.side-nav-card'));
 
-    // 2.4. Load and render User cards
+    // 2.5 Load and render User cards
     window.setTimeout(cardLoaderAndRender, 3500);
   }
 };
